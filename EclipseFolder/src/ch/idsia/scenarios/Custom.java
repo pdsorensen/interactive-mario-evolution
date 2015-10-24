@@ -37,6 +37,7 @@ import ch.idsia.tools.MarioAIOptions;
 
 import java.io.IOException;
 
+import own.FSMController;
 import competition.gic2010.turing.sergeykarakovskiy.SergeyKarakovskiy_ForwardAgent;
 
 /**
@@ -55,7 +56,7 @@ public static void main(String[] args)
     final BasicTask basicTask = new BasicTask(marioAIOptions);
     
     Environment environment = MarioEnvironment.getInstance();
-    Agent agent = new ForwardJumpingAgent(); 
+    Agent agent = new FSMController(); 
     
     String options = "-lf on -zs 1 -ls 16 -vis on";
     environment.reset(options);
