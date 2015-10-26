@@ -30,6 +30,7 @@ package ch.idsia.scenarios;
 import ch.idsia.agents.Agent;
 import ch.idsia.agents.controllers.ForwardAgent;
 import ch.idsia.agents.controllers.ForwardJumpingAgent;
+import ch.idsia.agents.learning.SimpleMLPAgent;
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.benchmark.tasks.BasicTask;
@@ -38,6 +39,7 @@ import ch.idsia.tools.MarioAIOptions;
 import java.io.IOException;
 
 import own.FSMController;
+import own.NEATController;
 import competition.gic2010.turing.sergeykarakovskiy.SergeyKarakovskiy_ForwardAgent;
 
 /**
@@ -56,13 +58,15 @@ public static void main(String[] args)
     final BasicTask basicTask = new BasicTask(marioAIOptions);
     
     Environment environment = MarioEnvironment.getInstance();
-    Agent agent = new FSMController(); 
+    //Agent agent = new ForwardJumpingAgent(); 
+    //Agent agent = new SimpleMLPAgent();
+    Agent agent = new NEATController();
     
     String options = "-lf on -zs 1 -ls 16 -vis on";
     environment.reset(options);
     
     marioAIOptions.setLevelDifficulty(0);
-    marioAIOptions.setLevelRandSeed(0);
+    marioAIOptions.setLevelRandSeed(2);
     basicTask.setOptionsAndReset(marioAIOptions);
     
     while(!environment.isLevelFinished()){
