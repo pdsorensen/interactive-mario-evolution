@@ -19,7 +19,7 @@ private Environment environment;
 private boolean[] actions; 
 
 //http://www.marioai.org/gameplay-track/marioai-benchmark	for zlevels:
-int zLevelScene = 1;
+int zLevelScene = 0;
 int zLevelEnemies = 0;
 
 // ---- NEAT VARIABLES ---- // 
@@ -31,6 +31,7 @@ private int[] outputs;
 
 // --- DEBUGGING VARIABLES ---- //
 StringBuilder sb = new StringBuilder(); 
+StringBuilder printMap = new StringBuilder(); 
 
 	public NEATController() {
 		super("NEAT Controller");
@@ -48,7 +49,9 @@ StringBuilder sb = new StringBuilder();
 	
 	public boolean[] getAction(){
 		// Look at SimeMLPAgent to see a simple MLP agent representation
-		actions[Mario.KEY_JUMP] = !actions[Mario.KEY_JUMP]; 
+		printLevelSceneWithEnemies();
+		//actions[Mario.KEY_JUMP] = !actions[Mario.KEY_JUMP]; 
+		actions[Mario.KEY_RIGHT] = true;
 		return actions; 
 	}
 	
@@ -57,7 +60,7 @@ StringBuilder sb = new StringBuilder();
 	    this.environment = environment;
 	    levelScene = environment.getLevelSceneObservationZ(zLevelScene);
 	    enemies = environment.getEnemiesObservationZ(zLevelEnemies);
-	    mergedObservation = environment.getMergedObservationZZ(1, 0);
+	    mergedObservation = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
 
 	    this.marioFloatPos = environment.getMarioFloatPos();
 	    this.enemiesFloatPos = environment.getEnemiesFloatPos();
@@ -76,6 +79,55 @@ StringBuilder sb = new StringBuilder();
 	}
 	
 
+	/* --- DEBUGGING FUNCTIONS ---- */	
+	public void printLevelSceneWithEnemies(){
+		// Mario is always on square [9][9], therefore numbering it to M
+		printMap.setLength(0);
+		
+		System.out.println("Printing out scene, length: " + mergedObservation.length + ", " + mergedObservation[0].length);
+		
+		System.out.println("state = " + marioState[1]);
+		
+		for(int i = 0; i<mergedObservation.length; i++){
+			for(int j = 0; j<mergedObservation[i].length; j++){
+				
+				if(mergedObservation[i][j] == 0){
+					
+					//Look for Mario
+					if(marioState[1] > 0)
+						if(i == 8 && j == 9)
+							printMap.append("/M/");
+					if(i == 9 && j == 9)
+						printMap.append("/M/");
+					//Look for air
+					else
+						printMap.append(" ´ ");
+				
+				}
+				else if(mergedObservation[i][j] == 11)
+					printMap.append("|?|");
+				else if(mergedObservation[i][j] == -60)
+					printMap.append("===");
+				else if(mergedObservation[i][j] == -24)
+					printMap.append("|X|");
+				
+				else if(mergedObservation[i][j] == 80)
+					printMap.append("!!!");
+				else if(mergedObservation[i][j] == 2)
+					printMap.append(" 0 ");
+				//
+				else
+					printMap.append(mergedObservation[i][j]);
+			}
+			//Make line change
+			printMap.append("\n");
+		}
+		System.out.println(printMap.toString());
+		
+	}
+	
+	
+	
 /* --- DEBUGGING FUNCTIONS ---- */	
 	public void printLevelScene(){
 		// Mario is always on square [9][9], therefore numbering it to M
@@ -84,7 +136,7 @@ StringBuilder sb = new StringBuilder();
 		for(int i = 0; i<levelScene.length; i++){
 			for(int j = 0; j<levelScene[i].length; j++){
 				if(i == 9 && j == 9){
-					sb.append("M"); 
+					sb.append(" M "); 
 				} else {
 					sb.append(levelScene[i][j]);
 				}
