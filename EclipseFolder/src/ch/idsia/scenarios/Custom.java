@@ -57,6 +57,10 @@ public static void main(String[] args)
     final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
     
+    // Uncomment to play with keyboard
+    //basicTask.setOptionsAndReset(marioAIOptions);
+    //basicTask.runSingleEpisode(1);
+    
     Environment environment = MarioEnvironment.getInstance();
     //Agent agent = new ForwardJumpingAgent(); 
     //Agent agent = new SimpleMLPAgent();
@@ -74,6 +78,8 @@ public static void main(String[] args)
     	agent.integrateObservation(environment);
         environment.performAction(agent.getAction());
     }
+    
+    
     
     System.out.println(environment.getEvaluationInfo());
     System.exit(0);
