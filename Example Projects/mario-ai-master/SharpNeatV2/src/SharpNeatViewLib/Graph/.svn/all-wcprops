@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph
+END
+IOGraphPainter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/sharpneat/!svn/ver/42/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/IOGraphPainter.cs
+END
+IOGraphViewportPainter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/sharpneat/!svn/ver/42/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/IOGraphViewportPainter.cs
+END
+DepthLayoutManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/sharpneat/!svn/ver/58/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/DepthLayoutManager.cs
+END
+GridLayoutManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/sharpneat/!svn/ver/42/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/GridLayoutManager.cs
+END
+GraphConnection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/GraphConnection.cs
+END
+ILayoutManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/ILayoutManager.cs
+END
+CppnGraphPainter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/CppnGraphPainter.cs
+END
+GraphNode.cs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/sharpneat/!svn/ver/42/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/GraphNode.cs
+END
+IOGraph.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/sharpneat/!svn/ver/42/trunk/SharpNeatV2/src/SharpNeatViewLib/Graph/IOGraph.cs
+END

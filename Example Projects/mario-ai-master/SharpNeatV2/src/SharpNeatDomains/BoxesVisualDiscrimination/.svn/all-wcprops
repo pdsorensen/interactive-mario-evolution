@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/sharpneat/!svn/ver/18/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination
+END
+BoxesVisualDiscriminationView.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination/BoxesVisualDiscriminationView.Designer.cs
+END
+BoxesVisualDiscriminationView.cs
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination/BoxesVisualDiscriminationView.cs
+END
+TestCaseField.cs
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination/TestCaseField.cs
+END
+BoxesVisualDiscriminationExperiment.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svnroot/sharpneat/!svn/ver/18/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination/BoxesVisualDiscriminationExperiment.cs
+END
+BoxesVisualDiscriminationEvaluator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination/BoxesVisualDiscriminationEvaluator.cs
+END
+BoxesVisualDiscriminationView.resx
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/BoxesVisualDiscrimination/BoxesVisualDiscriminationView.resx
+END
