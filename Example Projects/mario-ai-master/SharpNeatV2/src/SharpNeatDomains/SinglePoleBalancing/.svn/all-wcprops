@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/sharpneat/!svn/ver/18/trunk/SharpNeatV2/src/SharpNeatDomains/SinglePoleBalancing
+END
+SinglePoleStateData.cs
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/SinglePoleBalancing/SinglePoleStateData.cs
+END
+SinglePoleBalancingExperiment.cs
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svnroot/sharpneat/!svn/ver/18/trunk/SharpNeatV2/src/SharpNeatDomains/SinglePoleBalancing/SinglePoleBalancingExperiment.cs
+END
+SinglePoleBalancingEvaluator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svnroot/sharpneat/!svn/ver/12/trunk/SharpNeatV2/src/SharpNeatDomains/SinglePoleBalancing/SinglePoleBalancingEvaluator.cs
+END

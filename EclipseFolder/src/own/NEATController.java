@@ -82,6 +82,7 @@ StringBuilder printMap = new StringBuilder();
 
 	/* --- DEBUGGING FUNCTIONS ---- */	
 	public void printLevelSceneWithEnemies(){
+
 		// Mario is always on square [9][9], therefore numbering it to M
 		printMap.setLength(0);
 		
@@ -143,7 +144,7 @@ StringBuilder printMap = new StringBuilder();
 		for(int i = 0; i<mergedObservation.length; i++){
 			for(int j = 0; j<mergedObservation[i].length; j++){
 				if(i == 9 && j == 9){
-					sb.append("M"); 
+					sb.append(" M "); 
 				} else {
 					System.out.print("levelScene[i][j]: " + mergedObservation[i][j]);
 					sb.append(mergedObservation[i][j]);

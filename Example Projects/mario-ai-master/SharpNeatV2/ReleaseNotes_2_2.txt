@@ -1,0 +1,48 @@
+SharpNEAT 2.2.0
+2012-04-02
+Colin Green
+
+Changes from previous release (2.1.0).
+=====================================
+
+
+New Features
+------------------
+
+
+ * Walker BOX2D Problem Domain.
+ 
+ * Support for multiple auxiliary fitness values per genome (plotted on graphs).
+
+ * Acyclic networks as HyperNEAT CPPNs.
+
+
+
+
+Fixes
+-----
+
+ * FIX: Prey Capture problem domain: Only one of the four ANN output signals was being read. 
+   This effectively completely broke the prey capture domain.
+
+
+ * IntPoint: Fixed equality and inequality operators and CalculateDistance(). 
+   In the released code these defects severely affected the prey capture domain.
+
+
+ * FIX: Config loading: Relaxing network delta threshold setting was being parsed as an Int32 instead of a Double.
+
+
+ * Fix to RandomClusteringStrategy.cs. Genome.SpecieIdx was not being set upon allocation. 
+   Added debug assertion to check specieIdx is correctly set following speciation.
+    
+    
+ * FIX/MOD: Network visualisation: Layout logic failed when there were large numbers of neurons in
+   a layout layer such that the gap between them was less than 0.5 of a pixel, and thus got rounded down to 0,
+   positioning all nodes in that layer at the same coordinates.
+   
+    
+ * FIX/MOD: Ensure ID generators are set accordingly when loading genomes using a pre-existing genome factory.
+    
+
+ 
