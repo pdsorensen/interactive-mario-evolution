@@ -6,11 +6,10 @@
 			<accessrule kind="accessible" pattern="com/sun/xml/internal/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/ImportASM"/>
-	<classpathentry kind="lib" path="C:/Users/patrikk/Desktop/My tresors/AI in Modern Games/Group Project/hamcrest-junit-2.0.0.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/patrikk/Desktop/My tresors/AI in Modern Games/Group Project/jdom-1.1.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/patrikk/Desktop/My tresors/AI in Modern Games/Group Project/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/patrikk/Desktop/My tresors/AI in Modern Games/Group Project/junit-4.12.jar"/>
-	<classpathentry kind="lib" path="C:/Users/patrikk/Desktop/My tresors/AI in Modern Games/Group Project/testng-6.8.7.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ASMimport"/>
+	<classpathentry kind="lib" path="/Users/jeppeholsen/Tresors/Java Projects/Mario AI/MAIG2015/hamcrest-junit-2.0.0.0.jar"/>
+	<classpathentry kind="lib" path="/Users/jeppeholsen/Tresors/Java Projects/Mario AI/MAIG2015/jdom-1.1.3.jar"/>
+	<classpathentry kind="lib" path="/Users/jeppeholsen/Tresors/Java Projects/Mario AI/MAIG2015/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="/Users/jeppeholsen/Tresors/Java Projects/Mario AI/MAIG2015/testng-6.8.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -70,7 +70,7 @@ public static void main(String[] args)
     environment.reset(options);
     
     marioAIOptions.setLevelDifficulty(0);
-    marioAIOptions.setLevelRandSeed(2);
+    marioAIOptions.setLevelRandSeed(20);
     basicTask.setOptionsAndReset(marioAIOptions);
     
     while(!environment.isLevelFinished()){
