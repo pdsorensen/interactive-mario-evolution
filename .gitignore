@@ -1,4 +1,4 @@
-﻿# Windows image file caches
+# Windows image file caches
 Thumbs.db
 ehthumbs.db
 
@@ -50,7 +50,7 @@ Temporary Items
 # When checking the project into a version control system, you should add the Assets and the ProjectSettings directories to the system. The Library directory should be completely ignored - when using .meta files, it’s only a local cache of imported assets.
 # http://docs.unity3d.com/Manual/ExternalVersionControlSystemSupport.html
 .Settings
-bin
+#bin
 lib
 target
 .classpath
