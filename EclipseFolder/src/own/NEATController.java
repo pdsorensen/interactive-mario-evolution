@@ -49,9 +49,12 @@ StringBuilder printMap = new StringBuilder();
 	
 	public boolean[] getAction(){
 		// Look at SimeMLPAgent to see a simple MLP agent representation
-		printLevelScene();
-		printLevelSceneWithEnemies();
-		//actions[Mario.KEY_JUMP] = !actions[Mario.KEY_JUMP]; 
+		//printLevelScene();
+		//printLevelSceneWithEnemies();
+		if(System.currentTimeMillis()%5 == 0)
+			actions[Mario.KEY_JUMP] = !actions[Mario.KEY_JUMP]; 
+		
+		//actions[Mario.KEY] = true;
 		actions[Mario.KEY_RIGHT] = true;
 		return actions; 
 	}

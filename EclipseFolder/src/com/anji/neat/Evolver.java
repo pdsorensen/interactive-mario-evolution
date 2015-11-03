@@ -152,6 +152,7 @@ public void init( Properties props ) throws Exception {
 	config.setBulkFitnessFunction( fitnessFunc );
 	maxFitness = fitnessFunc.getMaxFitnessValue();
 
+	
 	// load population, either from previous run or random
 	genotype = db.loadGenotype( config );
 	if ( genotype != null )
@@ -160,7 +161,6 @@ public void init( Properties props ) throws Exception {
 		genotype = Genotype.randomInitialGenotype( config );
 		logger.info( "random genotype" );
 	}
-
 }
 
 /**
@@ -244,13 +244,13 @@ private static void logConclusion( int generationOfFirstSolution, Chromosome cha
 public static void main( String[] args ) throws Throwable {
 	try {
 		System.out.println( Copyright.STRING );
-
+		/*
 		if ( args.length != 1 ) {
 			usage();
 			System.exit( -1 );
-		}
+		}*/
 
-		Properties props = new Properties( args[ 0 ] );
+		Properties props = new Properties( "xor.properties" );
 		Evolver evolver = new Evolver();
 		evolver.init( props );
 		evolver.run();

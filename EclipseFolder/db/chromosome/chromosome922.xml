@@ -1,8 +1,0 @@
-<chromosome id="922" primary-parent-id="759"><neuron id="0" type="in" activation="linear"/>
-<neuron id="1" type="in" activation="linear"/>
-<neuron id="2" type="in" activation="linear"/>
-<neuron id="3" type="out" activation="sigmoid"/>
-<connection id="4" src-id="0" dest-id="3" weight="-4.0317714155563085"/>
-<connection id="5" src-id="1" dest-id="3" weight="2.0480490516385443"/>
-<connection id="6" src-id="2" dest-id="3" weight="-0.5075546806944706"/>
-</chromosome>
