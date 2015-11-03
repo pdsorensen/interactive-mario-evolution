@@ -1,0 +1,15 @@
+<chromosome id="744" primary-parent-id="647" secondary-parent-id="524"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="-0.45904767513275146"/>
+<connection id="5" src-id="1" dest-id="3" weight="3.0579413783838096"/>
+<connection id="6" src-id="2" dest-id="3" weight="-4.697357006088216"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="171" src-id="0" dest-id="170" weight="-2.846649230470046"/>
+<connection id="172" src-id="170" dest-id="3" weight="4.9025313822197845"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="-0.5258447001561106"/>
+<connection id="436" src-id="434" dest-id="170" weight="-2.0782396066455524"/>
+<connection id="562" src-id="2" dest-id="434" weight="1.98133736685343"/>
+</chromosome>

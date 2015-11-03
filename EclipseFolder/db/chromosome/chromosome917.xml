@@ -1,0 +1,15 @@
+<chromosome id="917" primary-parent-id="744"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="-0.45904767513275146"/>
+<connection id="5" src-id="1" dest-id="3" weight="1.4810597044659914"/>
+<connection id="6" src-id="2" dest-id="3" weight="-4.697357006088216"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="171" src-id="0" dest-id="170" weight="-2.846649230470046"/>
+<connection id="172" src-id="170" dest-id="3" weight="6.664977071798277"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="-1.0759072766443705"/>
+<connection id="436" src-id="434" dest-id="170" weight="0.05741453616739367"/>
+<connection id="562" src-id="2" dest-id="434" weight="1.5884680918097274"/>
+</chromosome>

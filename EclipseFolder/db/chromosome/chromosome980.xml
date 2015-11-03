@@ -1,0 +1,12 @@
+<chromosome id="980" primary-parent-id="658" secondary-parent-id="868"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="5" src-id="1" dest-id="3" weight="3.3160050386821185"/>
+<connection id="6" src-id="2" dest-id="3" weight="-9.518301899200976"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="172" src-id="170" dest-id="3" weight="3.8559216028335555"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="-1.2550252257803103"/>
+<connection id="436" src-id="434" dest-id="170" weight="0.9759775571854364"/>
+</chromosome>

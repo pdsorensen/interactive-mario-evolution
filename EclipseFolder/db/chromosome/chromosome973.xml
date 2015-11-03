@@ -1,0 +1,17 @@
+<chromosome id="973" primary-parent-id="913"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="2" dest-id="167" weight="-1.6705359929458723"/>
+<connection id="169" src-id="167" dest-id="3" weight="1.2426046860627162"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="171" src-id="0" dest-id="170" weight="-4.556257266121491"/>
+<connection id="172" src-id="170" dest-id="3" weight="1.0989556186510474"/>
+<neuron id="173" type="hid" activation="sigmoid"/>
+<connection id="175" src-id="173" dest-id="3" weight="2.0211714332776127"/>
+<neuron id="564" type="hid" activation="sigmoid"/>
+<connection id="565" src-id="1" dest-id="564" weight="2.2089504107918847"/>
+<connection id="566" src-id="564" dest-id="173" weight="-0.979538494666653"/>
+<connection id="822" src-id="0" dest-id="173" weight="1.7747671992417569"/>
+</chromosome>

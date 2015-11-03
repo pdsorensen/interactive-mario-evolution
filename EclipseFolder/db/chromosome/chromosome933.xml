@@ -1,0 +1,12 @@
+<chromosome id="933" primary-parent-id="704"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="6.782994341028272"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="2" dest-id="167" weight="-0.8029057173751102"/>
+<connection id="169" src-id="167" dest-id="3" weight="-0.8536302202386584"/>
+<neuron id="173" type="hid" activation="sigmoid"/>
+<connection id="174" src-id="1" dest-id="173" weight="1.920381042004834"/>
+<connection id="175" src-id="173" dest-id="3" weight="1.1002407041449849"/>
+</chromosome>

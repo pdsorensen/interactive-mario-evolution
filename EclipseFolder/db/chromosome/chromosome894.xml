@@ -1,0 +1,8 @@
+<chromosome id="894" primary-parent-id="759" secondary-parent-id="764"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="-1.045097319519248"/>
+<connection id="5" src-id="1" dest-id="3" weight="0.6809918619985365"/>
+<connection id="6" src-id="2" dest-id="3" weight="3.0902180611177354"/>
+</chromosome>

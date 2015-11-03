@@ -1,0 +1,12 @@
+<chromosome id="851" primary-parent-id="658"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="5" src-id="1" dest-id="3" weight="3.907185683798321"/>
+<connection id="6" src-id="2" dest-id="3" weight="-7.3226409140445785"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="172" src-id="170" dest-id="3" weight="7.33619643211239"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="-0.04842874031495592"/>
+<connection id="436" src-id="434" dest-id="170" weight="-0.31819859624992275"/>
+</chromosome>

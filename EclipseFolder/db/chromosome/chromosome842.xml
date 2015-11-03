@@ -1,0 +1,14 @@
+<chromosome id="842" primary-parent-id="658"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="5" src-id="1" dest-id="3" weight="3.699322839349212"/>
+<connection id="6" src-id="2" dest-id="3" weight="-7.133717896496364"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="-2.0260201719068105"/>
+<connection id="436" src-id="434" dest-id="170" weight="1.5557622401544597"/>
+<neuron id="699" type="hid" activation="sigmoid"/>
+<connection id="700" src-id="170" dest-id="699" weight="-1.357279708231252"/>
+<connection id="701" src-id="699" dest-id="3" weight="5.962187156738677"/>
+</chromosome>

@@ -1,0 +1,12 @@
+<chromosome id="903" primary-parent-id="754" secondary-parent-id="806"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="6" src-id="2" dest-id="3" weight="-1.299409203015195"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="171" src-id="0" dest-id="170" weight="-2.3818834422084625"/>
+<connection id="172" src-id="170" dest-id="3" weight="-3.454617208981377"/>
+<neuron id="173" type="hid" activation="sigmoid"/>
+<connection id="174" src-id="1" dest-id="173" weight="3.7866555318148016"/>
+<connection id="175" src-id="173" dest-id="3" weight="2.050174350134676"/>
+</chromosome>

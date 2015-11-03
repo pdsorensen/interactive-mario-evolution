@@ -1,0 +1,12 @@
+<chromosome id="977" primary-parent-id="876"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="4.77200676980101"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="2" dest-id="167" weight="3.2244516985608387"/>
+<connection id="169" src-id="167" dest-id="3" weight="-2.5104257345004353"/>
+<neuron id="173" type="hid" activation="sigmoid"/>
+<connection id="174" src-id="1" dest-id="173" weight="2.279874930824125"/>
+<connection id="175" src-id="173" dest-id="3" weight="2.545920500752539"/>
+</chromosome>

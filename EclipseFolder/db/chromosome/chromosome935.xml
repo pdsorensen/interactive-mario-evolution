@@ -1,0 +1,12 @@
+<chromosome id="935" primary-parent-id="658"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="5" src-id="1" dest-id="3" weight="2.8221767006382312"/>
+<connection id="6" src-id="2" dest-id="3" weight="-7.830543239397865"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<connection id="172" src-id="170" dest-id="3" weight="4.9673177029510445"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="-1.327413315765802"/>
+<connection id="436" src-id="434" dest-id="170" weight="-1.5846279819667457"/>
+</chromosome>

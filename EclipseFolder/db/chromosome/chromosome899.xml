@@ -1,0 +1,12 @@
+<chromosome id="899" primary-parent-id="704"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="7.097456019114368"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="2" dest-id="167" weight="-0.7302741269091318"/>
+<connection id="169" src-id="167" dest-id="3" weight="-3.313703575495014"/>
+<neuron id="173" type="hid" activation="sigmoid"/>
+<connection id="174" src-id="1" dest-id="173" weight="2.2443788527089947"/>
+<connection id="175" src-id="173" dest-id="3" weight="0.03400448431222314"/>
+</chromosome>

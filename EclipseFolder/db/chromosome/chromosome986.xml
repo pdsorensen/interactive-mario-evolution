@@ -1,0 +1,14 @@
+<chromosome id="986" primary-parent-id="842"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="5" src-id="1" dest-id="3" weight="1.6318912615897334"/>
+<connection id="6" src-id="2" dest-id="3" weight="-10.249962867290952"/>
+<neuron id="170" type="hid" activation="sigmoid"/>
+<neuron id="434" type="hid" activation="sigmoid"/>
+<connection id="435" src-id="0" dest-id="434" weight="1.180186866168781"/>
+<connection id="436" src-id="434" dest-id="170" weight="3.00704016328321"/>
+<neuron id="699" type="hid" activation="sigmoid"/>
+<connection id="700" src-id="170" dest-id="699" weight="-0.26200470986024604"/>
+<connection id="701" src-id="699" dest-id="3" weight="7.075376130573976"/>
+</chromosome>
