@@ -180,6 +180,7 @@ private void setTrackLength( double aTrackLength ) {
  */
 public void init( Properties props ) throws Exception {
 	try {
+		
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );
 		setTrackLength( props.getDoubleProperty( TRACK_LENGTH_KEY, DEFAULT_TRACK_LENGTH ) );
 		maxTimesteps = props.getIntProperty( TIMESTEPS_KEY, DEFAULT_TIMESTEPS );
@@ -268,6 +269,7 @@ private double[] newState() {
 }
 
 private int singleTrial( Activator activator ) {
+	System.out.println("FINDING FITNESS AND RUNNING SIMULATION");
 	double[] state = newState();
 	double energyUsed = 0;
 	double f2 = 0.0;

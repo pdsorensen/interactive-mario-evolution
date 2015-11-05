@@ -1,5 +1,10 @@
 package own;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.jgap.BulkFitnessFunction;
 import org.jgap.Chromosome;
@@ -62,13 +67,6 @@ public class MarioNeat implements Configurable{
 	private int maxFitness = 0;
 
 	private Persistence db = null;
-
-	
-	//MARIO VARIABLES
-	static final MarioAIOptions marioAIOptions = new MarioAIOptions();
-    static final BasicTask basicTask = new BasicTask(marioAIOptions);
-    static Environment environment = MarioEnvironment.getInstance();
-    static Agent agent = new NEATController();
 	
 	
 	
@@ -150,15 +148,25 @@ public class MarioNeat implements Configurable{
 	}
 	
 	public void run() throws Exception {
+		Date runStartDate = Calendar.getInstance().getTime();
+		logger.info( "Run: start" );
+		DateFormat fmt = new SimpleDateFormat( "HH:mm:ss" );
 		
-		while(!environment.isLevelFinished()){
-	    	environment.tick();
-	    	agent.integrateObservation(environment);
-	        environment.performAction(agent.getAction());
-	    }
+		for ( int generation = 0; generation < numEvolutions; ++generation ) {
+			Date generationStartDate = Calendar.getInstance().getTime();
+			logger.info( "Generation " + generation + ": start" );
+			
+			genotype.evolve();
+			
+			// generation finish
+			Date generationEndDate = Calendar.getInstance().getTime();
+			long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
+			logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
+					+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
+		}
 		
 		//Print results
-		System.out.println(environment.getEvaluationInfo());
+		//System.out.println(environment.getEvaluationInfo());
 	}
 	
 	public static void main( String[] args ) throws Throwable {
@@ -167,7 +175,7 @@ public class MarioNeat implements Configurable{
 			
 			//FOR MARIO
 		    String options = "-lf on -zs 1 -ls 16 -vis on";
-		    environment.reset(options);
+		    //environment.reset(options);
 		    
 		    //marioAIOptions.setLevelDifficulty(0);
 		    //marioAIOptions.setLevelRandSeed(0);

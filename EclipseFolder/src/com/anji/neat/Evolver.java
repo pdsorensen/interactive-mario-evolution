@@ -31,6 +31,8 @@ import org.jgap.Genotype;
 import org.jgap.event.GeneticEvent;
 
 import com.anji.Copyright;
+import com.anji.integration.Activator;
+import com.anji.integration.ActivatorTranscriber;
 import com.anji.integration.LogEventListener;
 import com.anji.integration.PersistenceEventListener;
 import com.anji.integration.PresentationEventListener;
@@ -249,11 +251,11 @@ public static void main( String[] args ) throws Throwable {
 			usage();
 			System.exit( -1 );
 		}*/
-
-		Properties props = new Properties( "xor.properties" );
+		Properties props = new Properties( "mario.properties" );
 		Evolver evolver = new Evolver();
 		evolver.init( props );
 		evolver.run();
+		
 		System.exit( 0 );
 	}
 	catch ( Throwable th ) {

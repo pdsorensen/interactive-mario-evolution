@@ -42,7 +42,7 @@ private static final Logger logger = Logger.getLogger( DoublePoleBalanceEvaluato
 public static void main( String[] args ) throws Exception {
 	DoublePoleBalanceFitnessFunction ff = new DoublePoleBalanceFitnessFunction();
 	Properties props = new Properties();
-	props.loadFromResource( args[ 0 ] );
+	props.loadFromResource( "dpbalance.properties");
 	ff.init( props );
 	Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 	Configuration config = new DummyConfiguration();

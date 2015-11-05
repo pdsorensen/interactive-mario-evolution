@@ -2,5 +2,5 @@
 <neuron_id_map>
 </neuron_id_map>
 <connection_id_map>
-<connection id="6" src_neuron_id="2" dest_neuron_id="3" /><connection id="5" src_neuron_id="1" dest_neuron_id="3" /><connection id="4" src_neuron_id="0" dest_neuron_id="3" /></connection_id_map>
+<connection id="4" src_neuron_id="1" dest_neuron_id="2" /><connection id="3" src_neuron_id="0" dest_neuron_id="2" /></connection_id_map>
 </neat_id_map>

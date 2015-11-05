@@ -250,9 +250,9 @@ public synchronized void evolve() {
 		// each of the Chromosomes.
 		// --------------------------------------------------------------
 		BulkFitnessFunction bulkFunction = m_activeConfiguration.getBulkFitnessFunction();
-		if ( bulkFunction != null )
+		if ( bulkFunction != null ){
 			bulkFunction.evaluate( m_chromosomes );
-		else {
+		}else {
 			// Refactored such that Chromosome does not need a reference to Configuration. Left his
 			// in for backward compatibility, but it makes more sense to use BulkFitnessFunction
 			// now.
