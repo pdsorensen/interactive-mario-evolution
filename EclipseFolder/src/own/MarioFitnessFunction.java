@@ -109,10 +109,12 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 //			#For each tick do
 //				getState 
 //				setInputs
-				networkInput = new double[ 2 ];
+				networkInput = new double[ state.length ];
 				state = getStateFromStage();
-				networkInput[ 0 ] = state[ 0 ]; 
-				networkInput[ 1 ] = state[ 1 ];
+				for(int i = 0; i < networkInput.length; i++) 
+					networkInput[ i ] = state[ i ]; 
+//				networkInput[ 0 ] = state[ 0 ]; 
+//				networkInput[ 1 ] = state[ 1 ];
 //				networkInput[ 2 ] = state[ 2 ]; 
 //				networkInput[ 3 ] = state[ 3 ]; 
 //				networkInput[ 4 ] = state[ 4 ]; 
@@ -137,14 +139,36 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	public boolean[] getAction(double[] networkOutput){
 		
 		if(networkOutput[0] < 0.5)
-			actions[Mario.KEY_JUMP] = false;
+			actions[Mario.KEY_LEFT] = false;
 		else
-			actions[Mario.KEY_JUMP] = true;
+			actions[Mario.KEY_LEFT] = true;
 		
 		if(networkOutput[1] < 0.5)
 			actions[Mario.KEY_RIGHT] = false;
 		else
 			actions[Mario.KEY_RIGHT] = true;
+		
+		if(networkOutput[2] < 0.5)
+			actions[Mario.KEY_DOWN] = false;
+		else
+			actions[Mario.KEY_DOWN] = true;
+		
+		if(networkOutput[3] < 0.5)
+			actions[Mario.KEY_UP] = false;
+		else
+			actions[Mario.KEY_UP] = true;
+		
+		if(networkOutput[4] < 0.5)
+			actions[Mario.KEY_JUMP] = false;
+		else
+			actions[Mario.KEY_JUMP] = true;
+		
+		if(networkOutput[5] < 0.5)
+			actions[Mario.KEY_SPEED] = false;
+		else
+			actions[Mario.KEY_SPEED] = true;
+		
+		
 		
 //		for(int i = 0; i < networkOutput.length; i++){
 //			if(networkOutput[i] < 0.5)
@@ -157,8 +181,12 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 	
 	public void resetActions(){
-		actions[Mario.KEY_JUMP] = false;
-		actions[Mario.KEY_RIGHT] = false;
+	    actions[Mario.KEY_LEFT] = false;
+	    actions[Mario.KEY_RIGHT] = false;
+	    actions[Mario.KEY_DOWN] = false;
+	    actions[Mario.KEY_UP] = false;
+	    actions[Mario.KEY_JUMP] = false;
+	    actions[Mario.KEY_SPEED] = false;
 	}
 	
 	
@@ -178,13 +206,23 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 //								levelScene[8][11],
 //								levelScene[8][12]
 //							};
+
+		return inputs;
 		
+	}
+	
+	/*
+	 * @return The state of the Mario World. Atm only the two by three blocks in front of Mario
+	 */
+	public double[][] getFullStateFromStage(){
+		
+		double[][] inputs = new double[18][18];
 	    //GET INPUTS FROM STAGE
-//	    for(int i = 9; i<levelScene.length; i++){
-//			for(int j = 9; j<levelScene[i].length; j++){
-//			
-//			}
-//		}
+	    for(int i = 0; i<levelScene.length; i++){
+			for(int j = 0; j<levelScene[i].length; j++){
+				inputs[i][j] = levelScene[i][j];
+			}
+		}
 		
 		return inputs;
 		

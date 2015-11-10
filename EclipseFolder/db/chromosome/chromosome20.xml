@@ -1,0 +1,21 @@
+<chromosome id="20"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="out" activation="sigmoid"/>
+<connection id="3" src-id="0" dest-id="2" weight="0.006642341613769531"/>
+<connection id="4" src-id="1" dest-id="2" weight="0.10777723789215088"/>
+<neuron id="5" type="out" activation="sigmoid"/>
+<connection id="6" src-id="0" dest-id="5" weight="-0.8519500494003296"/>
+<connection id="7" src-id="1" dest-id="5" weight="0.7929668426513672"/>
+<neuron id="8" type="out" activation="sigmoid"/>
+<connection id="9" src-id="0" dest-id="8" weight="-0.26663637161254883"/>
+<connection id="10" src-id="1" dest-id="8" weight="-0.5082793235778809"/>
+<neuron id="11" type="out" activation="sigmoid"/>
+<connection id="12" src-id="0" dest-id="11" weight="0.44114136695861816"/>
+<connection id="13" src-id="1" dest-id="11" weight="-0.20008909702301025"/>
+<neuron id="14" type="out" activation="sigmoid"/>
+<connection id="15" src-id="0" dest-id="14" weight="0.12785744667053223"/>
+<connection id="16" src-id="1" dest-id="14" weight="-0.1981501579284668"/>
+<neuron id="17" type="out" activation="sigmoid"/>
+<connection id="18" src-id="0" dest-id="17" weight="0.8976720571517944"/>
+<connection id="19" src-id="1" dest-id="17" weight="0.43891680240631104"/>
+</chromosome>
