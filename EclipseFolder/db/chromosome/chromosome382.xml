@@ -1,0 +1,18 @@
+<chromosome id="382" primary-parent-id="302"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="out" activation="sigmoid"/>
+<connection id="4" src-id="1" dest-id="2" weight="3.6951679315869903"/>
+<neuron id="5" type="out" activation="sigmoid"/>
+<connection id="7" src-id="1" dest-id="5" weight="3.184235886042764"/>
+<neuron id="8" type="out" activation="sigmoid"/>
+<connection id="10" src-id="1" dest-id="8" weight="1.5195473001085817"/>
+<connection id="32" src-id="8" dest-id="2" weight="-0.42040926265114575"/>
+<connection id="58" src-id="2" dest-id="2" weight="1.4907184295963343"/>
+<connection id="99" src-id="5" dest-id="8" weight="-1.9109998094502783"/>
+<neuron id="101" type="hid" activation="sigmoid"/>
+<connection id="102" src-id="0" dest-id="101" weight="-2.706184547494113"/>
+<connection id="103" src-id="101" dest-id="2" weight="4.38413840373379"/>
+<neuron id="122" type="hid" activation="sigmoid"/>
+<connection id="123" src-id="0" dest-id="122" weight="0.2930600207312482"/>
+<connection id="148" src-id="122" dest-id="8" weight="-2.9543923891205406"/>
+</chromosome>

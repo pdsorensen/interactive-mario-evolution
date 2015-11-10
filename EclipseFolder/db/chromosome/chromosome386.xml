@@ -1,0 +1,35 @@
+<chromosome id="386" primary-parent-id="350"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="out" activation="sigmoid"/>
+<connection id="3" src-id="0" dest-id="2" weight="-4.476436105688638"/>
+<connection id="4" src-id="1" dest-id="2" weight="0.12205107219626665"/>
+<neuron id="5" type="out" activation="sigmoid"/>
+<neuron id="8" type="out" activation="sigmoid"/>
+<connection id="10" src-id="1" dest-id="8" weight="3.601606627558107"/>
+<connection id="32" src-id="8" dest-id="2" weight="-0.5816269635153895"/>
+<neuron id="35" type="hid" activation="sigmoid"/>
+<connection id="60" src-id="35" dest-id="2" weight="0.7592506805784482"/>
+<connection id="121" src-id="8" dest-id="35" weight="-1.0734292648331938"/>
+<neuron id="122" type="hid" activation="sigmoid"/>
+<connection id="123" src-id="0" dest-id="122" weight="2.3771026418944303"/>
+<connection id="124" src-id="122" dest-id="35" weight="3.7780904318897135"/>
+<neuron id="128" type="hid" activation="sigmoid"/>
+<connection id="129" src-id="35" dest-id="128" weight="-2.472846114990846"/>
+<neuron id="197" type="hid" activation="sigmoid"/>
+<connection id="198" src-id="128" dest-id="197" weight="0.45308650409828144"/>
+<connection id="218" src-id="8" dest-id="197" weight="-0.800703863365062"/>
+<neuron id="220" type="hid" activation="sigmoid"/>
+<connection id="221" src-id="197" dest-id="220" weight="3.9540377354281233"/>
+<connection id="222" src-id="220" dest-id="5" weight="0.9957901598376543"/>
+<connection id="271" src-id="5" dest-id="197" weight="-3.5758819306829395"/>
+<connection id="272" src-id="1" dest-id="197" weight="-1.7371115231716447"/>
+<connection id="282" src-id="122" dest-id="5" weight="-1.8437510357684377"/>
+<neuron id="285" type="hid" activation="sigmoid"/>
+<connection id="286" src-id="128" dest-id="285" weight="0.8465007650392009"/>
+<connection id="287" src-id="285" dest-id="220" weight="0.10696450595683382"/>
+<connection id="312" src-id="128" dest-id="2" weight="-2.070406006441308"/>
+<connection id="338" src-id="197" dest-id="285" weight="-2.7117896923354055"/>
+<neuron id="344" type="hid" activation="sigmoid"/>
+<connection id="345" src-id="0" dest-id="344" weight="2.147858523819747"/>
+<connection id="346" src-id="344" dest-id="8" weight="-1.2907151665104641"/>
+</chromosome>

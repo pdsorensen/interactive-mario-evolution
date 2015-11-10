@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jgap.BulkFitnessFunction;
@@ -197,9 +198,17 @@ public void run() throws Exception {
 
 		// next generation
 		genotype.evolve();
-
+		
+		List chroms = genotype.getChromosomes(); 
+		for(int i = 0; i<chroms.size(); i++){
+			Chromosome c = (Chromosome) chroms.get(i); 
+			System.out.println("Chrom: " + c.getFitnessValue());
+		}
+			
+		
 		// result data
 		champ = genotype.getFittestChromosome();
+		System.out.println("CHAMP: fitness, " + champ.getFitnessValue());
 		adjustedFitness = ( maxFitness > 0 ? (double) champ.getFitnessValue() / maxFitness : champ
 				.getFitnessValue() );
 		if ( adjustedFitness >= thresholdFitness && generationOfFirstSolution == -1 )

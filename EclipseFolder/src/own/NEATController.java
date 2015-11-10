@@ -59,6 +59,11 @@ StringBuilder printMap = new StringBuilder();
 		return actions; 
 	}
 	
+	
+	
+	
+	
+	
 	public void integrateObservation(Environment environment){
 		// Taken from SimpleMLPAgent.java
 	    this.environment = environment;
@@ -81,6 +86,9 @@ StringBuilder printMap = new StringBuilder();
 	    getKillsByStomp = marioState[8];
 	    getKillsByShell = marioState[9];
 	}
+	
+	
+	
 	
 
 	/* --- DEBUGGING FUNCTIONS ---- */	

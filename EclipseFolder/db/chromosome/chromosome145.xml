@@ -1,0 +1,17 @@
+<chromosome id="145" primary-parent-id="119"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="out" activation="sigmoid"/>
+<connection id="3" src-id="0" dest-id="2" weight="0.44560352982276774"/>
+<connection id="4" src-id="1" dest-id="2" weight="-1.6664701574390612"/>
+<neuron id="5" type="out" activation="sigmoid"/>
+<connection id="7" src-id="1" dest-id="5" weight="2.37020563309777"/>
+<neuron id="8" type="out" activation="sigmoid"/>
+<connection id="10" src-id="1" dest-id="8" weight="1.1225441633633548"/>
+<connection id="32" src-id="8" dest-id="2" weight="2.27396699466262"/>
+<neuron id="35" type="hid" activation="sigmoid"/>
+<connection id="36" src-id="0" dest-id="35" weight="-2.999755690185201"/>
+<connection id="60" src-id="35" dest-id="2" weight="0.8614806706763187"/>
+<neuron id="128" type="hid" activation="sigmoid"/>
+<connection id="129" src-id="35" dest-id="128" weight="-0.9223433685579949"/>
+<connection id="130" src-id="128" dest-id="5" weight="-0.5171497823773246"/>
+</chromosome>

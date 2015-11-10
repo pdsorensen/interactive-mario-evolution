@@ -1,6 +1,3 @@
-<?xml version = "1.0" encoding = "UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="./graphComplexityRefresh.xsl" ?>
-<!DOCTYPE run SYSTEM "../run.dtd">
 <run name="testrun" timedatestamp="[20151110 12:43:27 - 20151110 12:43:48]" >
 <search-parameters>
 <population-size>20</population-size>

@@ -1,0 +1,12 @@
+<chromosome id="11"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="out" activation="sigmoid"/>
+<connection id="3" src-id="0" dest-id="2" weight="-0.12515342235565186"/>
+<connection id="4" src-id="1" dest-id="2" weight="-0.39866673946380615"/>
+<neuron id="5" type="out" activation="sigmoid"/>
+<connection id="6" src-id="0" dest-id="5" weight="0.35522937774658203"/>
+<connection id="7" src-id="1" dest-id="5" weight="0.25446462631225586"/>
+<neuron id="8" type="out" activation="sigmoid"/>
+<connection id="9" src-id="0" dest-id="8" weight="0.31218791007995605"/>
+<connection id="10" src-id="1" dest-id="8" weight="0.4351550340652466"/>
+</chromosome>
