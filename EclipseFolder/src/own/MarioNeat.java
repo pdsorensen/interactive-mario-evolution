@@ -2,8 +2,10 @@ package own;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jgap.BulkFitnessFunction;
@@ -18,6 +20,7 @@ import com.anji.integration.PresentationEventListener;
 import com.anji.neat.Evolver;
 import com.anji.neat.NeatConfiguration;
 import com.anji.persistence.Persistence;
+import com.anji.polebalance.DoublePoleBalanceFitnessFunction;
 import com.anji.run.Run;
 import com.anji.util.Configurable;
 import com.anji.util.Properties;
@@ -52,7 +55,7 @@ public class MarioNeat implements Configurable{
 	 */
 	public static final String FITNESS_TARGET_KEY = "fitness.target";
 
-	private NeatConfiguration config = null;
+	private static NeatConfiguration config = null;
 
 	private Chromosome champ = null;
 
@@ -68,7 +71,8 @@ public class MarioNeat implements Configurable{
 
 	private Persistence db = null;
 	
-	
+	// FOR FINDING THE BEST CHROMOSONES FOR EACH RUN: 
+	static ArrayList<Chromosome> bestChroms = new ArrayList<Chromosome>(); 
 	
 	/**
 	 * ctor; must call <code>init()</code> before using this object
@@ -153,10 +157,13 @@ public class MarioNeat implements Configurable{
 		DateFormat fmt = new SimpleDateFormat( "HH:mm:ss" );
 		
 		for ( int generation = 0; generation < numEvolutions; ++generation ) {
+			System.out.println("*************** Running generation: " + generation + " ***************"); 
 			Date generationStartDate = Calendar.getInstance().getTime();
 			logger.info( "Generation " + generation + ": start" );
-			
 			genotype.evolve();
+			
+			Chromosome c = genotype.getFittestChromosome();
+			bestChroms.add(c);
 			
 			// generation finish
 			Date generationEndDate = Calendar.getInstance().getTime();
@@ -170,6 +177,7 @@ public class MarioNeat implements Configurable{
 	}
 	
 	public static void main( String[] args ) throws Throwable {
+		Properties props = new Properties( "mario.properties" );
 		try {
 			System.out.println("Booting up!");
 			
@@ -182,18 +190,28 @@ public class MarioNeat implements Configurable{
 		    //basicTask.setOptionsAndReset(marioAIOptions);
 		    
 		    //NEAT SETUP
-			Properties props = new Properties( "mario.properties" );
+			
 			MarioNeat mNeat = new MarioNeat();
 			mNeat.init(props);
 			mNeat.run();
 		
 			System.out.println("Last up!");
-			System.exit( 0 );
 			
 		}
 		catch ( Throwable th ) {
 			
 		}
+		
+		System.out.println("RUNNING BEST SELECTED CHROMOSONE");
+		MarioFitnessFunction ff = new MarioFitnessFunction(); 
+		ff.init(props);
+		//TODO:  Get champ ID! 
+		for(int i = 0; i<bestChroms.size(); i++){
+			System.out.println("Running the best chromosome (fitness: " + bestChroms.get(i).getFitnessValue() + " of run " + i + "..."); 
+			ff.evaluate(bestChroms.get(i), true);
+		}
+		
+		
 	}
 	
 }

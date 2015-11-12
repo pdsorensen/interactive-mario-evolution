@@ -22,6 +22,7 @@ import com.anji.util.DummyConfiguration;
 import com.anji.util.Properties;
 
 import ch.idsia.agents.Agent;
+import ch.idsia.benchmark.mario.engine.GlobalOptions;
 import ch.idsia.benchmark.mario.engine.sprites.Mario;
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
@@ -38,6 +39,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	//MARIO VARIABLES
 	static final MarioAIOptions marioAIOptions = new MarioAIOptions();
     static final BasicTask basicTask = new BasicTask(marioAIOptions);
+
     static Environment environment = MarioEnvironment.getInstance();
     static Agent agent = new NEATController();
     
@@ -54,6 +56,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     protected byte[][] mergedObservation;
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
+    
 	
 	
 	@Override
@@ -61,27 +64,38 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		// TODO Auto-generated method stub
 		System.out.println("INITTING");
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );		
+		//marioAIOptions.printOptions(false);
 	}
 
 	@Override
 	public void evaluate(List genotypes) {
-		// TODO Auto-generated method stub
-
+		System.out.println("Evaluting list of chromosones..."); 
 		Iterator it = genotypes.iterator();
 		while ( it.hasNext() ) {
 			Chromosome genotype = (Chromosome) it.next();
-			evaluate(genotype);
-			//GET MARIO TO PLAY...
+			evaluate(genotype, false);
 		}
-		System.out.println("EVALUATING LIST END");
-		environment.reset(marioAIOptions);
+		
+		
+		//marioAIOptions
 	}
 	
-	public void evaluate( Chromosome c ) {
-		System.out.println("EVALUATE CHROMOSOME");
-		try {
+	public void evaluate( Chromosome c, boolean visual ) {
+		// Easy level: 
+		//String options = "-lf off -zs 1 -ls 16 -vis on";
+	    //environment.reset(options);
+		
+		// Reset environment each trial
+		if(visual){
+			marioAIOptions.setVisualization(true);
+			environment.reset(marioAIOptions);
+		} else {
+			marioAIOptions.setVisualization(false);
+			environment.reset(marioAIOptions);
+		}
+	    
+	    try {
 			Activator activator = factory.newActivator( c );
-			//System.out.println("ACTIVATOR: " + activator.getClass());
 
 			marioAIOptions.setVisualization(false);
 			
@@ -90,6 +104,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			environment.reset(marioAIOptions);
 			for ( int i = 0; i < numTrials; i++ )
 				fitness += singleTrial( activator );
+			fitness /= numTrials;
 			System.out.println("EVALUATE: fitness score,  " + fitness);
 			c.setFitnessValue( fitness );
 		}
@@ -338,16 +353,4 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		// TODO Auto-generated method stub
 		return 10;
 	}
-	
-	public void showBestMario(Chromosome c){
-//		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
-//		Configuration config = new DummyConfiguration();
-//		Chromosome chrom = db.loadChromosome( , config );
-//		if ( chrom == null )
-//			throw new IllegalArgumentException( "no chromosome found: " + args[ 1 ] );
-//		ff.enableDisplay();
-//		ff.evaluate( chrom );
-	}
-	
-	
 }
