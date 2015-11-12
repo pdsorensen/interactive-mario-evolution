@@ -43,8 +43,15 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     
     //Info on stage
     double[] state; 
+    double[][] fullState;
+    double[][] limitedState;
+    int detectionRadius = 1;
+    int radNorth, radEast, radSouth, radWest;
+    int radCenter = 9;
     int zLevelScene = 0;
+    int zLevelEnemies = 0;
     protected byte[][] levelScene;
+    protected byte[][] mergedObservation;
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
 	
@@ -76,8 +83,11 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			Activator activator = factory.newActivator( c );
 			//System.out.println("ACTIVATOR: " + activator.getClass());
 
+			marioAIOptions.setVisualization(false);
+			
 			// calculate fitness, sum of multiple trials
 			int fitness = 0;
+			environment.reset(marioAIOptions);
 			for ( int i = 0; i < numTrials; i++ )
 				fitness += singleTrial( activator );
 			System.out.println("EVALUATE: fitness score,  " + fitness);
@@ -89,41 +99,45 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		}
 	}
 	
-	private double[] newState() {
-		double[] state = new double[ 2 ];
-		state[ 0 ] = state[ 1 ] =  0;
-		return state;
-	}
+
 	
 	private int singleTrial( Activator activator ) {
-		state = newState();
+		
+		
 		int fitness = 0;
-		logger.debug( "state = " + Arrays.toString( state ) );
+		//logger.debug( "state = " + Arrays.toString( state ) );
 		double[] networkInput;
-	    levelScene = environment.getLevelSceneObservationZ(zLevelScene);
+		//levelScene = environment.getLevelSceneObservationZ(zLevelScene);
+	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
+	    
+	    //state = newState();
+	    setRadius(2, 2, 2, 2);
 		
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
 			resetActions();
 			
 //			#For each tick do
-//				getState 
-//				setInputs
-				networkInput = new double[ state.length ];
-				state = getStateFromStage();
-				for(int i = 0; i < networkInput.length; i++) 
-					networkInput[ i ] = state[ i ]; 
-//				networkInput[ 0 ] = state[ 0 ]; 
-//				networkInput[ 1 ] = state[ 1 ];
-//				networkInput[ 2 ] = state[ 2 ]; 
-//				networkInput[ 3 ] = state[ 3 ]; 
-//				networkInput[ 4 ] = state[ 4 ]; 
-//				networkInput[ 5 ] = state[ 5 ]; 
 				
+				//GET STATE
+//				state = getStateFromStage();
+				fullState = getFullStateFromStage();
+				
+				
+				limitedState = getLimitedStateFromStage();
+				
+				//networkInput = new double[ levelScene.length * levelScene[0].length ];
+				networkInput = new double[ getXdimensionLength() * getYdimensionLength() ];
+				
+				//SET INPUTS
+//				networkInput = state;
+				//networkInput = getTwoDimToOneDimArray(fullState);
+				networkInput = getTwoDimToOneDimArray(limitedState);
+				//System.out.println("Xdim: " + getXdimensionLength() +  " Ydim: " + getYdimensionLength());
+				//System.out.println("networkInput: " + networkInput.length);
 				//Give the network some inputs
 				double[] networkOutput = activator.next(networkInput);
-				//System.out.println("NetworkOutput[0]: " + networkOutput[0]);
-				//System.out.println("NetworkOutput[1]: " + networkOutput[1]);
+
 				//Perform some action based on networkOutput
 				environment.performAction(getAction(networkOutput));
 				makeTick();
@@ -135,6 +149,132 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		//logger.debug( "trial took " + currentTimestep + " steps" );
 		return fitness;
 	}
+	
+	
+	private double[] newState() {
+		double[] state = new double[ 2 ];
+		state[ 0 ] = state[ 1 ] =  0;
+		return state;
+	}
+	
+	/*
+	 * @return The state of the Mario World. Atm only the two by three blocks in front of Mario
+	 */
+	public double[] getStateFromStage(){
+		
+		double[] inputs =  { levelScene[ 9 ][ 10 ], levelScene[9][11]};
+
+		return inputs;	
+	}
+	
+	private double[][] newFullState(){
+		
+		double[][] state = new double[ levelScene.length ][ levelScene[0].length ];
+		
+		for(int i = 0; i < levelScene.length; i++)
+			for(int j = 0; j < levelScene[i].length; j++)
+				state[ i ][ j ] = 0;
+		
+		return state;
+	}
+	
+	/*
+	 * @return The FULL state of the Mario World
+	 */
+	private double[][] getFullStateFromStage(){
+
+		double[][] inputs = newFullState();
+		
+		for(int i = 0; i < levelScene.length; i++)
+			for(int j = 0; j< levelScene[i].length; j++)
+				inputs[ i ][ j ] = levelScene[ i ][ j ];
+			
+		return inputs;
+	}
+	
+	private double[] getTwoDimToOneDimArray(double[][] state){
+		
+		double[] newArray = new double[state.length * state[0].length];
+		
+		for(int i = 0; i < state.length; i++){
+			double[] row = state[i];
+			
+			for(int j = 0; i < row.length; i++){
+				newArray[i * row.length + j] = state[i][j];
+			}
+		}
+		
+		return newArray;
+	}
+	
+	private double[][] getBlankLimitedState(){
+		
+		//Calculate dimension lengths
+		int xDimension = getXdimensionLength();
+		int yDimension = getYdimensionLength();
+		
+		//Create array
+		double[][] state = new double[ xDimension ][ yDimension ];
+		
+		//Reset array - is it necessary?
+		for(int i = 0; i < xDimension; i++)
+			for(int j = 0; j < yDimension; j++)
+				state[ i ][ j ] = 0;
+		
+		
+		return state;
+	}
+	
+	private double[][] getLimitedStateFromStage(){
+		
+		double[][] inputs = getBlankLimitedState();
+		
+		//Calculate dimension lengths
+		int xDimension = getXdimensionLength();
+		int yDimension = getYdimensionLength();
+		
+		//Create array
+		double[][] state = new double[ xDimension ][ yDimension ];
+		
+		//Put values in the array
+		for(int i = getStartX(); i < xDimension; i++)
+			for(int j = getStartY(); j< yDimension; j++)
+				inputs[ i ][ j ] = levelScene[ i ][ j ];
+		
+		return inputs;
+	}
+	
+	/*
+	 * Set radius for all 4 directions;
+	 */
+	private void setRadius(int north, int east, int south, int west){	
+		radNorth = north;
+		radEast = east;
+		radSouth = south;
+		radWest = west;	
+	}
+	
+	private int getXdimensionLength(){
+		int xDimension = ( radCenter + radEast ) - ( radCenter - radWest ) + 1;
+		return xDimension;
+	}
+	
+	private int getYdimensionLength(){
+		int yDimension = ( radCenter + radEast ) - ( radCenter - radWest ) + 1;
+		return yDimension;
+	}
+	
+	private int getStartX(){
+		return radCenter - radWest;
+	}
+	private int getStartY(){
+		return radCenter - radSouth;
+	}
+	
+	
+	
+	
+	
 	
 	public boolean[] getAction(double[] networkOutput){
 		
@@ -168,15 +308,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		else
 			actions[Mario.KEY_SPEED] = true;
 		
-		
-		
-//		for(int i = 0; i < networkOutput.length; i++){
-//			if(networkOutput[i] < 0.5)
-//				actions[i] = false;
-//			else
-//				actions[i] = true;
-//		}
-		
 		return actions;
 	}
 	
@@ -189,44 +320,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	    actions[Mario.KEY_SPEED] = false;
 	}
 	
-	
-	
-	/*
-	 * @return The state of the Mario World. Atm only the two by three blocks in front of Mario
-	 */
-	public double[] getStateFromStage(){
-		
-		double[] inputs =  { levelScene[9][10], levelScene[9][11]};
-		
-//		double[] inputs =  { 
-//								levelScene[9][10], 
-//								levelScene[9][11],
-//								levelScene[9][12],
-//								levelScene[8][10], 
-//								levelScene[8][11],
-//								levelScene[8][12]
-//							};
-
-		return inputs;
-		
-	}
-	
-	/*
-	 * @return The state of the Mario World. Atm only the two by three blocks in front of Mario
-	 */
-	public double[][] getFullStateFromStage(){
-		
-		double[][] inputs = new double[18][18];
-	    //GET INPUTS FROM STAGE
-	    for(int i = 0; i<levelScene.length; i++){
-			for(int j = 0; j<levelScene[i].length; j++){
-				inputs[i][j] = levelScene[i][j];
-			}
-		}
-		
-		return inputs;
-		
-	}
 	
 	public void performAction(){
 		
