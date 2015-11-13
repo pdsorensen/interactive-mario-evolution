@@ -39,10 +39,15 @@ import ch.idsia.tools.GameViewer;
 import ch.idsia.tools.MarioAIOptions;
 import ch.idsia.tools.Scale2x;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
+import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -85,6 +90,13 @@ private GameViewer gameViewer = null;
 private static MarioVisualComponent marioVisualComponent = null;
 
 private Scale2x scale2x = new Scale2x(320, 240);
+
+// FOR GIF CREATION
+private int fileNumber = 1; 
+int counter = 0; 
+int saveFrequency = 1; 
+public boolean saveImages = false; 
+
 
 private MarioVisualComponent(MarioAIOptions marioAIOptions, MarioEnvironment marioEnvironment)
 {
@@ -174,7 +186,7 @@ public void tick()
 {
 //    this.render(thisVolatileImageGraphics, CheaterKeyboardAgent.isObserveLevel ? level.length : 0);
     this.render(thisVolatileImageGraphics);
-
+    
     String msg = "Agent: " + this.agentNameStr;
     drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 6, 5);
 
@@ -336,7 +348,47 @@ public void render(Graphics g)
         g.drawString("x : " + mario.x + "y: " + mario.y, 10, 215);
         g.drawString("xOld : " + mario.xOld + "yOld: " + mario.yOld, 10, 225);
     }
+    if(saveImages)
+    	createImage();
+    g.clearRect(5, 5, 5, 5);
 }
+
+public void createImage(){
+	//System.out.println("Creating image...");
+	BufferedImage imageToDraw = thisVolatileImage.getSnapshot();
+	
+	// File Variables: 
+	StringBuilder sb = new StringBuilder(); 
+	String fileName = "mario_image_";
+	String folderDestAsString = "./db/images/";
+	String extension = "png"; 
+	
+	if(counter == saveFrequency){
+		try {
+			sb.append(folderDestAsString);
+			if(fileNumber<10){
+				sb.append("0");
+			}
+			sb.append(fileNumber + ".");
+			//sb.append(fileName + "."); 
+			sb.append(extension);
+			
+			String finalFileName = sb.toString();
+	        if (ImageIO.write(imageToDraw, extension, new File(finalFileName)))
+	        {
+	            System.out.println("-- image saved to: " + finalFileName);
+	            fileNumber++; 
+	            counter = 0; 
+	        }
+	    } catch (IOException e) {	
+	            e.printStackTrace();
+	    }
+	} else {
+		counter++; 
+	}
+}
+
+
 
 private void drawProgress(Graphics g)
 {
@@ -356,7 +408,11 @@ private void drawProgress(Graphics g)
     }
     drawStringDropShadow(g, progress_str, 0, 28, 2);
     drawStringDropShadow(g, "intermediate reward: " + marioEnvironment.getIntermediateReward(), 0, 27, 2);
+    
+    
 }
+
+
 
 public static void drawStringDropShadow(Graphics g, String text, int x, int y, int c)
 {
