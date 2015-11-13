@@ -119,7 +119,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	private int singleTrial( Activator activator ) {
 		
-		
 		double fitness = 0;
 		//logger.debug( "state = " + Arrays.toString( state ) );
 		double[] networkInput;
@@ -144,6 +143,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				
 				//networkInput = new double[ levelScene.length * levelScene[0].length ];
 				networkInput = new double[ getXdimensionLength() * getYdimensionLength() ];
+				double[] networkInputNearestEnemies = getClosestEnemiesInput();
 				
 				//SET INPUTS
 //				networkInput = state;
@@ -152,16 +152,17 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				//System.out.println("Xdim: " + getXdimensionLength() +  " Ydim: " + getYdimensionLength());
 				//System.out.println("networkInput: " + networkInput.length);
 				//Give the network some inputs
-				double[] networkOutput = activator.next(networkInput);
+				double[] networkOutput = activator.next(networkInputNearestEnemies);
+				
 
 				//Perform some action based on networkOutput
 				environment.performAction(getAction(networkOutput));
 				makeTick();
 				
-				float[] enemies = environment.getEnemiesFloatPos();
-				if(enemies.length > 0)
-					for(int i = 0; i < enemies.length; i++)
-						System.out.println("enemies[" + i + "]: " + enemies[i] + " out of ");
+//				float[] enemies = environment.getEnemiesFloatPos();
+//				if(enemies.length > 0)
+//					for(int i = 0; i < enemies.length; i++)
+//						System.out.println("enemies[" + i + "]: " + enemies[i] + " out of ");
 				//float[] mario = environment.getMarioFloatPos();
 				//System.out.println("mario at: " + mario[0]);
 				
@@ -172,9 +173,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 
 		//NORMALIZED RESULTS
 		fitness += getFitnessDistancePassed(1);
-		fitness += getFitnessQuick(10);
+		//fitness += getFitnessQuick(10);
 		//fitness += getFitnessGreedy(100);
-		//fitness += getFitnessAgressive(1);
+		fitness += getFitnessAgressive(3);
 		//fitness += getFitnessVariedAgressive(1, 1, 1);
 		
 		//UNNORMALIZED RESULTS
@@ -188,6 +189,51 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		fitness *= 10000;
 		
 		return (int)fitness;
+	}
+	
+	
+	/*
+	 * @return The distance and angle to up to 3 nearest enemies.
+	 */
+	public double[] getClosestEnemiesInput(){
+		
+		float[] enemies = environment.getEnemiesFloatPos();
+		
+		int maxEnemies = 3;
+		double[] inputs = new double[ maxEnemies * 2 + 2 ];
+		
+		//Reset array
+		for(int i = 0; i < maxEnemies * 2; i++)
+			inputs[i] = 0;
+		
+		//Add angles and distance to enemies
+		for(int i = 0; i < enemies.length; i += 3){
+			
+			double relX = enemies[i+1];
+			double relY = enemies[i+2];
+			
+			double distance = Math.sqrt( Math.pow(relX, 2) + Math.pow(relY, 2) );
+			
+			//get angle in radians to mario
+			double rad = Math.atan2(relX, relY);
+			
+			//Convert angle to degrees
+			double degrees = rad * ( 180 / Math.PI);
+			
+			//Get index in input array
+			int k = i + 2 / 3;
+			
+			//Add distance to array
+			inputs[ k ] = distance;
+			
+			//Add angle to array
+			inputs[ k + 1 ] = degrees;	
+		}
+		
+		inputs[inputs.length-2] = levelScene[ 9 ][ 10 ];
+		inputs[inputs.length-1] = levelScene[ 9 ][ 11 ];
+		
+		return inputs;
 	}
 	
 	
