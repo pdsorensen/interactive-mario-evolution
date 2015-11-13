@@ -102,9 +102,28 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			
 			// calculate fitness, sum of multiple trials
 			int fitness = 0;
-			environment.reset(marioAIOptions);
-			for ( int i = 0; i < numTrials; i++ )
+			for ( int i = 0; i < numTrials; i++ ){
+				if(i == 0){
+					marioAIOptions.setLevelDifficulty(0);
+				    marioAIOptions.setLevelType(0);
+				    marioAIOptions.setLevelRandSeed(0);
+				} 
+				
+				if(i == 1){
+					marioAIOptions.setLevelDifficulty(0);
+				    marioAIOptions.setLevelType(1);
+				    marioAIOptions.setLevelRandSeed(20);
+				} 
+				
+				if(i == 2) {
+					marioAIOptions.setLevelDifficulty(1);
+				    marioAIOptions.setLevelType(1);
+				    marioAIOptions.setLevelRandSeed(5);
+				}
+				environment.reset(marioAIOptions);
 				fitness += singleTrial( activator );
+			}
+			
 			fitness /= numTrials;
 			System.out.println("EVALUATE: fitness score,  " + fitness);
 			c.setFitnessValue( fitness );
@@ -139,7 +158,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				//GET STATE
 //				state = getStateFromStage();
 				fullState = getFullStateFromStage();
-				
 				limitedState = getLimitedStateFromStage();
 				
 				//networkInput = new double[ levelScene.length * levelScene[0].length ];
@@ -159,9 +177,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				makeTick();
 				
 				float[] enemies = environment.getEnemiesFloatPos();
-				if(enemies.length > 0)
-					for(int i = 0; i < enemies.length; i++)
-						System.out.println("enemies[" + i + "]: " + enemies[i] + " out of ");
+				//if(enemies.length > 0)
+					//for(int i = 0; i < enemies.length; i++)
+						//System.out.println("enemies[" + i + "]: " + enemies[i] + " out of ");
 				//float[] mario = environment.getMarioFloatPos();
 				//System.out.println("mario at: " + mario[0]);
 				
@@ -173,9 +191,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		//NORMALIZED RESULTS
 		fitness += getFitnessDistancePassed(1);
 		fitness += getFitnessQuick(10);
-		//fitness += getFitnessGreedy(100);
-		//fitness += getFitnessAgressive(1);
-		//fitness += getFitnessVariedAgressive(1, 1, 1);
+		fitness += getFitnessGreedy(100);
+		fitness += getFitnessAgressive(1);
+		fitness += getFitnessVariedAgressive(1, 1, 1);
 		
 		//UNNORMALIZED RESULTS
 		//fitness += getFitnessMushroomsAndFlowers(100,100);
@@ -270,9 +288,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 		fitness += shellKills / totalCreatures * ratioShell;
 		fitness += fireKills / totalCreatures * ratioFire;
-		System.out.println("FireKills: " + fitness );
+		//System.out.println("FireKills: " + fitness );
 		fitness += stompKills / totalCreatures * ratioStomp;
-		System.out.println("+ stompKills: " + fitness );
+		//System.out.println("+ stompKills: " + fitness );
 		
 		return fitness;
 	}

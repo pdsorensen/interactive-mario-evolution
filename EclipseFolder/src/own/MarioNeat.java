@@ -207,11 +207,33 @@ public class MarioNeat implements Configurable{
 		ff.init(props);
 		//TODO:  Get champ ID! 
 		for(int i = 0; i<bestChroms.size(); i++){
-			System.out.println("Running the best chromosome (fitness: " + bestChroms.get(i).getFitnessValue() + " of run " + i + "..."); 
+			System.out.println("GENERATION: " + i  + " (Best Chromosome had fitness: " + bestChroms.get(i).getFitnessValue() + " of run " + i + "..."); 
 			ff.evaluate(bestChroms.get(i), true);
 		}
 		
-		
+		´/* // Sensor sizes and counts (in nodes)
+        public const int SENSOR_SIZE_PIT = 2;
+        public const int SENSOR_COUNT_PIT = 1;
+
+        public const int SENSOR_SIZE_ENEMY = 2;
+        public const int SENSOR_COUNT_ENEMY = 3;
+
+        public const int SENSOR_SIZE_POWERUP = 2;
+        public const int SENSOR_COUNT_POWERUP = 2;
+
+        public const int SENSOR_SIZE_ENVIRO = 2;
+        public const int SENSOR_COUNT_ENVIRO = 1;
+
+        public const int SENSOR_COUNT_LUIGI = 3; // Player specific information
+
+        // Output nodes
+        public const int OUTPUT_NODE_COUNT = 4;
+
+        public const int OUTPUT_INDEX_DIRECTION = 0;
+        public const int OUTPUT_INDEX_JUMP  = 1;
+        public const int OUTPUT_INDEX_SHOOT = 2;
+        public const int OUTPUT_INDEX_SPEED = 3;
+        */
 	}
 	
 }
