@@ -29,6 +29,7 @@ public class MarioGIFCreator {
 	    
 	    String options = "-lf on -zs 1 -ls 16 -vis on";
 	    environment.reset(options);
+	    environment.recordMario(false);
 	    
 	    marioAIOptions.setLevelDifficulty(0);
 	    marioAIOptions.setLevelRandSeed(20);
@@ -39,8 +40,6 @@ public class MarioGIFCreator {
 	    	agent.integrateObservation(environment);
 	        environment.performAction(agent.getAction());
 	    }
-	    
-	    
 	    
 	    System.out.println(environment.getEvaluationInfo());
 	    System.exit(0);

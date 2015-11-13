@@ -737,6 +737,11 @@ public void saveLastRun(String filename)
     }
 }
 
+@Override
+public void recordMario(boolean b) {
+	marioVisualComponent.saveImages = true; 
+}
+
 //public void setRecording(boolean isRecording)
 //{
 //    this.isRecording = isRecording;
