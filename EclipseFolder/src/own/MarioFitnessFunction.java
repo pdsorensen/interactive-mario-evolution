@@ -214,14 +214,15 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		float[] enemies = environment.getEnemiesFloatPos();
 		
 		int maxEnemies = 3;
-		double[] inputs = new double[ maxEnemies * 2 + 2 ];
+		double[] inputs = new double[ maxEnemies * 2 ];
+		//System.out.println("inputs length:" + inputs.length );
 		
 		//Reset array
 		for(int i = 0; i < maxEnemies * 2; i++)
 			inputs[i] = 0;
 		
 		//Add angles and distance to enemies
-		for(int i = 0; i < enemies.length; i += 3){
+		for(int i = 0; i < enemies.length && i < 9; i += 3){
 			
 			double relX = enemies[i+1];
 			double relY = enemies[i+2];
@@ -235,17 +236,17 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			double degrees = rad * ( 180 / Math.PI);
 			
 			//Get index in input array
-			int k = i + 2 / 3;
-			
+			int k = i * 2 / 3;
+			//System.out.println("k: " + k + " out of " + enemies.length);
 			//Add distance to array
 			inputs[ k ] = distance;
 			
 			//Add angle to array
-			inputs[ k + 1 ] = degrees;	
+			inputs[ k + 1 ] = degrees;
 		}
 		
-		inputs[inputs.length-2] = levelScene[ 9 ][ 10 ];
-		inputs[inputs.length-1] = levelScene[ 9 ][ 11 ];
+		//inputs[inputs.length-2] = levelScene[ 9 ][ 10 ];
+		//inputs[inputs.length-1] = levelScene[ 9 ][ 11 ];
 		
 		return inputs;
 	}
