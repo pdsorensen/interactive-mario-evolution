@@ -201,7 +201,7 @@ public class GifSequenceWriter {
       
       // create a new BufferedOutputStream with the last argument
       ImageOutputStream output = 
-        new FileImageOutputStream(new File(Integer.toString(fileNumber)));
+        new FileImageOutputStream(new File("./db/gifs/" + Integer.toString(fileNumber) + ".gif"));
       fileNumber++; 
       // create a gif sequence with the type of the first image, 1 second
       // between frames, which loops continuously
