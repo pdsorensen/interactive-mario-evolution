@@ -62,6 +62,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	@Override
 	public void init(Properties props) throws Exception {
 		// TODO Auto-generated method stub
+
 		System.out.println("INITTING");
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );		
 		//marioAIOptions.printOptions(false);
@@ -82,8 +83,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	public void evaluate( Chromosome c, boolean visual ) {
 		// Easy level: 
-		//String options = "-lf off -zs 1 -ls 16 -vis on";
-	    //environment.reset(options);
+		String options = "-lf off -zs 1 -ls 16 -vis on";
+	    environment.reset(options);
 		
 		// Reset environment each trial
 		if(visual){
@@ -97,7 +98,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	    try {
 			Activator activator = factory.newActivator( c );
 
-			marioAIOptions.setVisualization(false);
+			//marioAIOptions.setVisualization(false);
 			
 			// calculate fitness, sum of multiple trials
 			int fitness = 0;
@@ -119,14 +120,15 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	private int singleTrial( Activator activator ) {
 		
 		
-		int fitness = 0;
+		double fitness = 0;
 		//logger.debug( "state = " + Arrays.toString( state ) );
 		double[] networkInput;
 		//levelScene = environment.getLevelSceneObservationZ(zLevelScene);
 	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
 	    
 	    //state = newState();
-	    setRadius(2, 2, 2, 2);
+	    int reach = 2;
+	    setRadius(reach, reach, reach, reach);
 		
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
@@ -137,7 +139,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				//GET STATE
 //				state = getStateFromStage();
 				fullState = getFullStateFromStage();
-				
 				
 				limitedState = getLimitedStateFromStage();
 				
@@ -157,13 +158,164 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				environment.performAction(getAction(networkOutput));
 				makeTick();
 				
+				float[] enemies = environment.getEnemiesFloatPos();
+				if(enemies.length > 0)
+					for(int i = 0; i < enemies.length; i++)
+						System.out.println("enemies[" + i + "]: " + enemies[i] + " out of ");
+				//float[] mario = environment.getMarioFloatPos();
+				//System.out.println("mario at: " + mario[0]);
+				
+					//System.out.println("eniemes: " + enemies.length);
+				
 	    }
-		fitness = environment.getEvaluationInfo().distancePassedCells;
-		//System.out.println("Fitness: " + fitness);
+		
+
+		//NORMALIZED RESULTS
+		fitness += getFitnessDistancePassed(1);
+		fitness += getFitnessQuick(10);
+		//fitness += getFitnessGreedy(100);
+		//fitness += getFitnessAgressive(1);
+		//fitness += getFitnessVariedAgressive(1, 1, 1);
+		
+		//UNNORMALIZED RESULTS
+		//fitness += getFitnessMushroomsAndFlowers(100,100);
+		//fitness += getFitnessMode(1);
+		
 		//double networkOutput = activator.next( networkInput )[ 0 ];
 		//logger.debug( "trial took " + currentTimestep + " steps" );
+		
+		//To account for the casting to int
+		fitness *= 10000;
+		
+		return (int)fitness;
+	}
+	
+	
+	/*
+	 * NORMALIZED FITNESS ELEMENTS
+	 */
+
+	/*
+	 * @return normalized distance that Mario have travelled in the stage
+	 */
+	public double getFitnessDistancePassed(double ratio){
+		
+		double levelLength = environment.getEvaluationInfo().levelLength;
+		double distancePassed = environment.getEvaluationInfo().distancePassedCells;
+
+		double fitness = distancePassed / levelLength * ratio;
 		return fitness;
 	}
+	
+	/*
+	 * @return normalized time left of stage
+	 */
+	
+	public double getFitnessQuick(int ratio){
+		
+		int passedCells = environment.getEvaluationInfo().distancePassedCells;
+		double fitness = 0;
+		
+		double timeLeft = environment.getEvaluationInfo().timeLeft;
+		double totalTime = timeLeft + environment.getEvaluationInfo().timeSpent;
+		
+		
+		if(passedCells > 255){ //Only if goal reached
+			
+			fitness = timeLeft / totalTime * ratio;
+			System.out.println("timefitness: " + fitness);
+		}
+		
+		return fitness;
+	}
+	
+	/*
+	 * @return Normalized value of amount of coins collected
+	 */
+	
+	public double getFitnessGreedy(double ratio){
+		
+		double totalNumberOfCoins = environment.getEvaluationInfo().totalNumberOfCoins;
+		double coinsCollected = environment.getEvaluationInfo().coinsGained;
+		
+		double fitness = coinsCollected / totalNumberOfCoins * ratio;
+		return fitness;
+	}
+	
+	/*
+	 * @return Normalized result of creatures killed
+	 */
+	
+	public double getFitnessAgressive(double ratio){
+		
+		double totalCreatures = environment.getEvaluationInfo().totalNumberOfCreatures;
+		double totalKills = environment.getEvaluationInfo().killsTotal;
+		
+		double fitness = totalKills / totalCreatures * ratio;
+		return fitness;
+	}
+	
+	/*
+	 * @return Normalized result of creatures killed, varied by kill method
+	 */
+	public double getFitnessVariedAgressive(double ratioStomp, double ratioFire, double ratioShell){
+		
+		double fitness = 0;
+		
+		double totalCreatures = environment.getEvaluationInfo().totalNumberOfCreatures;
+		
+		double shellKills = environment.getEvaluationInfo().killsByShell * ratioShell;
+		double fireKills = environment.getEvaluationInfo().killsByFire * ratioFire;
+		double stompKills = environment.getEvaluationInfo().killsByStomp * ratioStomp;
+		
+		fitness += shellKills / totalCreatures * ratioShell;
+		fitness += fireKills / totalCreatures * ratioFire;
+		System.out.println("FireKills: " + fitness );
+		fitness += stompKills / totalCreatures * ratioStomp;
+		System.out.println("+ stompKills: " + fitness );
+		
+		return fitness;
+	}
+	
+
+	
+	/*
+	 * UNORMALIZED RESULTS
+	 */
+	public int getFitnessMushroomsAndFlowers(int ratioMushrooms, int ratioFlowers){
+		
+		int fitness = 0;
+		
+		//Mushrooms
+		fitness += environment.getEvaluationInfo().mushroomsDevoured * ratioMushrooms;
+		//Flowers
+		fitness += environment.getEvaluationInfo().flowersDevoured * ratioFlowers;
+		
+		return fitness;
+	}
+	
+	public int getFitnessMode(int quotient){
+		
+		int mode = environment.getEvaluationInfo().marioMode;
+		int passedCells = environment.getEvaluationInfo().distancePassedCells;
+		
+		int fitness = 0;
+		if(passedCells > 255) //Only if goal reached
+			if(mode == 0) //Small
+				fitness += 0 * quotient;
+			else
+				if(mode == 1) //Large
+					fitness += 1000 * quotient;
+				else
+					if(mode == 2) //Fire
+						fitness += 10000 * quotient;
+					else
+						fitness += 0;
+		return fitness;
+	}
+	
+	
+	
 	
 	
 	private double[] newState() {
