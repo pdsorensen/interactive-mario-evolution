@@ -44,9 +44,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     static Agent agent = new NEATController();
     
     //Info on stage
-    double[] state; 
-    double[][] fullState;
-    double[][] limitedState;
     int detectionRadius = 1;
     int radNorth, radEast, radSouth, radWest;
     int radCenter = 9;
@@ -140,11 +137,10 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 		double fitness = 0;
 		//logger.debug( "state = " + Arrays.toString( state ) );
-		double[] networkInput;
+		
 		//levelScene = environment.getLevelSceneObservationZ(zLevelScene);
 	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
 	    
-	    //state = newState();
 	    int reach = 2;
 	    setRadius(reach, reach, reach, reach);
 		
@@ -153,57 +149,66 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			resetActions();
 			
 //			#For each tick do
+			
+			//GET INPUTS
+				//create input array
+				double[] networkInput = new double[0];
 				
-				//GET STATE
-//				state = getStateFromStage();
-				fullState = getFullStateFromStage();
-				limitedState = getLimitedStateFromStage();
+				//Get state of the world
+				double[] limitedStateInput = getLimitedStateFromStage();
+				networkInput = addArrays(networkInput, limitedStateInput);
 				
-				//networkInput = new double[ levelScene.length * levelScene[0].length ];
-				networkInput = new double[ getXdimensionLength() * getYdimensionLength() ];
-				double[] networkInputNearestEnemies = getClosestEnemiesInput();
+				//Get direction and distance to nearest enemies
+				double[] inputNearestEnemies = getClosestEnemiesInput();
+				networkInput = addArrays(networkInput, inputNearestEnemies);
 				
-				//SET INPUTS
-//				networkInput = state;
-				//networkInput = getTwoDimToOneDimArray(fullState);
-				networkInput = getTwoDimToOneDimArray(limitedState);
-				//System.out.println("Xdim: " + getXdimensionLength() +  " Ydim: " + getYdimensionLength());
-				//System.out.println("networkInput: " + networkInput.length);
-				//Give the network some inputs
-				double[] networkOutput = activator.next(networkInputNearestEnemies);
+				//Get the state of Mario
+				double[] marioStateInput = getMarioStateInput();
+				networkInput = addArrays(networkInput, marioStateInput);
 				
-
+				//Feed the inputs to the network
+				double[] networkOutput = activator.next(networkInput);
+				
 				//Perform some action based on networkOutput
 				environment.performAction(getAction(networkOutput));
-				makeTick();				
+				makeTick();		
 	    }
 		
 
 		//NORMALIZED RESULTS
 		fitness += getFitnessDistancePassed(1);
-		//fitness += getFitnessQuick(10);
-		//fitness += getFitnessGreedy(100);
-		fitness += getFitnessAgressive(3);
+		//fitness += getFitnessQuick(1);
+		//fitness += getFitnessGreedy(1);
+		//fitness += getFitnessAgressive(1);
 		//fitness += getFitnessVariedAgressive(1, 1, 1);
-
-		fitness += getFitnessQuick(10);
-		fitness += getFitnessGreedy(100);
-		fitness += getFitnessAgressive(1);
-		fitness += getFitnessVariedAgressive(1, 1, 1);
-
-		
-		//UNNORMALIZED RESULTS
-		//fitness += getFitnessMushroomsAndFlowers(100,100);
-		//fitness += getFitnessMode(1);
-		
-		//double networkOutput = activator.next( networkInput )[ 0 ];
-		//logger.debug( "trial took " + currentTimestep + " steps" );
+		//fitness += getFitnessMushroomsAndFlowers(1,1);
+		//fitness += getFitnessExplore(1, 1);
+		fitness *= getFitnessMode( 1.2, 1.5, 2.0 );
 		
 		//To account for the casting to int
 		fitness *= 10000;
 		
 		return (int)fitness;
 	}
+	
+	/*
+	 * @param arr1 is the first array to be concatenated
+	 * @oaram arr2 the second array to be concatenated
+	 * @return arr1 and arr2 in a single array
+	 */
+	public double[] addArrays( double[] arr1, double[] arr2 ){
+		
+		double[] both = new double[ arr1.length + arr2.length ];
+		
+		//Add first array
+		System.arraycopy(arr1, 0, both, 0, arr1.length);
+		
+		//Add second array
+		System.arraycopy(arr2, 0, both, arr1.length, arr2.length);
+		
+		return both;
+	}
+	
 	
 	
 	/*
@@ -215,7 +220,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 		int maxEnemies = 3;
 		double[] inputs = new double[ maxEnemies * 2 ];
-		//System.out.println("inputs length:" + inputs.length );
 		
 		//Reset array
 		for(int i = 0; i < maxEnemies * 2; i++)
@@ -244,9 +248,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			//Add angle to array
 			inputs[ k + 1 ] = degrees;
 		}
-		
-		//inputs[inputs.length-2] = levelScene[ 9 ][ 10 ];
-		//inputs[inputs.length-1] = levelScene[ 9 ][ 11 ];
 		
 		return inputs;
 	}
@@ -338,40 +339,75 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		return fitness;
 	}
 	
-
-	
-	/*
-	 * UNORMALIZED RESULTS
-	 */
-	public int getFitnessMushroomsAndFlowers(int ratioMushrooms, int ratioFlowers){
+	public double getFitnessMushroomsAndFlowers(int ratioMushrooms, int ratioFlowers){
 		
-		int fitness = 0;
+		double fitness = 0;
+		
+		double totalFlowers = environment.getEvaluationInfo().totalNumberOfFlowers;
+		double totalMushrooms = environment.getEvaluationInfo().totalNumberOfMushrooms;
+		
+		double flowersEaten = environment.getEvaluationInfo().flowersDevoured;
+		double mushroomsEaten = environment.getEvaluationInfo().mushroomsDevoured;
 		
 		//Mushrooms
-		fitness += environment.getEvaluationInfo().mushroomsDevoured * ratioMushrooms;
+		if(totalFlowers > 0)
+			fitness += flowersEaten / totalFlowers * ratioMushrooms;
 		//Flowers
-		fitness += environment.getEvaluationInfo().flowersDevoured * ratioFlowers;
+		if(totalMushrooms > 0)
+			fitness += mushroomsEaten / totalMushrooms * ratioFlowers;
+		
+		System.out.println("-----");
+		System.out.println("flowersEaten: " + flowersEaten + " / " + totalFlowers);
+		System.out.println("mushroomsEaten: " + mushroomsEaten + " / " + totalMushrooms);
+		
 		
 		return fitness;
 	}
 	
-	public int getFitnessMode(int quotient){
+	public double getFitnessExplore(int ratioHiddenBlocks, int ratioPowerUps){
+		
+		double fitness = 0;
+		
+//		double totalFlowers = environment.getEvaluationInfo().totalNumberOfFlowers;
+//		double totalMushrooms = environment.getEvaluationInfo().totalNumberOfMushrooms;
+//
+//		fitness += ( totalFlowers + totalMushrooms ) * ratioPowerUps;
+		
+		double totalHiddenBlocks = environment.getEvaluationInfo().totalNumberOfHiddenBlocks;
+		double hiddenBlocksFound = environment.getEvaluationInfo().hiddenBlocksFound;
+		
+		fitness += hiddenBlocksFound / totalHiddenBlocks * ratioHiddenBlocks;
+		
+		return fitness;
+	}
+	
+	
+	/*
+	 * UNORMALIZED RESULTS
+	 */
+	public double getFitnessMode(double rewardSmall, double rewardBig, double rewardFire){
+		
+		double fitness = 0;
 		
 		int mode = environment.getEvaluationInfo().marioMode;
 		int passedCells = environment.getEvaluationInfo().distancePassedCells;
 		
-		int fitness = 0;
-		if(passedCells > 255) //Only if goal reached
+		//If goal reached
+		if(passedCells > 255) 
 			if(mode == 0) //Small
-				fitness += 0 * quotient;
+				fitness = rewardSmall;
 			else
 				if(mode == 1) //Large
-					fitness += 1000 * quotient;
+					fitness = rewardBig;
 				else
 					if(mode == 2) //Fire
-						fitness += 10000 * quotient;
+						fitness = rewardFire;
 					else
-						fitness += 0;
+						fitness += 1;
+		//if goal not reached
+		else 
+			fitness = 1;
+		
 		return fitness;
 	}
 	
@@ -388,13 +424,27 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	/*
 	 * @return The state of the Mario World. Atm only the two by three blocks in front of Mario
 	 */
-	public double[] getStateFromStage(){
+//	public double[] getStateFromStage(){
+//		
+//		double[] inputs =  { levelScene[ 9 ][ 10 ], levelScene[9][11]};
+//
+//		return inputs;	
+//	}
+	
+	
+	private double[] getMarioStateInput(){
 		
-		double[] inputs =  { levelScene[ 9 ][ 10 ], levelScene[9][11]};
-
-		return inputs;	
+		double[] marioState = new double[1];
+		marioState[0] = environment.getEvaluationInfo().marioMode;
+		
+		return marioState;
+		
 	}
 	
+	
+	/*
+	 * @return an empty double array in the size of the full stage.
+	 */
 	private double[][] newFullState(){
 		
 		double[][] state = new double[ levelScene.length ][ levelScene[0].length ];
@@ -453,9 +503,10 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		return state;
 	}
 	
-	private double[][] getLimitedStateFromStage(){
+	private double[] getLimitedStateFromStage(){
 		
 		double[][] inputs = getBlankLimitedState();
+		
 		
 		//Calculate dimension lengths
 		int xDimension = getXdimensionLength();
@@ -469,7 +520,10 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			for(int j = getStartY(); j< yDimension; j++)
 				inputs[ i ][ j ] = levelScene[ i ][ j ];
 		
-		return inputs;
+		//Convert to single dimension array
+		double[] input = getTwoDimToOneDimArray(inputs);
+		
+		return input;
 	}
 	
 	/*
