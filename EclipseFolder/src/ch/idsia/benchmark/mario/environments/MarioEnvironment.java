@@ -741,6 +741,11 @@ public void recordMario(boolean b) {
 	marioVisualComponent.saveImages = b; 
 }
 
+public void drawNEATInputsString(int x, int y) {
+	marioVisualComponent.drawNEATInputs(x, y);
+	
+}
+
 //public void setRecording(boolean isRecording)
 //{
 //    this.isRecording = isRecording;
