@@ -157,6 +157,8 @@ public class MarioNeat implements Configurable{
 		logger.info( "Run: start" );
 		DateFormat fmt = new SimpleDateFormat( "HH:mm:ss" );
 		
+		boolean wait = false;
+		
 		for ( int generation = 0; generation < numEvolutions; generation++ ) {
 			System.out.println("*************** Running generation: " + generation + " ***************"); 
 			Date generationStartDate = Calendar.getInstance().getTime();
@@ -171,6 +173,11 @@ public class MarioNeat implements Configurable{
 			long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
 			logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 					+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
+			
+			while(!wait){
+				//FIRE EVENT
+				Thread.sleep(1);
+			}
 		}
 	}
 	

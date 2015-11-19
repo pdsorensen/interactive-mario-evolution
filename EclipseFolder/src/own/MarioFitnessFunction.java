@@ -74,9 +74,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			evaluate(genotype, false);
 		}
 		
-		
 		//marioAIOptions
 	}
+	
 	
 	public void evaluate( Chromosome c, boolean visual ) {
 		// Easy level: 
