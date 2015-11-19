@@ -142,7 +142,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
 	    
 	    int reach = 2;
-	    setRadius(reach, reach, reach, reach);
+	    setRadius( reach, reach, reach, reach);
 		
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
@@ -542,7 +542,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 	
 	private int getYdimensionLength(){
-		int yDimension = ( radCenter + radEast ) - ( radCenter - radWest ) + 1;
+		int yDimension = ( radCenter + radNorth ) - ( radCenter - radSouth) + 1;
 		return yDimension;
 	}
 	

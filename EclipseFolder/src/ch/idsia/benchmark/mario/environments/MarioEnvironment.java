@@ -737,9 +737,8 @@ public void saveLastRun(String filename)
     }
 }
 
-@Override
 public void recordMario(boolean b) {
-	marioVisualComponent.saveImages = true; 
+	marioVisualComponent.saveImages = b; 
 }
 
 //public void setRecording(boolean isRecording)
