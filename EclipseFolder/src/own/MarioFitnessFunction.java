@@ -142,7 +142,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
 	    
 	    int reach = 2;
-	    setRadius( reach, reach, reach, reach);
+	    setRadius(2, 4, 0, 4);
 		
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
@@ -157,7 +157,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 				//Get state of the world
 				double[] limitedStateInput = getLimitedStateFromStage();
 				networkInput = addArrays(networkInput, limitedStateInput);
-				
+				//System.out.println("Grid Size: " + limitedStateInput.length);
 				//Get direction and distance to nearest enemies
 				double[] inputNearestEnemies = getClosestEnemiesInput();
 				networkInput = addArrays(networkInput, inputNearestEnemies);
@@ -542,7 +542,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 	
 	private int getYdimensionLength(){
-		int yDimension = ( radCenter + radNorth ) - ( radCenter - radSouth) + 1;
+		int yDimension = ( radCenter + radNorth ) - ( radCenter - radSouth ) + 1;
 		return yDimension;
 	}
 	

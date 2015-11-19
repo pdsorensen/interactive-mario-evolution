@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.jgap.BulkFitnessFunction;
 import org.jgap.Chromosome;
+import org.jgap.Configuration;
 import org.jgap.Genotype;
 import org.jgap.event.GeneticEvent;
 
@@ -23,6 +24,7 @@ import com.anji.persistence.Persistence;
 import com.anji.polebalance.DoublePoleBalanceFitnessFunction;
 import com.anji.run.Run;
 import com.anji.util.Configurable;
+import com.anji.util.DummyConfiguration;
 import com.anji.util.Properties;
 import com.anji.util.Reset;
 
@@ -106,7 +108,6 @@ public class MarioNeat implements Configurable{
 		//
 
 		// run
-		// TODO - hibernate
 		Run run = (Run) props.singletonObjectProperty( Run.class );
 		db.startRun( run.getName() );
 		config.getEventManager().addEventListener( GeneticEvent.GENOTYPE_EVALUATED_EVENT, run );
@@ -171,47 +172,33 @@ public class MarioNeat implements Configurable{
 			logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 					+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
 		}
-		
-		//Print results
-		//System.out.println(environment.getEvaluationInfo());
 	}
 	
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
 		try {
-			System.out.println("Booting up!");
-			
-			//FOR MARIO
-		    String options = "-lf on -zs 1 -ls 16 -vis on";
-		    //environment.reset(options);
-		    
-		    //marioAIOptions.setLevelDifficulty(0);
-		    //marioAIOptions.setLevelRandSeed(0);
-		    //basicTask.setOptionsAndReset(marioAIOptions);
-		    
-		    //NEAT SETUP
-			
 			MarioNeat mNeat = new MarioNeat();
 			mNeat.init(props);
 			mNeat.run();
-		
-			System.out.println("Last up!");
-			
 		}
 		catch ( Throwable th ) {
-			
+			System.out.println(th);
 		}
 		
 		System.out.println("RUNNING BEST SELECTED CHROMOSONE");
 		MarioFitnessFunction ff = new MarioFitnessFunction(); 
 		ff.init(props);
-		//TODO:  Get champ ID! 
 		for(int i = 0; i<bestChroms.size(); i++){
-			System.out.println("Running the best chromosome (fitness: " + bestChroms.get(i).getFitnessValue() + " of run " + i + "..."); 
+			System.out.println("GENERATION: " + i + " - BestFitness: " + bestChroms.get(i).getFitnessValue() + "..."); 
 			ff.evaluate(bestChroms.get(i), true);
 		}
 		
-		
+		// Load in chromosome: 
+		String chromId = null; 
+		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
+		Chromosome chrom = db.loadChromosome( chromId, config );
+		if ( chrom == null )
+			ff.evaluate(chrom, true);
 	}
 	
 }
