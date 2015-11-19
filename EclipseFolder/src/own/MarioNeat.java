@@ -108,6 +108,7 @@ public class MarioNeat implements Configurable{
 		//
 
 		// run
+		// TODO - hibernate
 		Run run = (Run) props.singletonObjectProperty( Run.class );
 		db.startRun( run.getName() );
 		config.getEventManager().addEventListener( GeneticEvent.GENOTYPE_EVALUATED_EVENT, run );
@@ -172,33 +173,45 @@ public class MarioNeat implements Configurable{
 			logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 					+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
 		}
+		
+		//Print results
+		//System.out.println(environment.getEvaluationInfo());
 	}
 	
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
 		try {
+			System.out.println("Booting up!");
+		    
+		    //NEAT SETUP
 			MarioNeat mNeat = new MarioNeat();
 			mNeat.init(props);
 			mNeat.run();
+		
+			System.out.println("Last up!");
+			
 		}
 		catch ( Throwable th ) {
 			System.out.println(th);
 		}
 		
-		System.out.println("RUNNING BEST SELECTED CHROMOSONE");
 		MarioFitnessFunction ff = new MarioFitnessFunction(); 
 		ff.init(props);
 		for(int i = 0; i<bestChroms.size(); i++){
-			System.out.println("GENERATION: " + i + " - BestFitness: " + bestChroms.get(i).getFitnessValue() + "..."); 
-			ff.evaluate(bestChroms.get(i), true);
+			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
+			//ff.evaluate(bestChroms.get(i), true);
 		}
 		
 		// Load in chromosome: 
-		String chromId = null; 
+		String chromId = "244";
 		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		Chromosome chrom = db.loadChromosome( chromId, config );
 		if ( chrom == null )
-			ff.evaluate(chrom, true);
+			throw new IllegalArgumentException( "no chromosome found.");
+		
+		ff.evaluate(chrom, true);
+		
+		
 	}
 	
 }
