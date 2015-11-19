@@ -177,8 +177,6 @@ void saveLastRun(String filename);
 
 public void recordMario(boolean b);
 
-public void drawString(int y, int x);
-
 public void drawNEATInputsString(int i, int j);
 }
 

@@ -746,6 +746,7 @@ public void drawNEATInputsString(int x, int y) {
 	
 }
 
+
 //public void setRecording(boolean isRecording)
 //{
 //    this.isRecording = isRecording;
