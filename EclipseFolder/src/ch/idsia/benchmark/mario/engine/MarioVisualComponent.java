@@ -244,6 +244,7 @@ public void tick()
             Thread.sleep(Math.max(0, tm - System.currentTimeMillis()));
         } catch (InterruptedException ignored) {}
     }
+    
 }
 
 private int recordIndicator = 20;
@@ -313,7 +314,8 @@ public void render(Graphics g)
 //    drawStringDropShadow(g, "MUSHROOMS: " + df.format(Mario.mushroomsDevoured), 0, 5, 4);
     drawStringDropShadow(g, "by Stomp : " + marioEnvironment.getKilledCreaturesByStomp(), 19, 3, 1);
 //    drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.flowersDevoured), 0, 6, 4);
-
+    drawNEATInputs(100, 100);
+    
     if (GlobalOptions.isRecording)
     {
         --recordIndicator;
@@ -388,6 +390,11 @@ public void createImage(){
 	}
 }
 
+public void drawNEATInputs(int x, int y){
+	// TODO: Make generic
+	drawString(thisVolatileImageGraphics, "Jeppeh er en abekat", x, y, 1);
+	thisVolatileImageGraphics.drawLine(100, 100, 200, 200);
+}
 
 
 private void drawProgress(Graphics g)
@@ -423,8 +430,9 @@ public static void drawStringDropShadow(Graphics g, String text, int x, int y, i
 public static void drawString(Graphics g, String text, int x, int y, int c)
 {
     char[] ch = text.toCharArray();
-    for (int i = 0; i < ch.length; i++)
+    for (int i = 0; i < ch.length; i++){
         g.drawImage(Art.font[ch[i] - 32][c], x + i * 8, y, null);
+    }
 }
 
 //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
