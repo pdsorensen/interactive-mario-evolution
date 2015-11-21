@@ -36,7 +36,7 @@ import ch.idsia.tools.MarioAIOptions;
 
 public class MarioNeat implements Configurable{
 
-	private static Logger logger = Logger.getLogger( Evolver.class );
+	static Logger logger = Logger.getLogger( Evolver.class );
 	
 	/**
 	 * properties key, # generations in run
@@ -61,9 +61,9 @@ public class MarioNeat implements Configurable{
 
 	private Chromosome champ = null;
 
-	private Genotype genotype = null;
+	Genotype genotype = null;
 
-	private int numEvolutions = 0;
+	public int numEvolutions = 0;
 
 	private double targetFitness = 0.0d;
 
@@ -175,10 +175,6 @@ public class MarioNeat implements Configurable{
 			logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 					+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
 			
-			while(!wait){
-				//FIRE EVENT
-				Thread.sleep(1);
-			}
 		}
 		
 		//Print results
@@ -206,17 +202,17 @@ public class MarioNeat implements Configurable{
 		ff.init(props);
 		for(int i = 0; i<bestChroms.size(); i++){
 			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
-			//ff.evaluate(bestChroms.get(i), true);
+			ff.evaluate(bestChroms.get(i), true);
 		}
 		
 		// Load in chromosome: 
-		String chromId = "244";
-		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
-		Chromosome chrom = db.loadChromosome( chromId, config );
-		if ( chrom == null )
-			throw new IllegalArgumentException( "no chromosome found.");
-		
-		ff.evaluate(chrom, true);
+//		String chromId = "244";
+//		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
+//		Chromosome chrom = db.loadChromosome( chromId, config );
+//		if ( chrom == null )
+//			throw new IllegalArgumentException( "no chromosome found.");
+//		
+//		ff.evaluate(chrom, true);
 		
 		
 	}

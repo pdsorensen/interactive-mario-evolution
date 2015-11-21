@@ -78,6 +78,82 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 	
 	
+	/*
+	 * @param index used for naming the gifs,
+	 */
+	public void recordImages( Chromosome c, boolean visual ){
+
+	    //marioAIOptions.setVisualization(false);
+		environment.reset(marioAIOptions);
+	    
+		//Turn on recording
+		environment.recordMario(false);
+		
+		int gifDurationMillis = 5000;
+		
+		try {
+			Activator activator = factory.newActivator( c );
+			
+			marioAIOptions.setLevelDifficulty(1);
+		    marioAIOptions.setLevelType(1);
+		    marioAIOptions.setLevelRandSeed(5);
+
+		    singleTrialForGIF( activator, gifDurationMillis );
+		}
+		catch ( Throwable e ) {
+			logger.warn( "error evaluating chromosome " + c.toString(), e );
+			c.setFitnessValue( 0 );
+		}
+		
+	}
+	
+private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
+		
+	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
+
+	    //Set radius of input grid
+	    setRadius(2, 4, 0, 4);
+	    
+	    //Get millis at starting point
+	    long startMillis = System.currentTimeMillis();
+	    
+	    //Run trial
+		while(!environment.isLevelFinished() && startMillis + gifDurationMillis > System.currentTimeMillis()){			
+			
+			//Begin recording after some seconds
+			if(environment.getEvaluationInfo().timeSpent > 2)	
+				environment.recordMario(true);
+				
+			
+			//Set all actions to false
+			resetActions();
+			
+			//GET INPUTS
+				//create input array
+				double[] networkInput = new double[0];
+				
+				//Get state of the world
+				double[] limitedStateInput = getLimitedStateFromStage();
+				networkInput = addArrays(networkInput, limitedStateInput);
+				//System.out.println("Grid Size: " + limitedStateInput.length);
+				//Get direction and distance to nearest enemies
+				double[] inputNearestEnemies = getClosestEnemiesInput();
+				networkInput = addArrays(networkInput, inputNearestEnemies);
+				
+				//Get the state of Mario
+				double[] marioStateInput = getMarioStateInput();
+				networkInput = addArrays(networkInput, marioStateInput);
+				
+				//Feed the inputs to the network
+				double[] networkOutput = activator.next(networkInput);
+				
+				//Perform some action based on networkOutput
+				environment.performAction(getAction(networkOutput));
+				makeTick();		
+		}
+	}
+
+
 	public void evaluate( Chromosome c, boolean visual ) {
 		// Easy level: 
 		String options = "-lf off -zs 1 -ls 16 -vis on";
@@ -143,7 +219,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	    
 	    int reach = 2;
 	    setRadius(2, 4, 0, 4);
-		
+	    
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
 			resetActions();

@@ -174,7 +174,7 @@ public class GifSequenceWriter {
       }
   };
   
-  public static void createGIF() throws Exception{
+  public void createGIF() throws Exception{
 	// LOADING IMAGES: 
     final File dir = new File("./db/images/");
     ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 
@@ -192,16 +192,17 @@ public class GifSequenceWriter {
             System.out.println("Something failed while loading the images");
         }
     }
-    
-    // CREATING THE GIF: 
+    System.out.println("Image.size: " + images.size() );
+    // CREATING THE GIF:
     if (images.size() > 1) {
       // grab the output image type from the first image in the sequence
       System.out.println("File: " + images.get(0));	
       BufferedImage firstImage = images.get(0);
       
+      
       // create a new BufferedOutputStream with the last argument
       ImageOutputStream output = 
-        new FileImageOutputStream(new File(Integer.toString(fileNumber)));
+        new FileImageOutputStream(new File("db/gifs/" + Integer.toString(fileNumber) + ".gif"));
       fileNumber++; 
       // create a gif sequence with the type of the first image, 1 second
       // between frames, which loops continuously
@@ -210,28 +211,21 @@ public class GifSequenceWriter {
       
       // write out the first image to our sequence...
       writer.writeToSequence(firstImage);
+      
       for(int i=1; i<images.size()-1; i++) {
-        BufferedImage nextImage = images.get(i);
-        writer.writeToSequence(nextImage);
+    	  System.out.println( "image " + i );
+    	  BufferedImage nextImage = images.get(i);
+    	  writer.writeToSequence(nextImage);
       }
       
       writer.close();
       output.close();
     } else {
-      System.out.println(
-        "Usage: java GifSequenceWriter [list of gif files] [output file]");
+    	
+    	System.out.println(
+    			"Usage: java GifSequenceWriter [list of gif files] [output file]");
     }
   }
-  
-  public static void main(String[] args){
-	  try {
-		createGIF();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
-  }
-
     
     
 }

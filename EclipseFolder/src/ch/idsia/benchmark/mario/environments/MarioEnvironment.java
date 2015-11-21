@@ -742,7 +742,7 @@ public void recordMario(boolean b) {
 }
 
 public void drawNEATInputsString(int x, int y) {
-	marioVisualComponent.drawNEATInputs(x, y);
+	//marioVisualComponent.drawNEATInputs(x, y);
 	
 }
 

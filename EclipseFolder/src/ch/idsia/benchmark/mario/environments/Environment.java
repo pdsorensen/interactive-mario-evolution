@@ -175,9 +175,9 @@ public byte[][] getScreenCapture();
 
 void saveLastRun(String filename);
 
-public void recordMario(boolean b);
-
 public void drawNEATInputsString(int i, int j);
+
+public void recordMario(boolean b);
 }
 
 

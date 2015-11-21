@@ -241,9 +241,10 @@ public synchronized Chromosome getFittestChromosome() {
  * 4.
  */
 public synchronized void evolve() {
+
 	try {
 		m_activeConfiguration.lockSettings();
-
+		
 		// If a bulk fitness function has been provided, then convert the
 		// working pool to an array and pass it to the bulk fitness
 		// function so that it can evaluate and assign fitness values to
