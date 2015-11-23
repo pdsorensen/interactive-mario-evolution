@@ -1,5 +1,6 @@
-package own;
+package iec;
 
+import own.NEATController;
 import ch.idsia.agents.Agent;
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;

@@ -1,5 +1,8 @@
 package own;
 
+import iec.GifSequenceWriter;
+import iec.MarioGIF;
+
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -93,10 +96,12 @@ public class MarioNeatGif extends MarioNeat {
 		
 		//MarioFitnessFunction ff = new MarioFitnessFunction(); 
 		//ff.init(props);
-		for(int i = 0; i<bestChroms.size(); i++){
+		/*for(int i = 0; i<bestChroms.size(); i++){
 			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
 			ff.evaluate(bestChroms.get(i), true);
-		}
+		}*/
+		
+		MarioGIF.runIEC();
 	}
 	
 }
