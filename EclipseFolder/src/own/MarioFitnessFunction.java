@@ -81,7 +81,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	/*
 	 * @param index used for naming the gifs,
 	 */
-	public void recordImages( Chromosome c, boolean visual ){
+	public void recordImages( Chromosome c ){
 
 	    //marioAIOptions.setVisualization(false);
 		environment.reset(marioAIOptions);
@@ -139,11 +139,12 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 				//Get direction and distance to nearest enemies
 				double[] inputNearestEnemies = getClosestEnemiesInput();
 				networkInput = addArrays(networkInput, inputNearestEnemies);
+				System.out.println("marioStateInput: " + networkInput.length);
 				
 				//Get the state of Mario
 				double[] marioStateInput = getMarioStateInput();
 				networkInput = addArrays(networkInput, marioStateInput);
-				
+				System.out.println("marioStateInput: " + networkInput.length);
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
 				

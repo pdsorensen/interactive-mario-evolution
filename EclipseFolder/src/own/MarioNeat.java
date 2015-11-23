@@ -36,7 +36,7 @@ import ch.idsia.tools.MarioAIOptions;
 
 public class MarioNeat implements Configurable{
 
-	static Logger logger = Logger.getLogger( Evolver.class );
+	protected static Logger logger = Logger.getLogger( Evolver.class );
 	
 	/**
 	 * properties key, # generations in run

@@ -737,6 +737,7 @@ public void saveLastRun(String filename)
     }
 }
 
+
 public void recordMario(boolean b) {
 	marioVisualComponent.saveImages = b; 
 }
