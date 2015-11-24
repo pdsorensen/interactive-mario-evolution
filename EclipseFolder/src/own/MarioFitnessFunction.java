@@ -89,14 +89,14 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		//Turn on recording
 		environment.recordMario(false);
 		
-		int gifDurationMillis = 500;
+		int gifDurationMillis = 5000;
 		
 		try {
 			Activator activator = factory.newActivator( c );
 			
-			marioAIOptions.setLevelDifficulty(1);
-		    marioAIOptions.setLevelType(1);
-		    marioAIOptions.setLevelRandSeed(5);
+			marioAIOptions.setLevelDifficulty(0);
+		    marioAIOptions.setLevelType(0);
+		    marioAIOptions.setLevelRandSeed(0);
 
 		    singleTrialForGIF( activator, gifDurationMillis );
 		}
@@ -109,10 +109,10 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		
-	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
+	    //levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
 
 	    //Set radius of input grid
-	    setRadius(2, 4, 0, 4);
+	    setRadius(1, 3, 0, 3);
 	    
 	    //Get millis at starting point
 	    long startMillis = System.currentTimeMillis();
@@ -143,7 +143,12 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 				//Get the state of Mario
 				double[] marioStateInput = getMarioStateInput();
 				networkInput = addArrays(networkInput, marioStateInput);
-
+				
+				double[] hardcodedInputs = getHardcodedInputs();
+				networkInput = addArrays(networkInput, hardcodedInputs);
+				
+				System.out.println("Size: " + networkInput.length);
+				
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
 				

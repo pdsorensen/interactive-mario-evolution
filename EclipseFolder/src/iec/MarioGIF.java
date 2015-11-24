@@ -20,13 +20,15 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import own.MarioNeatGif;
+
 
 public class MarioGIF {
 	
 	static int chosenGif;
 	public static int iecGeneration = 1; 
 	
-	public static void runIEC(){
+	public static void runIEC(int folder){
 		
 		Runnable r = new Runnable() {
 			@Override
@@ -52,7 +54,7 @@ public class MarioGIF {
 				
 			
 				for(int i = 0; i<9;i++){
-					String fileLocation = "./db/gifs/" + new Integer(i).toString() + ".gif";
+					String fileLocation = "./db/gifs/" + Integer.toString(folder) + "/" + new Integer(i).toString() + ".gif";
 					System.out.println("Loading file at location: " + fileLocation);
 					gifs[i] = new ImageIcon(fileLocation);
 				}
@@ -85,8 +87,8 @@ public class MarioGIF {
 		SwingUtilities.invokeLater(r);
 	}
 	
-	public static void deleteGifs(){
-		final File dir = new File("./db/gifs/");
+	public static void deleteGifs(String folder){
+		final File dir = new File(folder);
 	    ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 
 	    File[] imgFiles = dir.listFiles();
 	    for(int i = 0; i < 9; i++)

@@ -22,8 +22,10 @@ import com.anji.util.Properties;
 public class MarioNeatGif extends MarioNeat {
 	
 	static MarioFitnessFunction ff;
+	public int folderName = 0; 
 	
 	public void run() throws Exception {
+		
 		Date runStartDate = Calendar.getInstance().getTime();
 		logger.info( "Run: start" );
 		DateFormat fmt = new SimpleDateFormat( "HH:mm:ss" );
@@ -43,27 +45,25 @@ public class MarioNeatGif extends MarioNeat {
 			//GET CHROMOSOMES
 			List<Chromosome> chroms = genotype.getChromosomes();
 			
-
+			//Folder structure
+			new File("db/gifs/" + folderName).mkdirs();
+			
 			for (int i = 0; i < chroms.size(); i++) {
 			    Chromosome chrommie = (Chromosome) chroms.get(i);
 			    
 			    //Record images from playtrough
 			    ff.recordImages(chrommie);
 			    
-			    ImageOutputStream output = 
-			            new FileImageOutputStream(new File("db/gifs/" + i + ".gif"));
-			    GifSequenceWriter gsw = new GifSequenceWriter(output, 5, 1, false);
-			    
-			    //Create gif from recorded images
-			    gsw.createGIF();
+			    // Create GIFS from those images
+			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
 			}
+			
 			
 			GifSequenceWriter.fileNumber = 0; 
 			//Set wait to true
 			wait = true;
 
-			MarioGIF.runIEC();
-			
+			MarioGIF.runIEC(folderName);
 			
 			while(wait){
 				Thread.sleep(10);
@@ -90,7 +90,7 @@ public class MarioNeatGif extends MarioNeat {
 					System.out.println("evolve go!");
 					genotype.evolveGif();
 					
-					MarioGIF.deleteGifs();
+					MarioGIF.deleteGifs("./db/gifs/" + folderName);
 					
 					//Stop waiting and continue evolution
 					System.out.println("stop waiting go!");
@@ -103,7 +103,7 @@ public class MarioNeatGif extends MarioNeat {
 			long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
 			logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 					+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
-			
+			folderName++;
 		}
 		
 	}

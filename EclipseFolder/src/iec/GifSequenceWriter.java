@@ -174,7 +174,7 @@ public class GifSequenceWriter {
       }
   };
   
-  public void createGIF() throws Exception{
+  public static void createGIF(String outputFolder) throws Exception{
 	// LOADING IMAGES: 
     final File dir = new File("./db/images/");
     ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 
@@ -199,7 +199,7 @@ public class GifSequenceWriter {
       BufferedImage firstImage = images.get(0);
       
       // create a new BufferedOutputStream with the last argument
-      String outputLocation = "db/gifs/" + Integer.toString(fileNumber) + ".gif";
+      String outputLocation = outputFolder + Integer.toString(fileNumber) + ".gif";
       ImageOutputStream output = 
         new FileImageOutputStream(new File(outputLocation));
       fileNumber++; 
