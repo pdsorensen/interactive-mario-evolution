@@ -89,7 +89,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		//Turn on recording
 		environment.recordMario(false);
 		
-		int gifDurationMillis = 5000;
+		int gifDurationMillis = 500;
 		
 		try {
 			Activator activator = factory.newActivator( c );
@@ -121,7 +121,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		while(!environment.isLevelFinished() && startMillis + gifDurationMillis > System.currentTimeMillis()){			
 			
 			//Begin recording after some seconds
-			if(environment.getEvaluationInfo().timeSpent > 2)	
+			if(environment.getEvaluationInfo().timeSpent >= 0)	
 				environment.recordMario(true);
 				
 			

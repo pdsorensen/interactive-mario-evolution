@@ -25,7 +25,7 @@ public class GifSequenceWriter {
   protected IIOMetadata imageMetaData;
   
   //Own variables: 
-  private static int fileNumber;
+  public static int fileNumber;
   
   /**
    * Creates a new GifSequenceWriter
@@ -220,6 +220,8 @@ public class GifSequenceWriter {
       System.out.println(outputLocation + " sucessfully saved");
       writer.close();
       output.close();
+      
+      
     } else {
     	
     	System.out.println(

@@ -1,5 +1,6 @@
 package own;
 
+import iec.GenotypeGif;
 import iec.GifSequenceWriter;
 import iec.MarioGIF;
 
@@ -14,6 +15,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 import org.jgap.Chromosome;
+import org.jgap.Genotype;
 
 import com.anji.util.Properties;
 
@@ -36,15 +38,12 @@ public class MarioNeatGif extends MarioNeat {
 			
 			//Chromosome c = genotype.getFittestChromosome();
 			//bestChroms.add(c);
-			
-			
+
 			
 			//GET CHROMOSOMES
-			List chroms = genotype.getChromosomes();
+			List<Chromosome> chroms = genotype.getChromosomes();
 			
-			
-			
-			
+
 			for (int i = 0; i < chroms.size(); i++) {
 			    Chromosome chrommie = (Chromosome) chroms.get(i);
 			    
@@ -57,9 +56,48 @@ public class MarioNeatGif extends MarioNeat {
 			    
 			    //Create gif from recorded images
 			    gsw.createGIF();
-			    
 			}
 			
+			GifSequenceWriter.fileNumber = 0; 
+			//Set wait to true
+			wait = true;
+
+			MarioGIF.runIEC();
+			
+			
+			while(wait){
+				Thread.sleep(10);
+				
+				//Check if chromosome has been chosen
+				if(MarioGIF.getChosenGif() != -1){
+					System.out.println( "THE CHOSEN ONE IS #" + MarioGIF.getChosenGif() );
+					
+					//Set all chroms fitness to zero
+					for (Chromosome c : chroms)
+						c.setFitnessValue(0);
+					
+					//Get chosen chromosome
+				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
+				 	
+				 	//Set it's fitness
+				 	System.out.println("set fitness go!");
+				 	theChosenChrom.setFitnessValue(100);
+				 	
+					//reset chosen chromosome number
+				 	System.out.println("reset chosenGif go!");
+					MarioGIF.setChosenGif(-1);
+					
+					System.out.println("evolve go!");
+					genotype.evolveGif();
+					
+					MarioGIF.deleteGifs();
+					
+					//Stop waiting and continue evolution
+					System.out.println("stop waiting go!");
+					wait = false;
+				}
+			}
+				
 			// generation finish
 			Date generationEndDate = Calendar.getInstance().getTime();
 			long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
@@ -101,7 +139,7 @@ public class MarioNeatGif extends MarioNeat {
 			ff.evaluate(bestChroms.get(i), true);
 		}*/
 		
-		MarioGIF.runIEC();
+		
 	}
 	
 }
