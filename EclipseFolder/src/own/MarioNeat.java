@@ -33,6 +33,7 @@ import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.benchmark.tasks.BasicTask;
 import ch.idsia.tools.MarioAIOptions;
+import iec.GenotypeGif;
 
 public class MarioNeat implements Configurable{
 
@@ -62,6 +63,8 @@ public class MarioNeat implements Configurable{
 	private Chromosome champ = null;
 
 	Genotype genotype = null;
+	
+	GenotypeGif genotypeGif = null;
 
 	public int numEvolutions = 0;
 
@@ -143,6 +146,8 @@ public class MarioNeat implements Configurable{
 
 		// load population, either from previous run or random
 		genotype = db.loadGenotype( config );
+		genotypeGif = (GenotypeGif) db.loadGenotype( config );
+		
 		if ( genotype != null )
 			logger.info( "genotype from previous run" );
 		else {
