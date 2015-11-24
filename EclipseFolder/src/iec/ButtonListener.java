@@ -13,6 +13,7 @@ public class ButtonListener implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		MarioGIF.setChosenGif(buttonNumber);
+		MarioGIF.setVisibility(false);
 		//System.exit(0);
 	}
 

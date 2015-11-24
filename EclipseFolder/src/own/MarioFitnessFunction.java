@@ -82,7 +82,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	 * @param index used for naming the gifs,
 	 */
 	public void recordImages( Chromosome c ){
-
+		
 	    //marioAIOptions.setVisualization(false);
 		environment.reset(marioAIOptions);
 	    
@@ -97,7 +97,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			marioAIOptions.setLevelDifficulty(1);
 		    marioAIOptions.setLevelType(1);
 		    marioAIOptions.setLevelRandSeed(5);
-
+		    
 		    singleTrialForGIF( activator, gifDurationMillis );
 		}
 		catch ( Throwable e ) {

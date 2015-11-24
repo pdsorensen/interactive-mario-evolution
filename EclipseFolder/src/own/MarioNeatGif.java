@@ -19,6 +19,8 @@ import org.jgap.Genotype;
 
 import com.anji.util.Properties;
 
+import ch.idsia.tools.MarioAIOptions;
+
 public class MarioNeatGif extends MarioNeat {
 	
 	static MarioFitnessFunction ff;
@@ -38,7 +40,10 @@ public class MarioNeatGif extends MarioNeat {
 			
 			//Chromosome c = genotype.getFittestChromosome();
 			//bestChroms.add(c);
-
+			
+			
+			//Reset MarioGIF object
+			MarioGIF.reset();
 			
 			//GET CHROMOSOMES
 			List<Chromosome> chroms = genotype.getChromosomes();
@@ -62,14 +67,17 @@ public class MarioNeatGif extends MarioNeat {
 			//Set wait to true
 			wait = true;
 
+			
 			MarioGIF.runIEC();
 			
 			
 			while(wait){
 				Thread.sleep(10);
 				
+				
 				//Check if chromosome has been chosen
 				if(MarioGIF.getChosenGif() != -1){
+					MarioGIF.setVisibility(false);
 					System.out.println( "THE CHOSEN ONE IS #" + MarioGIF.getChosenGif() );
 					
 					//Set all chroms fitness to zero
@@ -82,19 +90,12 @@ public class MarioNeatGif extends MarioNeat {
 				 	//Set it's fitness
 				 	System.out.println("set fitness go!");
 				 	theChosenChrom.setFitnessValue(100);
-				 	
-					//reset chosen chromosome number
-				 	System.out.println("reset chosenGif go!");
-					MarioGIF.setChosenGif(-1);
-					
-					System.out.println("evolve go!");
+
 					genotype.evolveGif();
 					
-					MarioGIF.deleteGifs();
-					
 					//Stop waiting and continue evolution
-					System.out.println("stop waiting go!");
 					wait = false;
+
 				}
 			}
 				
