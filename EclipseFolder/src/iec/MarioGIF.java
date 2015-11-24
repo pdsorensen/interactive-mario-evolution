@@ -26,7 +26,24 @@ import own.MarioNeatGif;
 public class MarioGIF {
 	
 	static int chosenGif;
-	public static int iecGeneration = 1; 
+	public static int iecGeneration = 1;
+	//Frame parameters
+	static JFrame frame;
+	
+	public static void reset(int folderName){
+		
+		//Create new frame
+		frame = new JFrame(); 
+		
+		//Delete images
+		deleteGifs("./db/gifs/" + folderName + "/");
+		
+		//reset chosen chromosome number
+		MarioGIF.setChosenGif(-1);
+		
+		//Show window
+		MarioGIF.setVisibility(true);
+	}
 	
 	public static void runIEC(int folder){
 		
@@ -36,8 +53,6 @@ public class MarioGIF {
 				
 				chosenGif = -1;
 				
-				//Frame parameters
-				JFrame frame = new JFrame(); 
 				//JLabel headerLabel = new JLabel("headerLabel",JLabel.CENTER );
 				JPanel contentPane = new JPanel();
 				
@@ -88,12 +103,28 @@ public class MarioGIF {
 	}
 	
 	public static void deleteGifs(String folder){
+		
+		//Create path to directory
 		final File dir = new File(folder);
-	    ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 
-	    File[] imgFiles = dir.listFiles();
-	    for(int i = 0; i < 9; i++)
-	    	imgFiles[ i ].delete(); 
+	    
+		//Create arraylist
+		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 
+	    
+		//Get files from directory
+		File[] imgFiles = dir.listFiles();
+	    
+	    //Check if any files in directory
+	    if( imgFiles.length > 0 )
+	    	//Go through all of them
+	    	for(int i = 0; i < imgFiles.length; i++)
+	    		//Delete file
+	    		imgFiles[ i ].delete(); 
 	}
+	
+	public static void setVisibility(boolean visible){
+		frame.setVisible(visible);
+	}
+	
 	
 	public static void setChosenGif(int buttonNumber){
 		chosenGif = buttonNumber;
