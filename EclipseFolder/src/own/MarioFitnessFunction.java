@@ -135,8 +135,8 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 				//Get state of the world
 				double[] limitedStateInput = getLimitedStateFromStage();
 				networkInput = addArrays(networkInput, limitedStateInput);
-				//System.out.println("Grid Size: " + limitedStateInput.length);
-				//Get direction and distance to nearest enemies
+				
+				//Get three nearest enemies 
 				double[] inputNearestEnemies = getClosestEnemiesInput();
 				networkInput = addArrays(networkInput, inputNearestEnemies);
 				
@@ -695,5 +695,13 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 	public int getMaxFitnessValue() {
 		// TODO Auto-generated method stub
 		return 10;
+	}
+	
+	public double[] getHardcodedInputs(){
+		double jumping = (environment.isMarioAbleToJump()) ? 1 : 0;
+		double shooting = (environment.isMarioAbleToShoot()) ? 1 : 0;
+		double onGround = (environment.isMarioOnGround()) ? 1 : 0;
+		double[] inputs = {jumping, shooting, onGround};
+		return inputs; 
 	}
 }

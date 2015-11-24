@@ -1,4 +1,4 @@
-package own;
+package iec;
 // 
 //  GifSequenceWriter.java
 //  
@@ -181,43 +181,43 @@ public class GifSequenceWriter {
     File[] imgFiles = dir.listFiles();
     imgFiles[imgFiles.length-1].delete(); 
     
-    for (File f : imgFiles) {
+    for (int i = 0; i<imgFiles.length-1; i++) {
         BufferedImage img = null;
         try {
-            img = ImageIO.read(f);
-            System.out.println("image: " + f.getName());
+            img = ImageIO.read(imgFiles[i]);
+            //System.out.println("image: " + f.getName());
             images.add(img);
-            f.delete();
+            imgFiles[i].delete();
         } catch (final IOException e) {
-            System.out.println("Something failed while loading the images");
+            System.out.println("Something failed while loading the images" + e);
         }
     }
-    System.out.println("Image.size: " + images.size() );
     // CREATING THE GIF:
     if (images.size() > 1) {
+    	
       // grab the output image type from the first image in the sequence
-      System.out.println("File: " + images.get(0));	
       BufferedImage firstImage = images.get(0);
       
-      
       // create a new BufferedOutputStream with the last argument
+      String outputLocation = "db/gifs/" + Integer.toString(fileNumber) + ".gif";
       ImageOutputStream output = 
-        new FileImageOutputStream(new File("db/gifs/" + Integer.toString(fileNumber) + ".gif"));
+        new FileImageOutputStream(new File(outputLocation));
       fileNumber++; 
+      
       // create a gif sequence with the type of the first image, 1 second
       // between frames, which loops continuously
       GifSequenceWriter writer = 
-        new GifSequenceWriter(output, firstImage.getType(), 1, false);
+        new GifSequenceWriter(output, firstImage.getType(), 60, false);
       
       // write out the first image to our sequence...
       writer.writeToSequence(firstImage);
       
       for(int i=1; i<images.size()-1; i++) {
-    	  System.out.println( "image " + i );
     	  BufferedImage nextImage = images.get(i);
     	  writer.writeToSequence(nextImage);
       }
       
+      System.out.println(outputLocation + " sucessfully saved");
       writer.close();
       output.close();
     } else {

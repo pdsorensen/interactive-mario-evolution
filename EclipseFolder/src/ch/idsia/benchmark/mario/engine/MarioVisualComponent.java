@@ -370,13 +370,12 @@ public void createImage(){
 				sb.append("0");
 			}
 			sb.append(fileNumber + ".");
-			//sb.append(fileName + "."); 
 			sb.append(extension);
 			
 			String finalFileName = sb.toString();
 	        if (ImageIO.write(imageToDraw, extension, new File(finalFileName)))
 	        {
-	            System.out.println("-- image saved to: " + finalFileName);
+	            //System.out.println("-- image saved to: " + finalFileName);
 	            fileNumber++; 
 	            counter = 0; 
 	        }
