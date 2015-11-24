@@ -49,6 +49,7 @@ import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -96,6 +97,11 @@ private int fileNumber = 1;
 int counter = 0; 
 int saveFrequency = 1; 
 public boolean saveImages = false; 
+
+// FOR DEBUGGING INPUTS
+public boolean drawLines = false; 
+public ArrayList<Integer> xCords = new ArrayList<Integer>(); 
+public ArrayList<Integer> yCords = new ArrayList<Integer>(); 
 
 
 private MarioVisualComponent(MarioAIOptions marioAIOptions, MarioEnvironment marioEnvironment)
@@ -350,6 +356,9 @@ public void render(Graphics g)
     }
     if(saveImages)
     	createImage();
+    
+    if(drawLines)
+    	drawLines(); 
     g.clearRect(5, 5, 5, 5);
 }
 
@@ -387,6 +396,15 @@ public void createImage(){
 	}
 }
 
+public void drawLines(){
+	System.out.println("xCords: " + xCords.isEmpty() + ", " + xCords.size());
+	for(int i = 0; i<xCords.size(); i+=2){
+		thisVolatileImageGraphics.drawLine(xCords.get(i), yCords.get(i), xCords.get(i+1), xCords.get(i+1));
+	}
+	xCords.clear();
+	yCords.clear();
+	System.out.println("End of drawline");
+}
 
 
 private void drawProgress(Graphics g)
