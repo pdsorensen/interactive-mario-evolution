@@ -264,7 +264,7 @@ public class MarioInputs {
 		int x = radEast + radWest + 1;
 		int y = radNorth + radSouth + 1;
 		int numInputs = x * y;
-		System.out.println("Total stage grid is " + numInputs + " inputs!");
+		//System.out.println("Total stage grid is " + numInputs + " inputs!");
 	}
 	
 	private int getXdimensionLength(){
