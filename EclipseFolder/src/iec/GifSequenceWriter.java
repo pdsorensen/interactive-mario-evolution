@@ -207,7 +207,7 @@ public class GifSequenceWriter {
       // create a gif sequence with the type of the first image, 1 second
       // between frames, which loops continuously
       GifSequenceWriter writer = 
-        new GifSequenceWriter(output, firstImage.getType(), 60, false);
+        new GifSequenceWriter(output, firstImage.getType(), 90, false);
       
       // write out the first image to our sequence...
       writer.writeToSequence(firstImage);

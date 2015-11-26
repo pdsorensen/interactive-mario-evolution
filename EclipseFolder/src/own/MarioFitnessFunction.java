@@ -44,16 +44,14 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     static Agent agent = new NEATController();
     
     //Info on stage
-    int detectionRadius = 1;
-    int radNorth, radEast, radSouth, radWest;
-    int radCenter = 9;
-    int zLevelScene = 0;
-    int zLevelEnemies = 0;
-    protected byte[][] levelScene;
     protected byte[][] mergedObservation;
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
-    
+    int prevGeneration = 0;
+    int difficulty = 2;
+	int level = 0;
+	
+	MarioInputs marioInputs = new MarioInputs();
 	
 	
 	@Override
@@ -63,6 +61,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		System.out.println("INITTING");
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );		
 		//marioAIOptions.printOptions(false);
+		
+	    //Set radius of input grid
+	    marioInputs.setRadius(1, 1, 1, 1);
 	}
 
 	@Override
@@ -79,26 +80,65 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	
 	/*
-	 * @param index used for naming the gifs,
+	 * If enough playthroughs have been made:
+	 * 		Increase difficulty
+	 * 		Change state
 	 */
-	public void recordImages( Chromosome c ){
+	public void setStage(int generation){
+		//Check if generation changes
+		if(prevGeneration != generation){
+			
+			//Change difficulty
+			if( generation % 2 == 0 ) 
+				difficulty += 1;
+			
+			//Change level
+			if( generation % 5 == 0 ){
+				
+				difficulty = 1;
+				level += 1;
+			}
+			
+			prevGeneration = generation;
+			
+		}
 		
 	    //marioAIOptions.setVisualization(false);
+		marioAIOptions.setLevelDifficulty(difficulty);
+	    marioAIOptions.setLevelType(level);
+	    marioAIOptions.setLevelRandSeed(5);
 		environment.reset(marioAIOptions);
+		
+	}
+	
+	
+	/*
+	 * @param index used for naming the gifs,
+	 */
+	public void recordImages( Chromosome c, int generation ){
+		
+		GlobalOptions.FPS = 0;
+		
+		//Set stage and difficulty
+		setStage(generation);
 	    
 		//Turn on recording
 		environment.recordMario(false);
 		
-		int gifDurationMillis = 5000;
+		int gifDurationMillis = 2000;
+		int delayRecording = 1000;
+		
+		//Delay gif with generation
+		int generationDelay = ( generation * 200 );
+		delayRecording += generationDelay;
+		gifDurationMillis += generationDelay;
 		
 		try {
 			Activator activator = factory.newActivator( c );
 			
 
-			marioAIOptions.setLevelDifficulty(1);
-		    marioAIOptions.setLevelType(1);
-		    marioAIOptions.setLevelRandSeed(5);
-		    singleTrialForGIF( activator, gifDurationMillis );
+			
+		    singleTrialForGIF( activator, gifDurationMillis, delayRecording );
 		}
 		catch ( Throwable e ) {
 			logger.warn( "error evaluating chromosome " + c.toString(), e );
@@ -107,13 +147,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 	}
 	
-private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
+private void singleTrialForGIF( Activator activator, int gifDurationMillis, int delayRecording ) {
 		
-	    //levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
-
-	    //Set radius of input grid
-	    setRadius(1, 3, 0, 3);
-	    
 	    //Get millis at starting point
 	    long startMillis = System.currentTimeMillis();
 	    
@@ -121,7 +156,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		while(!environment.isLevelFinished() && startMillis + gifDurationMillis > System.currentTimeMillis()){			
 			
 			//Begin recording after some seconds
-			if(environment.getEvaluationInfo().timeSpent >= 0)	
+			if(environment.getEvaluationInfo().timeSpent >= ( delayRecording / 1000 ) )	
 				environment.recordMario(true);
 				
 			
@@ -132,22 +167,25 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 				//create input array
 				double[] networkInput = new double[0];
 				
+				//printLevelScene();
+				//turnLevelScene();
+				
 				//Get state of the world
-				double[] limitedStateInput = getLimitedStateFromStage();
-				networkInput = addArrays(networkInput, limitedStateInput);
+				double[] limitedStateInput = marioInputs.getLimitedStateFromStage();
+				networkInput = marioInputs.addArrays(networkInput, limitedStateInput);
 				
 				//Get three nearest enemies 
-				double[] inputNearestEnemies = getClosestEnemiesInput();
-				networkInput = addArrays(networkInput, inputNearestEnemies);
+				double[] inputNearestEnemies = marioInputs.getClosestEnemiesInput();
+				networkInput = marioInputs.addArrays(networkInput, inputNearestEnemies);
 				
 				//Get the state of Mario
-				double[] marioStateInput = getMarioStateInput();
-				networkInput = addArrays(networkInput, marioStateInput);
+				double[] marioStateInput = marioInputs.getMarioStateInput();
+				networkInput = marioInputs.addArrays(networkInput, marioStateInput);
 				
-				double[] hardcodedInputs = getHardcodedInputs();
-				networkInput = addArrays(networkInput, hardcodedInputs);
+//				double[] hardcodedInputs = getHardcodedInputs();
+//				networkInput = addArrays(networkInput, hardcodedInputs);
 				
-				System.out.println("Size: " + networkInput.length);
+				//System.out.println("Size: " + networkInput.length);
 				
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
@@ -219,11 +257,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		double fitness = 0;
 		//logger.debug( "state = " + Arrays.toString( state ) );
 		
-		//levelScene = environment.getLevelSceneObservationZ(zLevelScene);
-	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
-	    
-	    int reach = 2;
-	    setRadius(2, 4, 0, 4);
+	    marioInputs.setRadius(2, 4, 0, 4);
 	    
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
@@ -236,16 +270,16 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 				double[] networkInput = new double[0];
 				
 				//Get state of the world
-				double[] limitedStateInput = getLimitedStateFromStage();
-				networkInput = addArrays(networkInput, limitedStateInput);
-				//System.out.println("Grid Size: " + limitedStateInput.length);
+				double[] limitedStateInput = marioInputs.getLimitedStateFromStage();
+				networkInput = marioInputs.addArrays(networkInput, limitedStateInput);
+				System.out.println("Grid Size: " + limitedStateInput.length);
 				//Get direction and distance to nearest enemies
-				double[] inputNearestEnemies = getClosestEnemiesInput();
-				networkInput = addArrays(networkInput, inputNearestEnemies);
+				double[] inputNearestEnemies = marioInputs.getClosestEnemiesInput();
+				networkInput = marioInputs.addArrays(networkInput, inputNearestEnemies);
 				
 				//Get the state of Mario
-				double[] marioStateInput = getMarioStateInput();
-				networkInput = addArrays(networkInput, marioStateInput);
+				double[] marioStateInput = marioInputs.getMarioStateInput();
+				networkInput = marioInputs.addArrays(networkInput, marioStateInput);
 				
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
@@ -270,67 +304,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		fitness *= 10000;
 		
 		return (int)fitness;
-	}
-	
-	/*
-	 * @param arr1 is the first array to be concatenated
-	 * @oaram arr2 the second array to be concatenated
-	 * @return arr1 and arr2 in a single array
-	 */
-	public double[] addArrays( double[] arr1, double[] arr2 ){
-		
-		double[] both = new double[ arr1.length + arr2.length ];
-		
-		//Add first array
-		System.arraycopy(arr1, 0, both, 0, arr1.length);
-		
-		//Add second array
-		System.arraycopy(arr2, 0, both, arr1.length, arr2.length);
-		
-		return both;
-	}
-	
-	
-	
-	/*
-	 * @return The distance and angle to up to 3 nearest enemies.
-	 */
-	public double[] getClosestEnemiesInput(){
-		
-		float[] enemies = environment.getEnemiesFloatPos();
-		
-		int maxEnemies = 3;
-		double[] inputs = new double[ maxEnemies * 2 ];
-		
-		//Reset array
-		for(int i = 0; i < maxEnemies * 2; i++)
-			inputs[i] = 0;
-		
-		//Add angles and distance to enemies
-		for(int i = 0; i < enemies.length && i < 9; i += 3){
-			
-			double relX = enemies[i+1];
-			double relY = enemies[i+2];
-			
-			double distance = Math.sqrt( Math.pow(relX, 2) + Math.pow(relY, 2) );
-			
-			//get angle in radians to mario
-			double rad = Math.atan2(relX, relY);
-			
-			//Convert angle to degrees
-			double degrees = rad * ( 180 / Math.PI);
-			
-			//Get index in input array
-			int k = i * 2 / 3;
-			//System.out.println("k: " + k + " out of " + enemies.length);
-			//Add distance to array
-			inputs[ k ] = distance;
-			
-			//Add angle to array
-			inputs[ k + 1 ] = degrees;
-		}
-		
-		return inputs;
 	}
 	
 	
@@ -491,152 +464,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		
 		return fitness;
 	}
-	
-	
-	
-	
-	
-	private double[] newState() {
-		double[] state = new double[ 2 ];
-		state[ 0 ] = state[ 1 ] =  0;
-		return state;
-	}
-	
-	/*
-	 * @return The state of the Mario World. Atm only the two by three blocks in front of Mario
-	 */
-//	public double[] getStateFromStage(){
-//		
-//		double[] inputs =  { levelScene[ 9 ][ 10 ], levelScene[9][11]};
-//
-//		return inputs;	
-//	}
-	
-	
-	private double[] getMarioStateInput(){
-		
-		double[] marioState = new double[1];
-		marioState[0] = environment.getEvaluationInfo().marioMode;
-		
-		return marioState;
-		
-	}
-	
-	
-	/*
-	 * @return an empty double array in the size of the full stage.
-	 */
-	private double[][] newFullState(){
-		
-		double[][] state = new double[ levelScene.length ][ levelScene[0].length ];
-		
-		for(int i = 0; i < levelScene.length; i++)
-			for(int j = 0; j < levelScene[i].length; j++)
-				state[ i ][ j ] = 0;
-		
-		return state;
-	}
-	
-	/*
-	 * @return The FULL state of the Mario World
-	 */
-	private double[][] getFullStateFromStage(){
 
-		double[][] inputs = newFullState();
-		
-		for(int i = 0; i < levelScene.length; i++)
-			for(int j = 0; j< levelScene[i].length; j++)
-				inputs[ i ][ j ] = levelScene[ i ][ j ];
-			
-		return inputs;
-	}
-	
-	private double[] getTwoDimToOneDimArray(double[][] state){
-		
-		double[] newArray = new double[state.length * state[0].length];
-		
-		for(int i = 0; i < state.length; i++){
-			double[] row = state[i];
-			
-			for(int j = 0; i < row.length; i++){
-				newArray[i * row.length + j] = state[i][j];
-			}
-		}
-		
-		return newArray;
-	}
-	
-	private double[][] getBlankLimitedState(){
-		
-		//Calculate dimension lengths
-		int xDimension = getXdimensionLength();
-		int yDimension = getYdimensionLength();
-		
-		//Create array
-		double[][] state = new double[ xDimension ][ yDimension ];
-		
-		//Reset array - is it necessary?
-		for(int i = 0; i < xDimension; i++)
-			for(int j = 0; j < yDimension; j++)
-				state[ i ][ j ] = 0;
-		
-		
-		return state;
-	}
-	
-	private double[] getLimitedStateFromStage(){
-		
-		double[][] inputs = getBlankLimitedState();
-		
-		
-		//Calculate dimension lengths
-		int xDimension = getXdimensionLength();
-		int yDimension = getYdimensionLength();
-		
-		//Create array
-		double[][] state = new double[ xDimension ][ yDimension ];
-		
-		//Put values in the array
-		for(int i = getStartX(); i < xDimension; i++)
-			for(int j = getStartY(); j< yDimension; j++)
-				inputs[ i ][ j ] = levelScene[ i ][ j ];
-		
-		//Convert to single dimension array
-		double[] input = getTwoDimToOneDimArray(inputs);
-		
-		return input;
-	}
-	
-	/*
-	 * Set radius for all 4 directions;
-	 */
-	private void setRadius(int north, int east, int south, int west){	
-		radNorth = north;
-		radEast = east;
-		radSouth = south;
-		radWest = west;	
-	}
-	
-	private int getXdimensionLength(){
-		int xDimension = ( radCenter + radEast ) - ( radCenter - radWest ) + 1;
-		return xDimension;
-	}
-	
-	private int getYdimensionLength(){
-		int yDimension = ( radCenter + radNorth ) - ( radCenter - radSouth ) + 1;
-		return yDimension;
-	}
-	
-	private int getStartX(){
-		return radCenter - radWest;
-	}
-	private int getStartY(){
-		return radCenter - radSouth;
-	}
-	
-	
-	
-	
 	
 	
 	public boolean[] getAction(double[] networkOutput){

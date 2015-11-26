@@ -36,7 +36,7 @@ public class MarioGIF {
 		frame = new JFrame(); 
 		
 		//Delete images
-		deleteGifs("./db/gifs/" + folderName + "/");
+		//deleteGifs("./db/gifs/" + folderName + "/");
 		
 		//reset chosen chromosome number
 		MarioGIF.setChosenGif(-1);

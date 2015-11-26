@@ -19,6 +19,7 @@ import org.jgap.Genotype;
 
 import com.anji.util.Properties;
 
+import ch.idsia.benchmark.mario.engine.GlobalOptions;
 import ch.idsia.tools.MarioAIOptions;
 
 public class MarioNeatGif extends MarioNeat {
@@ -43,7 +44,6 @@ public class MarioNeatGif extends MarioNeat {
 			//Chromosome c = genotype.getFittestChromosome();
 			//bestChroms.add(c);
 			
-			
 			//Reset MarioGIF object
 			MarioGIF.reset(folderName);
 			
@@ -57,7 +57,7 @@ public class MarioNeatGif extends MarioNeat {
 			    Chromosome chrommie = (Chromosome) chroms.get(i);
 			    
 			    //Record images from playtrough
-			    ff.recordImages(chrommie);
+			    ff.recordImages(chrommie, generation);
 			    
 			    // Create GIFS from those images
 			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
@@ -87,7 +87,7 @@ public class MarioNeatGif extends MarioNeat {
 					//Get chosen chromosome
 				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
 				 	
-				 	//Set it's fitness
+				 	//Set its fitness
 				 	System.out.println("set fitness go!");
 				 	theChosenChrom.setFitnessValue(100);
 
@@ -95,7 +95,7 @@ public class MarioNeatGif extends MarioNeat {
 					
 					MarioGIF.deleteGifs("./db/gifs/" + folderName);
 
-					//Stop waiting and continue evolution
+					//Stop waiting and continue evolution with next generation
 					wait = false;
 
 				}

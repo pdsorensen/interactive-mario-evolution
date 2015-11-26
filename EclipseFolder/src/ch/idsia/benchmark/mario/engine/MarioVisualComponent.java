@@ -495,7 +495,9 @@ public void adjustFPS()
 {
     int fps = GlobalOptions.FPS;
     delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
-//        System.out.println("Delay: " + delay);
+    
+    //Added to speed up the visualized run
+    delay = 0;
 }
 
 // THis method here solely for the displaying information in order to reduce
