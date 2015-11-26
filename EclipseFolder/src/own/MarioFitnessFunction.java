@@ -55,7 +55,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	//Define the inputs for Mario
 	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
 												true, 3,
-												true );
+												true, true, true, true );
 	
 	
 	@Override

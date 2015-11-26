@@ -181,6 +181,52 @@ public class MarioNeat implements Configurable{
 			//Reset MarioGIF object and create new .gif folder
 			MarioGIF.reset(folderName);
 			new File("db/gifs/" + folderName).mkdirs();
+
+			
+			// RECORDING STEP
+			List<Chromosome> chroms = genotype.getChromosomes();
+			for (int i = 0; i < chroms.size(); i++) {
+				
+				//Get a chromosome
+			    Chromosome chrommie = (Chromosome) chroms.get(i);
+			    //Record that chromosome
+			    ff.recordImages( chrommie, IECGeneration );
+			    //Create and save gif 
+			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
+			}
+			
+			
+			MarioGIF.runIEC(folderName);
+			
+			wait = true;
+			while(wait){
+				Thread.sleep(10);
+				//Check if chromosome has been chosen
+				if(MarioGIF.getChosenGif() != -1){
+					
+					MarioGIF.setVisibility(false);
+					
+					//Set all chroms fitness to zero
+					for (Chromosome c : chroms)
+						c.setFitnessValue(0);
+					
+					//Get chosen chromosome
+				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
+				 	
+				 	//Set it's fitness
+				 	theChosenChrom.setFitnessValue(100);
+
+					genotype.evolveGif();
+					
+					MarioGIF.deleteGifs("./db/gifs/" + folderName);
+
+					//Stop waiting and continue evolution
+					wait = false;
+
+				}
+			}
+			GifSequenceWriter.fileNumber = 0; 
+			folderName++;
 			
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
 			for ( int generation = 0; generation < numEvolutions; generation++ ) {
@@ -198,48 +244,6 @@ public class MarioNeat implements Configurable{
 				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
 			}
-			
-			// RECORDING STEP
-			List<Chromosome> chroms = genotype.getChromosomes();
-			for (int i = 0; i < chroms.size(); i++) {
-			    Chromosome chrommie = (Chromosome) chroms.get(i);
-			    ff.recordImages( chrommie, IECGeneration );
-			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
-			}
-			
-			
-			MarioGIF.runIEC(folderName);
-			
-			wait = true;
-			while(wait){
-				Thread.sleep(10);
-				//Check if chromosome has been chosen
-				if(MarioGIF.getChosenGif() != -1){
-					MarioGIF.setVisibility(false);
-					System.out.println( "THE CHOSEN ONE IS #" + MarioGIF.getChosenGif() );
-					
-					//Set all chroms fitness to zero
-					for (Chromosome c : chroms)
-						c.setFitnessValue(0);
-					
-					//Get chosen chromosome
-				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
-				 	
-				 	//Set it's fitness
-				 	System.out.println("set fitness go!");
-				 	theChosenChrom.setFitnessValue(100);
-
-					genotype.evolveGif();
-					
-					MarioGIF.deleteGifs("./db/gifs/" + folderName);
-
-					//Stop waiting and continue evolution
-					wait = false;
-
-				}
-			}
-			GifSequenceWriter.fileNumber = 0; 
-			folderName++;
 		}
 	}
 	

@@ -10,7 +10,7 @@ public class MarioInputs {
     int zLevelScene = 0;
     int zLevelEnemies = 0;
     
-    boolean includeStage, includeNearestEnemies, includeMarioState;
+    boolean includeStage, includeNearestEnemies, includeMarioState, includeJump, includeShoot, includeOnGround;
     
 	int radNorth, radEast, radSouth, radWest;
 	int radCenter = 9;
@@ -22,7 +22,10 @@ public class MarioInputs {
 	 */
 	public MarioInputs( boolean includeStage, int north, int east, int south, int west, 
 						boolean includeNearestEnemies, int numNearestEnemies,
-						boolean includeMarioState ){
+						boolean includeMarioState,
+						boolean includeJump,
+						boolean includeShoot,
+						boolean includeOnGround){
 		
 		this.includeStage = includeStage;
 		radNorth = north;
@@ -35,42 +38,13 @@ public class MarioInputs {
 		
 		this.includeMarioState = includeMarioState;
 		
+		this.includeJump = includeJump;
+		this.includeShoot = includeShoot;
+		this.includeOnGround = includeOnGround;
+		
 		//Print total number of inputs
 		System.out.println( "Total inputs for Neat: " + getNumInputs() );
-	}
-	
-	/**
-	 * 
-	 * @return the total number of inputs used for NEAT
-	 */
-	private int getNumInputs(){
-		
-		int numInputs = 0;
-		
-		if(includeStage)
-			numInputs += getNumStageInputs();
-		
-		if(includeNearestEnemies)
-			numInputs += numNearestEnemies * 2;
-		
-		if(includeMarioState)
-			numInputs++;
-		
-		return numInputs;
-	}
-	
-	/**
-	 * @return the number of tiles in the grid used for presenting the
-	 * the level for Mario
-	 */
-	private int getNumStageInputs(){
-		
-		int x = radEast + radWest + 1;
-		int y = radNorth + radSouth + 1;
-		
-		return x * y;
-	}
-	
+	}	
 
 	/**
 	 * Gets all the different inputs depended on what has been
@@ -100,7 +74,64 @@ public class MarioInputs {
 			networkInput = addArrays(networkInput, marioStateInput);
 		}
 		
+		if(includeJump){
+			double[] marioAbleToJump = getAbleToJump();
+			networkInput = addArrays(networkInput, marioAbleToJump);
+		}
+		
+		if(includeShoot){
+			double[] marioAbleToShoot= getAbleToShoot();
+			networkInput = addArrays(networkInput, marioAbleToShoot);
+		}
+		
+		if(includeOnGround){
+			double[] marioOnGround = getOnGround();
+			networkInput = addArrays(networkInput, marioOnGround);
+		}
+		
 		return networkInput;
+	}
+	
+	
+	/**
+	 * 
+	 * @return the total number of inputs used for NEAT
+	 */
+	private int getNumInputs(){
+		
+		int numInputs = 0;
+		
+		if(includeStage)
+			numInputs += getNumStageInputs();
+		
+		if(includeNearestEnemies)
+			numInputs += numNearestEnemies * 2;
+		
+		if(includeMarioState)
+			numInputs++;
+		
+		if(includeJump)
+			numInputs++;
+		
+		if(includeShoot)
+			numInputs++;
+		
+		if(includeOnGround)
+			numInputs++;
+		
+		return numInputs;
+	}
+	
+	/**
+	 * @return the number of tiles in the grid used for presenting the
+	 * the level for Mario
+	 */
+	private int getNumStageInputs(){
+		
+		int x = radEast + radWest + 1;
+		int y = radNorth + radSouth + 1;
+		
+		return x * y;
 	}
 	
 	/**
@@ -382,19 +413,34 @@ public class MarioInputs {
 		return startX;
 	}
 	
-	private int getEndX(){
-		int endX = getStartX() +  getXdimensionLength();
-		return endX;
-	}
-	
 	private int getStartY(){
 		int startY = radCenter - radNorth;
 		return startY;
 	}
+
 	
-	private int getEndY(){
-		int endY = getStartY() +  getYdimensionLength();
-		return endY;
+	private double[] getAbleToJump(){
+		
+		double[] jumping = new double[1];
+		jumping[0] = ( environment.isMarioAbleToJump() ) ? 1 : -1;
+		
+		return jumping;
+	}
+	
+	private double[] getAbleToShoot(){
+		
+		double[] canShoot = new double[1];
+		canShoot[0] = ( environment.isMarioAbleToShoot() ) ? 1 : -1;
+		
+		return canShoot;
+	}
+	
+	private double[] getOnGround(){
+		
+		double[] onGround = new double[1];
+		onGround[0] = ( environment.isMarioOnGround() ) ? 1 : -1;
+		
+		return onGround;
 	}
 	
 	public double[] getHardcodedInputs(){
