@@ -85,6 +85,7 @@ public class MarioNeat implements Configurable{
 	// FOR GIF CREATION 
 	public int folderName = 0; 
 	public static MarioFitnessFunction ff = new MarioFitnessFunction();
+	static ArrayList<Chromosome> iecCandidates = new ArrayList<Chromosome>(); 
 	/**
 	 * ctor; must call <code>init()</code> before using this object
 	 */
@@ -182,11 +183,10 @@ public class MarioNeat implements Configurable{
 			MarioGIF.reset(folderName);
 			new File("db/gifs/" + folderName).mkdirs();
 
-			
 			// RECORDING STEP
 			List<Chromosome> chroms = genotype.getChromosomes();
-			for (int i = 0; i < chroms.size(); i++) {
-				
+			
+			for (int i = 0; i < 9; i++) {
 				//Get a chromosome
 			    Chromosome chrommie = (Chromosome) chroms.get(i);
 			    //Record that chromosome
@@ -212,7 +212,7 @@ public class MarioNeat implements Configurable{
 					
 					//Get chosen chromosome
 				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
-				 	
+				 	bestChroms.add(theChosenChrom);
 				 	//Set it's fitness
 				 	theChosenChrom.setFitnessValue(100);
 
@@ -225,6 +225,7 @@ public class MarioNeat implements Configurable{
 
 				}
 			}
+			iecCandidates.clear();
 			GifSequenceWriter.fileNumber = 0; 
 			folderName++;
 			
@@ -236,7 +237,7 @@ public class MarioNeat implements Configurable{
 				genotype.evolve();
 				
 				Chromosome c = genotype.getFittestChromosome();
-				bestChroms.add(c);
+				iecCandidates.add(c);
 				
 				// generation finish
 				Date generationEndDate = Calendar.getInstance().getTime();
