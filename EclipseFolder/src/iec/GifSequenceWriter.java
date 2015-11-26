@@ -175,17 +175,18 @@ public class GifSequenceWriter {
   };
   
   public static void createGIF(String outputFolder) throws Exception{
+	System.out.println("Creating GIF called");
 	// LOADING IMAGES: 
     final File dir = new File("./db/images/");
     ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 
     File[] imgFiles = dir.listFiles();
-    imgFiles[imgFiles.length-1].delete(); 
-    
+    //imgFiles[imgFiles.length-1].delete(); 
+    //System.out.println("ImgFiles size: " + imgFiles.length);
     for (int i = 0; i<imgFiles.length-1; i++) {
         BufferedImage img = null;
         try {
             img = ImageIO.read(imgFiles[i]);
-            //System.out.println("image: " + f.getName());
+            //System.out.println("image: " + imgFiles[i].getName());
             images.add(img);
             imgFiles[i].delete();
         } catch (final IOException e) {
@@ -224,8 +225,8 @@ public class GifSequenceWriter {
       
     } else {
     	
-    	System.out.println(
-    			"Usage: java GifSequenceWriter [list of gif files] [output file]");
+    	System.out.println("Usage: java GifSequenceWriter [list of gif files] [output file]");
+    	System.out.println("Images array size: " + images.size());
     }
   }
     

@@ -34,7 +34,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	private static Logger logger = Logger.getLogger( TargetFitnessFunction.class );
 	private ActivatorTranscriber factory;
 	private int numTrials = 3;
-	
+	private int numTrialsBeforeIEC = 0;;
 	
 	//MARIO VARIABLES
 	static final MarioAIOptions marioAIOptions = new MarioAIOptions();
@@ -54,15 +54,12 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
     
-	
+	//TODO: Make properties variables for IECgenerations and random levels,
 	
 	@Override
 	public void init(Properties props) throws Exception {
-		// TODO Auto-generated method stub
-
 		System.out.println("INITTING");
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );		
-		//marioAIOptions.printOptions(false);
 	}
 
 	@Override
@@ -73,31 +70,21 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			Chromosome genotype = (Chromosome) it.next();
 			evaluate(genotype, false);
 		}
-		
-		//marioAIOptions
 	}
+
 	
-	
-	/*
-	 * @param index used for naming the gifs,
+	/**
+	 * @param chromosome to record
 	 */
 	public void recordImages( Chromosome c ){
-		
-	    //marioAIOptions.setVisualization(false);
-		environment.reset(marioAIOptions);
-	    
-		//Turn on recording
-		environment.recordMario(false);
+	    marioAIOptions.setVisualization(true);
+		environment.recordMario(true);
 		
 		int gifDurationMillis = 5000;
-		
 		try {
+			// Load in chromosome to the factory
 			Activator activator = factory.newActivator( c );
-			
-
-			marioAIOptions.setLevelDifficulty(1);
-		    marioAIOptions.setLevelType(1);
-		    marioAIOptions.setLevelRandSeed(5);
+			setMarioLevel(1, 1, 5);
 		    singleTrialForGIF( activator, gifDurationMillis );
 		}
 		catch ( Throwable e ) {
@@ -106,13 +93,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		}
 		
 	}
-	
 private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
-		
-	    //levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
-
-	    //Set radius of input grid
-	    setRadius(1, 3, 0, 3);
+	    setRadius(1, 1, 1, 1);
 	    
 	    //Get millis at starting point
 	    long startMillis = System.currentTimeMillis();
@@ -124,11 +106,10 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 			if(environment.getEvaluationInfo().timeSpent >= 0)	
 				environment.recordMario(true);
 				
-			
 			//Set all actions to false
 			resetActions();
 			
-			//GET INPUTS
+				//GET INPUTS
 				//create input array
 				double[] networkInput = new double[0];
 				
@@ -144,11 +125,10 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 				double[] marioStateInput = getMarioStateInput();
 				networkInput = addArrays(networkInput, marioStateInput);
 				
-				double[] hardcodedInputs = getHardcodedInputs();
-				networkInput = addArrays(networkInput, hardcodedInputs);
+				//double[] hardcodedInputs = getHardcodedInputs();
+				//networkInput = addArrays(networkInput, hardcodedInputs);
 				
-				System.out.println("Size: " + networkInput.length);
-				
+				//System.out.println("NetworkInput: " + networkInput.length);
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
 				
@@ -160,9 +140,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 
 
 	public void evaluate( Chromosome c, boolean visual ) {
-		// Easy level: 
-		String options = "-lf off -zs 1 -ls 16 -vis on";
-	    environment.reset(options);
 		
 		// Reset environment each trial
 		if(visual){
@@ -175,30 +152,21 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 	    
 	    try {
 			Activator activator = factory.newActivator( c );
-
-			//marioAIOptions.setVisualization(false);
 			
 			// calculate fitness, sum of multiple trials
 			int fitness = 0;
 			for ( int i = 0; i < numTrials; i++ ){
 				if(i == 0){
-					marioAIOptions.setLevelDifficulty(0);
-				    marioAIOptions.setLevelType(0);
-				    marioAIOptions.setLevelRandSeed(0);
+					setMarioLevel(0, 0, 0);
 				} 
 				
 				if(i == 1){
-					marioAIOptions.setLevelDifficulty(0);
-				    marioAIOptions.setLevelType(1);
-				    marioAIOptions.setLevelRandSeed(20);
+					setMarioLevel(1, 0, 20);
 				} 
 				
 				if(i == 2) {
-					marioAIOptions.setLevelDifficulty(1);
-				    marioAIOptions.setLevelType(1);
-				    marioAIOptions.setLevelRandSeed(5);
+					setMarioLevel(1, 1, 5);
 				}
-				environment.reset(marioAIOptions);
 				fitness += singleTrial( activator );
 			}
 			
@@ -215,44 +183,38 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 
 	
 	private int singleTrial( Activator activator ) {
-		
 		double fitness = 0;
-		//logger.debug( "state = " + Arrays.toString( state ) );
-		
-		//levelScene = environment.getLevelSceneObservationZ(zLevelScene);
-	    levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
-	    
-	    int reach = 2;
-	    setRadius(2, 4, 0, 4);
+	    setRadius(1,1,1,1);
 	    
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
 			resetActions();
 			
-//			#For each tick do
-			
 			//GET INPUTS
-				//create input array
-				double[] networkInput = new double[0];
-				
-				//Get state of the world
-				double[] limitedStateInput = getLimitedStateFromStage();
-				networkInput = addArrays(networkInput, limitedStateInput);
-				//System.out.println("Grid Size: " + limitedStateInput.length);
-				//Get direction and distance to nearest enemies
-				double[] inputNearestEnemies = getClosestEnemiesInput();
-				networkInput = addArrays(networkInput, inputNearestEnemies);
-				
-				//Get the state of Mario
-				double[] marioStateInput = getMarioStateInput();
-				networkInput = addArrays(networkInput, marioStateInput);
-				
-				//Feed the inputs to the network
-				double[] networkOutput = activator.next(networkInput);
-				
-				//Perform some action based on networkOutput
-				environment.performAction(getAction(networkOutput));
-				makeTick();		
+			double[] networkInput = new double[0];
+			
+			//Get state of the world
+			double[] limitedStateInput = getLimitedStateFromStage();
+			networkInput = addArrays(networkInput, limitedStateInput);
+			//System.out.println("Grid Size: " + limitedStateInput.length);
+			//Get direction and distance to nearest enemies
+			double[] inputNearestEnemies = getClosestEnemiesInput();
+			networkInput = addArrays(networkInput, inputNearestEnemies);
+			
+			//Get the state of Mario
+			double[] marioStateInput = getMarioStateInput();
+			networkInput = addArrays(networkInput, marioStateInput);
+			//System.out.println("Size: " + networkInput.length);
+			
+			//double[] hardcodedInputs = getHardcodedInputs();
+			//networkInput = addArrays(networkInput, hardcodedInputs);
+			
+			//Feed the inputs to the network
+			double[] networkOutput = activator.next(networkInput);
+			
+			//Perform some action based on networkOutput
+			environment.performAction(getAction(networkOutput));
+			makeTick();		
 	    }
 		
 
@@ -552,7 +514,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 	}
 	
 	private double[] getTwoDimToOneDimArray(double[][] state){
-		
 		double[] newArray = new double[state.length * state[0].length];
 		
 		for(int i = 0; i < state.length; i++){
@@ -698,7 +659,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 	
 	@Override
 	public int getMaxFitnessValue() {
-		// TODO Auto-generated method stub
 		return 10;
 	}
 	
@@ -708,5 +668,21 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis ) {
 		double onGround = (environment.isMarioOnGround()) ? 1 : 0;
 		double[] inputs = {jumping, shooting, onGround};
 		return inputs; 
+	}
+	/*
+	 * MARIO ENVIRONMENT FUNCTIONS
+	 */
+	
+	/**
+	 * 
+	 * @param level type
+	 * @param level difficulity 
+	 * @param seed
+	 */
+	public void setMarioLevel(int level, int difficulity, int seed){
+		marioAIOptions.setLevelType(level);
+		marioAIOptions.setLevelDifficulty(difficulity);
+	    marioAIOptions.setLevelRandSeed(seed);
+	    environment.reset(marioAIOptions);
 	}
 }

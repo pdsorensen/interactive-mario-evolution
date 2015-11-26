@@ -31,7 +31,7 @@ public class MarioGIFCreator {
 	    String options = "-lf on -zs 1 -ls 16 -vis on";
 	    environment.reset(options);
 	    environment.recordMario(false);
-	    environment.drawNEATInputsString(100, 100);
+	    //environment.drawNEATInputsString(100, 100);
 	    
 	    marioAIOptions.setLevelDifficulty(0);
 	    marioAIOptions.setLevelRandSeed(20);
