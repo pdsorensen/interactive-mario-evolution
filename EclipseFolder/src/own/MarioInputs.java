@@ -10,10 +10,105 @@ public class MarioInputs {
     int zLevelScene = 0;
     int zLevelEnemies = 0;
     
+    boolean includeStage, includeNearestEnemies, includeMarioState;
+    
 	int radNorth, radEast, radSouth, radWest;
 	int radCenter = 9;
 	
+	int numNearestEnemies;
 	
+	/**
+	 * constructor
+	 */
+	public MarioInputs( boolean includeStage, int north, int east, int south, int west, 
+						boolean includeNearestEnemies, int numNearestEnemies,
+						boolean includeMarioState ){
+		
+		this.includeStage = includeStage;
+		radNorth = north;
+		radEast = east;
+		radSouth = south;
+		radWest = west;
+		
+		this.includeNearestEnemies = includeNearestEnemies;
+		this.numNearestEnemies = numNearestEnemies;
+		
+		this.includeMarioState = includeMarioState;
+		
+		//Print total number of inputs
+		System.out.println( "Total inputs for Neat: " + getNumInputs() );
+	}
+	
+	/**
+	 * 
+	 * @return the total number of inputs used for NEAT
+	 */
+	private int getNumInputs(){
+		
+		int numInputs = 0;
+		
+		if(includeStage)
+			numInputs += getNumStageInputs();
+		
+		if(includeNearestEnemies)
+			numInputs += numNearestEnemies * 2;
+		
+		if(includeMarioState)
+			numInputs++;
+		
+		return numInputs;
+	}
+	
+	/**
+	 * @return the number of tiles in the grid used for presenting the
+	 * the level for Mario
+	 */
+	private int getNumStageInputs(){
+		
+		int x = radEast + radWest + 1;
+		int y = radNorth + radSouth + 1;
+		
+		return x * y;
+	}
+	
+
+	/**
+	 * Gets all the different inputs depended on what has been
+	 * included in the constructor of the MarioInputs object
+	 * @return
+	 */
+	public double[] getAllInputs(){
+		
+		double[] networkInput = new double[0];
+		
+		
+		if(includeStage){
+			//Get state of the world
+			double[] limitedStateInput = getLimitedStateFromStage();
+			networkInput = addArrays(networkInput, limitedStateInput);
+		}
+		
+		if(includeNearestEnemies){
+			//Get three nearest enemies
+			double[] inputNearestEnemies = getClosestEnemiesInput();
+			networkInput = addArrays(networkInput, inputNearestEnemies);
+		}
+		
+		if(includeMarioState){
+			//Get the state of Mario
+			double[] marioStateInput = getMarioStateInput();
+			networkInput = addArrays(networkInput, marioStateInput);
+		}
+		
+		return networkInput;
+	}
+	
+	/**
+	 * Concatenates the two parameter arrays
+	 * @param arr1 the first array to be concat'ed
+	 * @param arr2 the second array to be concat'ed
+	 * @return the concatenated arrays
+	 */
 	public double[] addArrays( double[] arr1, double[] arr2 ){
 		
 		double[] both = new double[ arr1.length + arr2.length ];
@@ -28,8 +123,8 @@ public class MarioInputs {
 	}
 	
 	
-	/*
-	 * @return the state of mario 
+	/**
+	 * @return the state of mario:
 	 * -1 = small
 	 *  0 = big
 	 *  1 = can shoot fire
@@ -48,25 +143,31 @@ public class MarioInputs {
 	
 	
 	///////GET CLOSEST ENEMIES
-	/*
+	/**
 	 * @return The distance and angle to up to 3 nearest enemies.
 	 */
 	public double[] getClosestEnemiesInput(){
 		
+		//Get enemy positions relative to Mario
 		float[] enemies = environment.getEnemiesFloatPos();
 		
-		int maxEnemies = 3;
-		double[] inputs = new double[ maxEnemies * 2 ];
+		//Create input array
+		double[] inputs = new double[ numNearestEnemies * 2 ];
 		
+		//Initial maxDistance, to be updated
 		double maxDistance = -1;
 		
 		//Add angles and distance to enemies
-		for(int i = 0; i < enemies.length && i < 9; i += 3){
+		for(int i = 0; i < enemies.length && i < numNearestEnemies * 3; i += 3){
 			
+			//Get relative X and Y distance to Mario
 			double relX = enemies[i+1];
 			double relY = enemies[i+2];
 			
+			//Calculate distance to Mario
 			double distance = Math.sqrt( Math.pow(relX, 2) + Math.pow(relY, 2) );
+			
+			//If this enemy is the farthest, update maxDistance
 			if( distance > maxDistance )
 				maxDistance = distance;
 			
@@ -78,7 +179,7 @@ public class MarioInputs {
 			
 			//Get index in input array
 			int k = i * 2 / 3;
-			//System.out.println("k: " + k + " out of " + enemies.length);
+
 			//Add distance to array
 			inputs[ k ] = distance;
 			
@@ -97,7 +198,7 @@ public class MarioInputs {
 	}
 	
 	
-	/*
+	/**
 	 * @param degree to be normalized
 	 * @return the normalized degree with value between -1 and 1
 	 */
@@ -119,7 +220,6 @@ public class MarioInputs {
 		
 		return normEnemyDist;
 	}
-	
 	
 	
 	/*
@@ -297,48 +397,12 @@ public class MarioInputs {
 		return endY;
 	}
 	
-	
-	//NOT USED!!!
-//	private double[][] getBlankLimitedState(){
-//		
-//		//Calculate dimension lengths
-//		int xDimension = getXdimensionLength();
-//		int yDimension = getYdimensionLength();
-//		
-//		//Create array
-//		double[][] state = new double[ xDimension ][ yDimension ];
-//		
-//		//Reset array - is it necessary?
-//		for(int i = 0; i < xDimension; i++)
-//			for(int j = 0; j < yDimension; j++)
-//				state[ i ][ j ] = 0;
-//		
-//		return state;
-//	}
-//	
-//	
-//	
-//	private double[] newState() {
-//		double[] state = new double[ 2 ];
-//		state[ 0 ] = state[ 1 ] =  0;
-//		return state;
-//	}
-//	
-//	
-//	/*
-//	 * @return The FULL state of the Mario World
-//	 */
-//	private double[][] getFullStateFromStage(){
-//
-//		double[][] inputs = newFullState();
-//		
-//		for(int i = 0; i < levelScene.length; i++)
-//			for(int j = 0; j< levelScene[i].length; j++)
-//				inputs[ i ][ j ] = levelScene[ i ][ j ];
-//		
-//		return inputs;
-//	}
-//	
-	
+	public double[] getHardcodedInputs(){
+		double jumping = (environment.isMarioAbleToJump()) ? 1 : 0;
+		double shooting = (environment.isMarioAbleToShoot()) ? 1 : 0;
+		double onGround = (environment.isMarioOnGround()) ? 1 : 0;
+		double[] inputs = {jumping, shooting, onGround};
+		return inputs; 
+	}
 	
 }

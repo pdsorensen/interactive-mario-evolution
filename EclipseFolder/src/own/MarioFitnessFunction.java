@@ -49,19 +49,19 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
 
     int prevGeneration = 0;
-    int difficulty = 2;
+    int difficulty = 0;
 	int level = 0;
 	
-	MarioInputs marioInputs = new MarioInputs();
+	//Define the inputs for Mario
+	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
+												true, 3,
+												true );
 	
 	
 	@Override
 	public void init(Properties props) throws Exception {
 		System.out.println("INITTING");
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );		
-
-	    //Set radius of input grid
-	    marioInputs.setRadius(1, 1, 1, 1);
 	}
 
 	@Override
@@ -113,8 +113,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	 */
 	public void recordImages( Chromosome c, int generation ){
 		
-		GlobalOptions.FPS = 0;
-		
 		//Set stage and difficulty
 		setStage(generation);
 	    
@@ -156,32 +154,11 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			if(environment.getEvaluationInfo().timeSpent >= ( delayRecording / 1000 ) )	
 				environment.recordMario(true);
 				
-			//Set all actions to false
-			resetActions();
+				//Set all actions to false
+				resetActions();
 			
-				//GET INPUTS
-				//create input array
-				double[] networkInput = new double[0];
-				
-				//printLevelScene();
-				//turnLevelScene();
-				
-				//Get state of the world
-				double[] limitedStateInput = marioInputs.getLimitedStateFromStage();
-				networkInput = marioInputs.addArrays(networkInput, limitedStateInput);
-				
-				//Get three nearest enemies 
-				double[] inputNearestEnemies = marioInputs.getClosestEnemiesInput();
-				networkInput = marioInputs.addArrays(networkInput, inputNearestEnemies);
-				
-				//Get the state of Mario
-				double[] marioStateInput = marioInputs.getMarioStateInput();
-				networkInput = marioInputs.addArrays(networkInput, marioStateInput);
-				
-//				double[] hardcodedInputs = getHardcodedInputs();
-//				networkInput = addArrays(networkInput, hardcodedInputs);
-				
-				System.out.println("Size: " + networkInput.length);
+				//Get inputs
+				double[] networkInput = marioInputs.getAllInputs();
 				
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
@@ -245,21 +222,8 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			//Set all actions to false
 			resetActions();
 			
-			//GET INPUTS
-			//create input array
-			double[] networkInput = new double[0];
-			
-			//Get state of the world
-			double[] limitedStateInput = marioInputs.getLimitedStateFromStage();
-			networkInput = marioInputs.addArrays(networkInput, limitedStateInput);
-			//System.out.println("Grid Size: " + limitedStateInput.length);
-			//Get direction and distance to nearest enemies
-			double[] inputNearestEnemies = marioInputs.getClosestEnemiesInput();
-			networkInput = marioInputs.addArrays(networkInput, inputNearestEnemies);
-			
-			//Get the state of Mario
-			double[] marioStateInput = marioInputs.getMarioStateInput();
-			networkInput = marioInputs.addArrays(networkInput, marioStateInput);
+			//Get inputs
+			double[] networkInput = marioInputs.getAllInputs();
 			
 			//Feed the inputs to the network
 			double[] networkOutput = activator.next(networkInput);
@@ -508,13 +472,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		return 10;
 	}
 	
-	public double[] getHardcodedInputs(){
-		double jumping = (environment.isMarioAbleToJump()) ? 1 : 0;
-		double shooting = (environment.isMarioAbleToShoot()) ? 1 : 0;
-		double onGround = (environment.isMarioOnGround()) ? 1 : 0;
-		double[] inputs = {jumping, shooting, onGround};
-		return inputs; 
-	}
 	/*
 	 * MARIO ENVIRONMENT FUNCTIONS
 	 */
