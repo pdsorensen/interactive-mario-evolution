@@ -236,8 +236,8 @@ public class MarioNeat implements Configurable{
 				logger.info( "Automated NEAT Generation " + generation + ": start" );
 				genotype.evolve();
 				
-				Chromosome c = genotype.getFittestChromosome();
-				iecCandidates.add(c);
+				//Chromosome c = genotype.getFittestChromosome();
+				//iecCandidates.add(c);
 				
 				// generation finish
 				Date generationEndDate = Calendar.getInstance().getTime();
