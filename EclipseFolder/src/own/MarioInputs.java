@@ -18,7 +18,10 @@ public class MarioInputs {
 	int numNearestEnemies;
 	
 	/**
-	 * constructor
+	 * constructor. 
+	 * Specify which inputs you would like to include for Mario. 
+	 * There will be a print to the console specifying how many inputs are
+	 * included in total.
 	 */
 	public MarioInputs( boolean includeStage, int north, int east, int south, int west, 
 						boolean includeNearestEnemies, int numNearestEnemies,
@@ -272,7 +275,10 @@ public class MarioInputs {
 	 */
 	private double[][] getRotatedLevelScene(){
 		
-		levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
+		levelScene = environment.getLevelSceneObservationZ(zLevelScene);
+		//Uncomment to include enemies
+		//levelScene = environment.getMergedObservationZZ(zLevelScene, zLevelEnemies);
+		
 		
 		int lengthX = levelScene.length;
 		int lengthY = levelScene[0].length;
@@ -283,7 +289,7 @@ public class MarioInputs {
 		for(int i = 0; i < lengthX; i++ )
 			for(int j = 0; j < lengthY; j++ )
 				rotatedLevelScene[ lengthY - 1 - i ][ j ] = levelScene[ j ][ lengthY - 1 - i ];
-		
+				
 		return rotatedLevelScene;
 	}
 
@@ -305,13 +311,12 @@ public class MarioInputs {
 		int index = 0;
 		
 		//Go through double dimension array and put values in single dimension array
-		for(int i = 0; i < lengthX; i++){
+		for(int i = 0; i < lengthX; i++)
 			for(int j = 0; j < lengthY; j++){
 				newArray[ index ] = state[i][j];
 				index++;
 			}
-		}
-		
+			
 		//Normalize values in newArray
 		double[] normNewArray = normalizeState(newArray);
 		

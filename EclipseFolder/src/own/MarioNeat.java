@@ -164,9 +164,9 @@ public class MarioNeat implements Configurable{
 		
 		// Might get messy: 
 		ff.init(props);
-		
-		
+
 	}
+
 	
 	public void run() throws Exception {
 		// TODO: Cleaning and evaluating, think about class variables, more proper logging
@@ -174,7 +174,7 @@ public class MarioNeat implements Configurable{
 		DateFormat fmt = new SimpleDateFormat( "HH:mm:ss" );
 		
 		boolean wait = false;
-		for(int IECGeneration = 0; IECGeneration < 5; IECGeneration++){
+		for(int IECGeneration = 0; IECGeneration < 50; IECGeneration++){
 			// IEC STEP
 			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
 			logger.info( "Generation " + IECGeneration + ": start" );
@@ -194,6 +194,9 @@ public class MarioNeat implements Configurable{
 			    //Create and save gif 
 			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
 			}
+			
+			ff.generation++;
+			System.out.println("Generation after record: " + ff.generation + " | " + ff);
 			
 			
 			MarioGIF.runIEC(folderName);
@@ -230,14 +233,18 @@ public class MarioNeat implements Configurable{
 			folderName++;
 			
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
-			for ( int generation = 0; generation < numEvolutions; generation++ ) {
+			for ( int generation = 0; generation < 2; generation++ ) {
 				System.out.println("Running generation: " + generation + "..."); 
 				Date generationStartDate = Calendar.getInstance().getTime();
 				logger.info( "Automated NEAT Generation " + generation + ": start" );
+				
 				genotype.evolve();
 				
 				//Chromosome c = genotype.getFittestChromosome();
 				//iecCandidates.add(c);
+				
+				ff.generation++;
+				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
 				
 				// generation finish
 				Date generationEndDate = Calendar.getInstance().getTime();
