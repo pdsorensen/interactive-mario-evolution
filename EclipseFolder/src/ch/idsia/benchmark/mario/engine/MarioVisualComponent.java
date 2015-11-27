@@ -102,6 +102,7 @@ public boolean saveImages = false;
 public boolean drawLines = false; 
 public ArrayList<Integer> xCords = new ArrayList<Integer>(); 
 public ArrayList<Integer> yCords = new ArrayList<Integer>(); 
+public ArrayList<String> drawStrings = new ArrayList<String>(); 
 
 
 private MarioVisualComponent(MarioAIOptions marioAIOptions, MarioEnvironment marioEnvironment)
@@ -396,14 +397,38 @@ public void createImage(){
 	}
 }
 
+public void setDrawText(){
+	
+}
+
 public void drawLines(){
-	System.out.println("xCords: " + xCords.isEmpty() + ", " + xCords.size());
+	System.out.println("--------------- DRAWING LINES ------------");
+	int halfWidth = GlobalOptions.VISUAL_COMPONENT_WIDTH/2;
+	int halfHeight = GlobalOptions.VISUAL_COMPONENT_WIDTH/2;
+	int stringCounter = 0; 
 	for(int i = 0; i<xCords.size(); i+=2){
-		thisVolatileImageGraphics.drawLine(xCords.get(i), yCords.get(i), xCords.get(i+1), xCords.get(i+1));
+		
+		System.out.println("Drawing Line and string!" + drawStrings.get(stringCounter));
+		int x1; int y1; int x2; int y2; 
+		if(xCords.get(i) > halfWidth){
+			x1 = xCords.get(i) + halfWidth - xCords.get(i);
+		    y1 = yCords.get(i) + halfHeight - yCords.get(i);
+		    x2 = xCords.get(i+1) + halfWidth - xCords.get(i+1);
+		    y2 = yCords.get(i+1) + halfHeight - yCords.get(i+1);
+		    System.out.println("xCords>halfWIdth: " + "[" + x1 + "][" + y1 + "]");
+		} else {
+			x1 = xCords.get(i); 
+			y1 = yCords.get(i);
+			x2 = xCords.get(i+1); 
+			y2 = yCords.get(i+1);
+		}
+		thisVolatileImageGraphics.drawLine(x1, yCords.get(i), x2, yCords.get(i+1));
+		drawString(thisVolatileImageGraphics, drawStrings.get(stringCounter), x2, yCords.get(i+1), 0);
+		stringCounter++;
 	}
 	xCords.clear();
 	yCords.clear();
-	System.out.println("End of drawline");
+	drawStrings.clear();
 }
 
 
@@ -497,7 +522,7 @@ public void adjustFPS()
     delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
     
     //Added to speed up the visualized run
-    delay = 0;
+    //delay = 0;
 }
 
 // THis method here solely for the displaying information in order to reduce

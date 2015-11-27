@@ -70,7 +70,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		Iterator it = genotypes.iterator();
 		while ( it.hasNext() ) {
 			Chromosome genotype = (Chromosome) it.next();
-			evaluate(genotype, false);
+			evaluate(genotype, true);
 		}
 	}
 
@@ -159,7 +159,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 				//Get inputs
 				double[] networkInput = marioInputs.getAllInputs();
-				
+				drawInputs(networkInput);
 				//Feed the inputs to the network
 				double[] networkOutput = activator.next(networkInput);
 				
@@ -224,12 +224,14 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 			//Get inputs
 			double[] networkInput = marioInputs.getAllInputs();
-			
+			//System.out.println("Network size: " + networkInput.length);
 			//Feed the inputs to the network
 			double[] networkOutput = activator.next(networkInput);
+			drawInputs(networkInput);
 			
 			//Perform some action based on networkOutput
 			environment.performAction(getAction(networkOutput));
+			 
 			makeTick();		
 	    }
 		
@@ -250,6 +252,24 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		return (int)fitness;
 	}
 	
+	public void drawInputs(double[] inputsToBeDrawn){
+		int marioX = (int) environment.getMarioFloatPos()[0];
+		int marioY = (int) environment.getMarioFloatPos()[1] - 8;
+
+		String[] inputValues = marioInputs.getHardcodedCellValues();
+		System.out.println("NORTH:  " + inputValues[0]); 
+		System.out.println("WEST:  " + inputValues[1]); 
+		System.out.println("EAST:  " + inputValues[2]); 
+		System.out.println("SOUTH:  " + inputValues[3]); 
+		// NORTH
+		environment.drawLine(marioX, marioY, marioX, marioY-16, inputValues[0]);
+		// WEST
+		environment.drawLine(marioX, marioY, marioX-16, marioY, inputValues[1]);
+		// EAST
+		environment.drawLine(marioX, marioY, marioX+16, marioY, inputValues[2]);
+		//SOUTH
+		environment.drawLine(marioX, marioY, marioX, marioY+16, inputValues[3]);
+	}
 	
 	/*
 	 * NORMALIZED FITNESS ELEMENTS

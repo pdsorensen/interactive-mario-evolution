@@ -742,12 +742,13 @@ public void recordMario(boolean b) {
 	marioVisualComponent.saveImages = b; 
 }
 
-public void drawLine(int x1, int y1, int x2, int y2) {
+public void drawLine(int x1, int y1, int x2, int y2, String text) {
 	
 	marioVisualComponent.xCords.add(x1);
 	marioVisualComponent.yCords.add(y1);
 	marioVisualComponent.xCords.add(x2);
 	marioVisualComponent.yCords.add(y2);
+	marioVisualComponent.drawStrings.add(text);
 	marioVisualComponent.drawLines = true; 
 }
 

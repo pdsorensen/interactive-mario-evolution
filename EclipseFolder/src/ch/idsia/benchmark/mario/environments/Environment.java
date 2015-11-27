@@ -175,7 +175,7 @@ public byte[][] getScreenCapture();
 
 void saveLastRun(String filename);
 
-public void drawLine(int x1, int y1, int x2, int y2);
+public void drawLine(int x1, int y1, int x2, int y2, String text);
 
 public void recordMario(boolean b);
 }

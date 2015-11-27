@@ -73,6 +73,7 @@ public static void main(String[] args)
     marioAIOptions.setLevelRandSeed(20);
     basicTask.setOptionsAndReset(marioAIOptions);
     
+    
     while(!environment.isLevelFinished()){
     	environment.tick();
     	agent.integrateObservation(environment);

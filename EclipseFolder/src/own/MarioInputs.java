@@ -17,6 +17,9 @@ public class MarioInputs {
 	
 	int numNearestEnemies;
 	
+	// FOR DRAWING
+	double[][] drawState;
+	
 	/**
 	 * constructor
 	 */
@@ -292,7 +295,7 @@ public class MarioInputs {
 	 * @param state, the double array with limited state of stage
 	 * @return the values from state put into a single dimension array
 	 */
-	private double[] getTwoDimToOneDimArray(double[][] state){
+	public double[] getTwoDimToOneDimArray(double[][] state){
 		
 		//Get the length of X and Y dimension of state array
 		int lengthX = state.length;
@@ -373,6 +376,8 @@ public class MarioInputs {
 			for( int j = 0; j < yDimension; j++ )
 				limitedState[ i ][ j ] = rotatedLevel[ i + getStartX() ][ j + getStartY() ];
 		
+		// Set draw values
+		setDrawValues(limitedState);
 		
 		//Convert to single dimension array
 		double[] input = getTwoDimToOneDimArray(limitedState);
@@ -380,6 +385,23 @@ public class MarioInputs {
 		return input;
 	}
 	
+	public void setDrawValues(double[][] inputs){
+		drawState = new double[inputs.length][inputs[0].length]; 
+		for(int i = 0; i<inputs.length; i++){
+			for(int j = 0; j<inputs[i].length; j++){
+				drawState[i][j] = inputs[i][j];
+			}
+		}
+	} 
+	public String[] getHardcodedCellValues(){
+		String[] res = new String[4];
+		res[0] = Double.toString(drawState[0][1]); // NORTH
+		res[1] = Double.toString(drawState[1][0]); // EAST 
+		res[2] = Double.toString(drawState[1][2]); // WEST
+		res[3] = Double.toString(drawState[2][1]); // SOUTH
+		
+		return res; 
+	}
 	
 	/**
 	 * Set radius for all 4 directions;
