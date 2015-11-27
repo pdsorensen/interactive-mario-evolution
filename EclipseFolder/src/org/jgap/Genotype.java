@@ -242,6 +242,7 @@ public synchronized Chromosome getFittestChromosome() {
  */
 
 
+
 public synchronized void evolveGif() {
 	System.out.println("Running genotypeGIF");
 
@@ -319,6 +320,7 @@ public synchronized void evolveGif() {
 		throw new RuntimeException( "bad config", e );
 	}
 }
+
 
 
 public synchronized void evolve() {

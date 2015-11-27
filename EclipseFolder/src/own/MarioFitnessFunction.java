@@ -48,9 +48,11 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
 
-    int prevGeneration = 0;
-    int difficulty = 0;
-	int level = 0;
+    public static int generation = 0;
+    public static int prevGeneration = 0;
+    public static int difficulty = 0;
+    public static int level = 0;
+    public static int seed = 2;
 	
 	//Define the inputs for Mario
 	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
@@ -75,34 +77,49 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 
 	
+	public void increaseGeneration(){
+		generation++;
+	}
+	
+	public void changeSeed(int num){
+		seed += num;
+	}
+	
 	/*
 	 * If enough playthroughs have been made:
 	 * 		Increase difficulty
 	 * 		Change state
+	 * 		Increase seed
 	 */
-	public void setStage(int generation){
+	public void setStage(){
 		//Check if generation changes
 		if(prevGeneration != generation){
-			
+			System.out.println("GENERATION HAS CHANGED");
 			//Change difficulty
-			if( generation % 2 == 0 ) 
-				difficulty += 1;
+			if( generation % 4 == 0 ) 
+				difficulty++;
 			
-			//Change level
-			if( generation % 5 == 0 ){
-				
-				difficulty = 1;
-				level += 1;
+			//Change seed
+			if( generation % 8 == 0 ){
+				difficulty = 0;
+				seed++;
 			}
 			
-			prevGeneration = generation;
+			//Change level
+			if( generation % 16 == 0 ){
+				difficulty = 0;
+				seed = 0;
+				level++;
+			}
 			
+			prevGeneration = generation;	
 		}
 		
+		System.out.println("level: " + level + " | diff: " + difficulty + " | seed: " + seed);
 	    //marioAIOptions.setVisualization(false);
-		marioAIOptions.setLevelDifficulty(difficulty);
-	    marioAIOptions.setLevelType(level);
-	    marioAIOptions.setLevelRandSeed(5);
+		marioAIOptions.setLevelDifficulty( difficulty );
+	    marioAIOptions.setLevelType( level );
+	    marioAIOptions.setLevelRandSeed( seed );
 		environment.reset(marioAIOptions);
 		
 	}
@@ -113,8 +130,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	 */
 	public void recordImages( Chromosome c, int generation ){
 		
-		//Set stage and difficulty
-		setStage(generation);
+		//Set stage, difficulty and seed
+		setStage();
 	    
 		//Turn on recording
 		marioAIOptions.setVisualization(true);
@@ -170,15 +187,18 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	}
 
 
+	/**
+	 * Evaluate for the automated Neat step
+	 * @param c
+	 * @param visual
+	 */
 	public void evaluate( Chromosome c, boolean visual ) {
 		
 		// Reset environment each trial
 		if(visual){
 			marioAIOptions.setVisualization(true);
-			environment.reset(marioAIOptions);
 		} else {
 			marioAIOptions.setVisualization(false);
-			environment.reset(marioAIOptions);
 		}
 	    
 	    try {
@@ -187,19 +207,15 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			// calculate fitness, sum of multiple trials
 			int fitness = 0;
 			for ( int i = 0; i < numTrials; i++ ){
-				if(i == 0){
-					setMarioLevel(0, 0, 0);
-				} 
+
+				setStage();
 				
-				if(i == 1){
-					setMarioLevel(1, 0, 20);
-				} 
-				
-				if(i == 2) {
-					setMarioLevel(1, 1, 5);
-				}
 				fitness += singleTrial( activator );
+				
+				changeSeed( 1 );
 			}
+			//Reset seed
+			changeSeed( -numTrials );
 			
 			fitness /= numTrials;
 			System.out.println("EVALUATE: fitness score,  " + fitness);
