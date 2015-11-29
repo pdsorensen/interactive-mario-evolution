@@ -31,6 +31,7 @@ import ch.idsia.agents.Agent;
 import ch.idsia.agents.controllers.ForwardAgent;
 import ch.idsia.agents.controllers.ForwardJumpingAgent;
 import ch.idsia.agents.learning.SimpleMLPAgent;
+import ch.idsia.benchmark.mario.engine.GlobalOptions;
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.benchmark.tasks.BasicTask;
@@ -39,6 +40,8 @@ import ch.idsia.tools.MarioAIOptions;
 import java.io.IOException;
 
 import own.FSMController;
+import own.MarioFitnessFunction;
+import own.MarioInputs;
 import own.NEATController;
 import competition.gic2010.turing.sergeykarakovskiy.SergeyKarakovskiy_ForwardAgent;
 
@@ -52,6 +55,7 @@ import competition.gic2010.turing.sergeykarakovskiy.SergeyKarakovskiy_ForwardAge
 
 public class Custom
 {
+	static Environment environment = MarioEnvironment.getInstance();
 public static void main(String[] args)
 {
     final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
@@ -61,24 +65,63 @@ public static void main(String[] args)
     //basicTask.setOptionsAndReset(marioAIOptions);
     //basicTask.runSingleEpisode(1);
     
-    Environment environment = MarioEnvironment.getInstance();
+    //Environment environment = MarioEnvironment.getInstance();
     //Agent agent = new ForwardJumpingAgent(); 
     //Agent agent = new SimpleMLPAgent();
-    Agent agent = new NEATController();
+    //Agent agent = new NEATController();
+    
+    // FOR DEBUGGING DRAWING FUNCTIONS
+    Agent agent = marioAIOptions.getAgent();
     
     String options = "-lf on -zs 1 -ls 16 -vis on";
     environment.reset(options);
+//    MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
+//			true, 3,
+//			true, true, true, true );
+    MarioFitnessFunction ff = new MarioFitnessFunction(); 
     
     marioAIOptions.setLevelDifficulty(0);
-    marioAIOptions.setLevelRandSeed(20);
+    marioAIOptions.setLevelRandSeed(0);
     basicTask.setOptionsAndReset(marioAIOptions);
     
     
-    while(!environment.isLevelFinished()){
-    	environment.tick();
-    	agent.integrateObservation(environment);
-        environment.performAction(agent.getAction());
+//    while(!environment.isLevelFinished()){
+//    	environment.tick();
+//    	//agent.integrateObservation(environment);
+//        //environment.performAction(agent.getAction());
+//        
+//    }
+    
+    while (!environment.isLevelFinished()){
+	    environment.tick();
+        if (!GlobalOptions.isGameplayStopped){
+        	// Do Drawing! 
+        	ff.resetActions();
+			
+			//Get inputs
+			//double[] networkInput = marioInputs.getAllInputs();
+			
+			//Feed the inputs to the network and translate it
+			//double[] networkOutput = activator.next(networkInput);
+			//boolean[] actions = getAction(networkOutput);
+			
+			//Drawing and debugging functions 
+        	ff.getAllInputs();
+			ff.drawGrid();
+			ff.drawPossibleMarioActions();
+			ff.drawNearestEnemies(2);
+			//ff.drawOutputs(actions);
+			//marioInputs.printAllOutputs(actions, networkOutput); 
+			//marioInputs.printAllInputs(networkInput);
+        	
+        	
+        	// Perform action 
+            agent.integrateObservation(environment);
+            boolean[] action = agent.getAction();
+            environment.performAction(action);
+        }
     }
+
     
     
     

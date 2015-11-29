@@ -100,10 +100,24 @@ public boolean saveImages = false;
 
 // FOR DEBUGGING INPUTS
 public boolean drawLines = false; 
+public boolean drawHardcodedStates = true;
+public boolean drawActionOutputs = true; 
+public boolean drawEnemies = false; 
+int halfWidth = GlobalOptions.VISUAL_COMPONENT_WIDTH/2;
+int halfHeight = GlobalOptions.VISUAL_COMPONENT_HEIGHT/2;
+// Drawing mario grid variables
 public ArrayList<Integer> xCords = new ArrayList<Integer>(); 
 public ArrayList<Integer> yCords = new ArrayList<Integer>(); 
 public ArrayList<String> drawStrings = new ArrayList<String>(); 
 
+// Drawing variables
+public ArrayList<Boolean> hardcodedMarioActions = new ArrayList<Boolean>(); 
+public ArrayList<Boolean> outputActions = new ArrayList<Boolean>(); 
+
+// Enemies drawing variables
+public ArrayList<Integer> enemyXCords = new ArrayList<Integer>(); 
+public ArrayList<Integer> enemyYCords = new ArrayList<Integer>(); 
+public ArrayList<String> enemyLabels = new ArrayList<String>();
 
 private MarioVisualComponent(MarioAIOptions marioAIOptions, MarioEnvironment marioEnvironment)
 {
@@ -194,10 +208,10 @@ public void tick()
 //    this.render(thisVolatileImageGraphics, CheaterKeyboardAgent.isObserveLevel ? level.length : 0);
     this.render(thisVolatileImageGraphics);
     
-    String msg = "Agent: " + this.agentNameStr;
-    drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 6, 5);
+    //String msg = "Agent: " + this.agentNameStr;
+    //drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 6, 5);
 
-    msg = "PRESSED KEYS: ";
+    String msg = "PRESSED KEYS: ";
     drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 7, 6);
 
     msg = "";
@@ -221,8 +235,8 @@ public void tick()
 //            drawString(thisVolatileImageGraphics, msgClick, 160 - msgClick.length() * 4, 110, 7);
     }
 //        thisVolatileImageGraphics.setColor(Color.DARK_GRAY);
-    drawStringDropShadow(thisVolatileImageGraphics, "FPS: ", 33, 2, 7);
-    drawStringDropShadow(thisVolatileImageGraphics, ((GlobalOptions.FPS > 99) ? "\\infty" : "  " + GlobalOptions.FPS.toString()), 33, 3, 7);
+    //drawStringDropShadow(thisVolatileImageGraphics, "FPS: ", 33, 2, 7);
+    //drawStringDropShadow(thisVolatileImageGraphics, ((GlobalOptions.FPS > 99) ? "\\infty" : "  " + GlobalOptions.FPS.toString()), 33, 3, 7);
 
 //        msg = totalNumberOfTrials == -2 ? "" : currentTrial + "(" + ((totalNumberOfTrials == -1) ? "\\infty" : totalNumberOfTrials) + ")";
 
@@ -300,16 +314,17 @@ public void render(Graphics g)
     g.setColor(Color.BLACK);
     //layer.renderExit(g, marioEnvironment.getTick());
 
-    drawStringDropShadow(g, "DIFFICULTY: " + df.format(marioEnvironment.getLevelDifficulty()), 0, 0, marioEnvironment.getLevelDifficulty() > 6 ? 1 : marioEnvironment.getLevelDifficulty() > 2 ? 4 : 7);
-//    drawStringDropShadow(g, "CREATURES:" + (mario.levelScene.paused ? "OFF" : " ON"), 19, 0, 7);
+    /*drawStringDropShadow(g, "DIFFICULTY: " + df.format(marioEnvironment.getLevelDifficulty()), 0, 0, marioEnvironment.getLevelDifficulty() > 6 ? 1 : marioEnvironment.getLevelDifficulty() > 2 ? 4 : 7);
+    //drawStringDropShadow(g, "CREATURES:" + (mario.levelScene.paused ? "OFF" : " ON"), 19, 0, 7);
     drawStringDropShadow(g, "SEED:" + marioEnvironment.getLevelSeed(), 0, 1, 7);
     drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[marioEnvironment.getLevelType()], 0, 2, 7);
     drawStringDropShadow(g, "ALL KILLS: " + marioEnvironment.getKilledCreaturesTotal(), 19, 0, 1);
     drawStringDropShadow(g, "LENGTH:" + (int) mario.x / 16 + " of " + marioEnvironment.getLevelLength(), 0, 3, 7);
     drawStringDropShadow(g, "HEIGHT:" + (int) mario.y / 16 + " of " + marioEnvironment.getLevelHeight(), 0, 4, 7);
     drawStringDropShadow(g, "by Fire  : " + marioEnvironment.getKilledCreaturesByFireBall(), 19, 1, 1);
-//    drawStringDropShadow(g, "COINS    : " + df.format(Mario.coins), 0, 4, 4);
+    //drawStringDropShadow(g, "COINS    : " + df.format(Mario.coins), 0, 4, 4);
     drawStringDropShadow(g, "by Shell : " + marioEnvironment.getKilledCreaturesByShell(), 19, 2, 1);
+    
     // COINS:
     g.drawImage(Art.level[0][2], 2, 43, 10, 10, null);
     drawStringDropShadow(g, "x" + df.format(Mario.coins), 1, 5, 4);
@@ -317,10 +332,10 @@ public void render(Graphics g)
     drawStringDropShadow(g, "x" + df.format(Mario.mushroomsDevoured), 7, 5, 4);
     g.drawImage(Art.items[1][0], 89, 43, 11, 11, null);
     drawStringDropShadow(g, "x" + df.format(Mario.flowersDevoured), 12, 5, 4);
-//    drawStringDropShadow(g, "MUSHROOMS: " + df.format(Mario.mushroomsDevoured), 0, 5, 4);
+    //drawStringDropShadow(g, "MUSHROOMS: " + df.format(Mario.mushroomsDevoured), 0, 5, 4);
     drawStringDropShadow(g, "by Stomp : " + marioEnvironment.getKilledCreaturesByStomp(), 19, 3, 1);
-//    drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.flowersDevoured), 0, 6, 4);
-
+    //drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.flowersDevoured), 0, 6, 4);*/
+/*
     if (GlobalOptions.isRecording)
     {
         --recordIndicator;
@@ -341,95 +356,36 @@ public void render(Graphics g)
         g.drawPolygon(new int[]{303, 303, 316}, new int[]{16, 4, 10}, 3);
     }
 
-    drawStringDropShadow(g, "TIME", 33, 0, 7);
+    /*drawStringDropShadow(g, "TIME", 33, 0, 7);
     int time = marioEnvironment.getTimeLeft();
-//    if (time < 0) time = 0;
+	//if (time < 0) time = 0;
 
     drawStringDropShadow(g, " " + df2.format(time), 33, 1, time < 0 ? 3 : time < 50 ? 1 : time < 100 ? 4 : 7);
 
     drawProgress(g);
-
+	
     if (GlobalOptions.areLabels)
     {
         g.drawString("xCam: " + xCam + "yCam: " + yCam, 10, 205);
         g.drawString("x : " + mario.x + "y: " + mario.y, 10, 215);
         g.drawString("xOld : " + mario.xOld + "yOld: " + mario.yOld, 10, 225);
-    }
+    }*/
     if(saveImages)
     	createImage();
     
     if(drawLines)
     	drawLines(); 
+    
+    if(drawHardcodedStates)
+    	drawHardcodedStates(); 
+    if(drawActionOutputs)
+    	drawActionOutputs();
+    if(drawEnemies)
+    	drawEnemies();
     g.clearRect(5, 5, 5, 5);
 }
 
-public void createImage(){
-	//System.out.println("Creating image...");
-	BufferedImage imageToDraw = thisVolatileImage.getSnapshot();
-	
-	// File Variables: 
-	StringBuilder sb = new StringBuilder(); 
-	String fileName = "mario_image_";
-	String folderDestAsString = "./db/images/";
-	String extension = "png"; 
-	
-	if( counter == saveFrequency ){
-		try {
-			sb.append(folderDestAsString);
-			if( fileNumber < 10 ){
-				sb.append("0");
-			}
-			sb.append(fileNumber + ".");
-			sb.append(extension);
-			
-			String finalFileName = sb.toString();
-	        if (ImageIO.write(imageToDraw, extension, new File(finalFileName)))
-	        {
-	            //System.out.println("-- image saved to: " + finalFileName);
-	            fileNumber++; 
-	            counter = 0; 
-	        }
-	    } catch (IOException e) {	
-	            e.printStackTrace();
-	    }
-	} else {
-		counter++; 
-	}
-}
 
-public void setDrawText(){
-	
-}
-
-public void drawLines(){
-	System.out.println("--------------- DRAWING LINES ------------");
-	int halfWidth = GlobalOptions.VISUAL_COMPONENT_WIDTH/2;
-	int halfHeight = GlobalOptions.VISUAL_COMPONENT_WIDTH/2;
-	int stringCounter = 0; 
-	for(int i = 0; i<xCords.size(); i+=2){
-		
-		System.out.println("Drawing Line and string!" + drawStrings.get(stringCounter));
-		int x1; int y1; int x2; int y2; 
-		if(xCords.get(i) > halfWidth){
-			x1 = xCords.get(i) + halfWidth - xCords.get(i);
-		    y1 = yCords.get(i) + halfHeight - yCords.get(i);
-		    x2 = xCords.get(i+1) + halfWidth - xCords.get(i+1);
-		    y2 = yCords.get(i+1) + halfHeight - yCords.get(i+1);
-		    System.out.println("xCords>halfWIdth: " + "[" + x1 + "][" + y1 + "]");
-		} else {
-			x1 = xCords.get(i); 
-			y1 = yCords.get(i);
-			x2 = xCords.get(i+1); 
-			y2 = yCords.get(i+1);
-		}
-		thisVolatileImageGraphics.drawLine(x1, yCords.get(i), x2, yCords.get(i+1));
-		drawString(thisVolatileImageGraphics, drawStrings.get(stringCounter), x2, yCords.get(i+1), 0);
-		stringCounter++;
-	}
-	xCords.clear();
-	yCords.clear();
-	drawStrings.clear();
-}
 
 
 private void drawProgress(Graphics g)
@@ -597,6 +553,155 @@ private void renderBlackout(Graphics g, int x, int y, int radius)
     g.fillPolygon(xp, yp, xp.length);
 }
 
+/************* OWN CUSTOM VISUAL FUNCTIONS (NOT PART OF MARIO AI FRAMEWORK) *************/
+
+/**
+ * CreateImage() 
+ * Creates and saves a image to folder "./db/images/ which is used by the GifSequenceWriter class to 
+ * create a .gif 
+ */
+public void createImage(){
+	//System.out.println("Creating image...");
+	BufferedImage imageToDraw = thisVolatileImage.getSnapshot();
+	
+	// File Variables: 
+	StringBuilder sb = new StringBuilder(); 
+	String folderDestAsString = "./db/images/";
+	String extension = "png"; 
+	
+	if( counter == saveFrequency ){
+		try {
+			sb.append(folderDestAsString);
+			if( fileNumber < 10 ){
+				sb.append("0");
+			}
+			sb.append(fileNumber + ".");
+			sb.append(extension);
+			
+			String finalFileName = sb.toString();
+	        if (ImageIO.write(imageToDraw, extension, new File(finalFileName)))
+	        {
+	            //System.out.println("-- image saved to: " + finalFileName);
+	            fileNumber++; 
+	            counter = 0; 
+	        }
+	    } catch (IOException e) {	
+	            e.printStackTrace();
+	    }
+	} else {
+		counter++; 
+	}
+}
+
+/**
+ * Draws all lines saved in xCords and yCords in MarioVisualComponent class. 
+ * To add values use the environment.drawline(x1, y1, x2, y2, text).
+ */
+public void drawLines(){
+	int stringCounter = 0; 
+	// So hardcoded it breaks your heart and makes your eyes bleed. But it's okay.  
+	if(xCords.get(0)>halfWidth && drawStrings.size() >= 8){
+		int x = xCords.get(0) + halfWidth - xCords.get(0); 
+		int y = yCords.get(1); 
+		// NORTHWEST, NORTH, NORTHEAST
+		drawCell(x-16, y, drawStrings.get(0)); 
+		drawCell(x, y, drawStrings.get(1)); 
+		drawCell(x+16, y, drawStrings.get(2)); 
+		
+		// WEST AND EAST
+		y += 16; 
+		drawCell(x-16, y, drawStrings.get(3)); 
+		drawCell(x+16, y, drawStrings.get(4)); 
+		
+		// SOUTHWEST, SOUTH, SOUTHEAST
+		y += 16;
+		drawCell(x-16, y, drawStrings.get(5)); 
+		drawCell(x, y, drawStrings.get(6)); 
+		drawCell(x+16, y, drawStrings.get(7)); 
+	} else {
+		for(int i = 0; i<xCords.size(); i+=2){
+			int x1 = xCords.get(i); ; 
+			int y2 = yCords.get(i+1);;
+			drawCell(x1, y2, drawStrings.get(stringCounter));
+			}
+		stringCounter++;
+	}
+	xCords.clear();
+	yCords.clear();
+	drawStrings.clear();
+}
+
+public void drawCell(int startX, int startY, String label){
+	//System.out.println("DRAWING CELL[" + startX + "][" + startY + "]");
+	
+	int cellSize = LevelScene.cellSize; 
+	int fontOffset = 12; 
+	
+	startX = startX-(cellSize/2); 
+	thisVolatileImageGraphics.drawLine(startX, startY, startX+cellSize, startY); 		 			// DRAW EAST
+	thisVolatileImageGraphics.drawLine(startX+cellSize, startY, startX+cellSize, startY-cellSize);  // DRAW NORTH
+	thisVolatileImageGraphics.drawLine(startX+cellSize, startY-cellSize, startX, startY-cellSize);  // DRAW WEST
+	thisVolatileImageGraphics.drawLine(startX, startY-cellSize, startX, startY); 
+
+	drawString(thisVolatileImageGraphics, label, startX, startY-fontOffset, 0);
+}
+
+
+/**
+ * Draws a string with the hardcoded mario values: isMarioAbleToJump(), 
+ * isMarioAbleToShoot(), and isMarioOnGround() set by the environment.  
+ */
+public void drawHardcodedStates(){
+	if(hardcodedMarioActions.size()>=3){
+		drawString(thisVolatileImageGraphics, "canJump :" + Boolean.toString(hardcodedMarioActions.get(0)), 0, 8, 0);
+		drawString(thisVolatileImageGraphics, "canShoot:" + Boolean.toString(hardcodedMarioActions.get(1)), 0, 16, 0);
+		drawString(thisVolatileImageGraphics, "onGround:" + Boolean.toString(hardcodedMarioActions.get(2)), 0, 24, 0);
+	} else {
+		drawString(thisVolatileImageGraphics, "canJump : null", 0, 8, 0);
+		drawString(thisVolatileImageGraphics, "canShoot: null", 0, 16, 0);
+		drawString(thisVolatileImageGraphics, "onGround: null", 0, 24, 0);
+	}
+	
+	hardcodedMarioActions.clear();
+}
+
+/**
+ * Draws strings of all network outputs as marioAction: value. Values are set in Environment class.  
+ */
+public void drawActionOutputs(){
+	if(outputActions.size() == 6){
+		drawString(thisVolatileImageGraphics, "RIGHT: " + outputActions.get(0), 140, 8, 0);
+		drawString(thisVolatileImageGraphics, "LEFT : " + outputActions.get(1), 140, 16, 0);
+		drawString(thisVolatileImageGraphics, "DOWN : " + outputActions.get(2), 140, 24, 0);
+		drawString(thisVolatileImageGraphics, "UP   : " + outputActions.get(3), 140, 32, 0);
+		drawString(thisVolatileImageGraphics, "FIRE : " + outputActions.get(4), 140, 48, 0);
+		drawString(thisVolatileImageGraphics, "JUMP : " + outputActions.get(5), 140, 40, 0);
+	}
+	outputActions.clear();
+}
+
+
+public void drawEnemies(){
+	int stringCounter = 0; 
+	int x1; int x2; 
+	int labelOffsetX = LevelScene.cellSize * 2;
+	int labelOffsetY = LevelScene.cellSize * 1; 
+	for(int i = 0; i<enemyXCords.size(); i+=2){
+		if(enemyXCords.get(i) > halfWidth){
+		    x1 = enemyXCords.get(i) + halfWidth - enemyXCords.get(i) ;
+		    x2 = enemyXCords.get(i+1) + halfWidth - enemyXCords.get(i);
+		} else {
+			x1 = enemyXCords.get(i); 
+		    x2 = enemyXCords.get(i+1);
+		}
+		thisVolatileImageGraphics.drawLine(x1, enemyYCords.get(i), x2, enemyYCords.get(i+1));
+		drawString(thisVolatileImageGraphics, enemyLabels.get(stringCounter), x2-labelOffsetX, enemyYCords.get(i+1)-labelOffsetY, 0);
+		stringCounter++; 
+	}
+	enemyXCords.clear();
+	enemyYCords.clear();
+	enemyLabels.clear();
+}
 
 }
 
