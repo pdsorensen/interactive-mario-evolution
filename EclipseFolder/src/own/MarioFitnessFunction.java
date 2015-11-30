@@ -34,7 +34,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	private static Logger logger = Logger.getLogger( TargetFitnessFunction.class );
 	private ActivatorTranscriber factory;
 	private int numTrials = 3;
-	private int numTrialsBeforeIEC = 0;;
 	
 	//MARIO VARIABLES
 	static final MarioAIOptions marioAIOptions = new MarioAIOptions();
@@ -59,6 +58,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 												true, 3,
 												true, true, true, true );
 	
+	//Recording params
+	public int gifDurationMillis = 2000;
+	public int delayRecording = 1000;
 	
 	@Override
 	public void init(Properties props) throws Exception {
@@ -72,7 +74,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		Iterator it = genotypes.iterator();
 		while ( it.hasNext() ) {
 			Chromosome genotype = (Chromosome) it.next();
-			evaluate(genotype, false);
+			evaluate(genotype, true);
 		}
 	}
 
@@ -125,7 +127,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 	
 	
-	/*
+	/**
 	 * @param index used for naming the gifs,
 	 */
 	public void recordImages( Chromosome c, int generation ){
@@ -137,9 +139,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		marioAIOptions.setVisualization(true);
 		environment.recordMario(true);
 		
-		int gifDurationMillis = 2000;
-		int delayRecording = 1000;
-		
 		//Delay gif with generation
 		int generationDelay = ( generation * 200 );
 		delayRecording += generationDelay;
@@ -148,7 +147,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		try {
 			// Load in chromosome to the factory
 			Activator activator = factory.newActivator( c );		
-			
 		    singleTrialForGIF( activator, gifDurationMillis, delayRecording );
 
 		}
@@ -177,11 +175,21 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 				//Get inputs
 				double[] networkInput = marioInputs.getAllInputs();
 				
-				//Feed the inputs to the network
+				//Feed the inputs to the network and translate it
 				double[] networkOutput = activator.next(networkInput);
+				boolean[] actions = getAction(networkOutput);
+				
+				//Drawing and debugging functions 
+				drawGrid();
+				drawPossibleMarioActions();
+				drawNearestEnemies(2);
+				drawOutputs(actions);
+				marioInputs.printAllOutputs(actions, networkOutput); 
+				marioInputs.printAllInputs(networkInput);
 				
 				//Perform some action based on networkOutput
-				environment.performAction(getAction(networkOutput));
+				
+				environment.performAction(actions);
 				makeTick();		
 		}
 	}
@@ -231,7 +239,10 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	
 	private int singleTrial( Activator activator ) {
 		double fitness = 0;
-
+		// FOR CREATING A FLAT LEVEL: 
+		//String options = "-lf on -zs 1 -ls 16 -vis on";
+ 	    //environment.reset(options);
+ 	    
 	    marioInputs.setRadius(1, 1, 1, 1);
 	    
 		while(!environment.isLevelFinished()){
@@ -243,9 +254,19 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 			//Feed the inputs to the network
 			double[] networkOutput = activator.next(networkInput);
+			boolean[] actions = getAction(networkOutput);
+			
+			//Drawing and debugging functions 
+			drawGrid();
+			drawPossibleMarioActions();
+			drawNearestEnemies(2);
+			drawOutputs(actions);
+			//marioInputs.printAllOutputs(actions, networkOutput); 
+			//marioInputs.printAllInputs(networkInput);
 			
 			//Perform some action based on networkOutput
-			environment.performAction(getAction(networkOutput));
+			environment.performAction(actions);
+			 
 			makeTick();		
 	    }
 		
@@ -265,6 +286,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		
 		return (int)fitness;
 	}
+	
 	
 	
 	/*
@@ -504,4 +526,82 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	    marioAIOptions.setLevelRandSeed(seed);
 	    environment.reset(marioAIOptions);
 	}
+	
+	// DRAWING AND DEBUGGING FUNCTIONS
+	/**
+	 * 
+	 * @param drawGrid: flag for drawing grid.
+	 * @param drawPossMarioActions: Flag for drawing possible mario actions. 
+	 * @param drawNearestEnemies: Flag for drawing nearest enemies.
+	 * @param drawOutputs: flag for drawing outputs.
+	 * @param actions: boolean array representing all mario actions in a tick.
+	 */
+	public void drawInputs(boolean drawGrid, boolean drawPossMarioActions, 
+						   boolean drawNearestEnemies, boolean drawOutputs, boolean[] actions){
+		if(drawGrid)
+			drawGrid();
+		
+		if(drawPossMarioActions)
+			drawPossibleMarioActions(); 
+		
+		if(drawNearestEnemies)
+			drawNearestEnemies(2);
+		
+		if(drawOutputs)
+			drawOutputs(actions);
+	}
+	
+	public void drawGrid(){
+		int marioX = (int) environment.getMarioFloatPos()[0];
+		int marioY = (int) environment.getMarioFloatPos()[1];
+		String[] inputValues = marioInputs.getHardcodedCellValues();
+//		System.out.println("NORTH:  " + inputValues[0]); 
+//		System.out.println("WEST:  " + inputValues[1]); 
+//		System.out.println("EAST:  " + inputValues[2]); 
+//		System.out.println("SOUTH:  " + inputValues[3]); 
+		
+		environment.drawLine(marioX, marioY, marioX, marioY-16, inputValues[0]);        // NORTH
+		environment.drawLine(marioX-16, marioY, marioX-16, marioY-16, inputValues[1]);  // NORTHWEST
+		environment.drawLine(marioX+16, marioY, marioX+16, marioY-16, inputValues[2]);  // NORTHEAST
+		environment.drawLine(marioX-16, marioY, marioX-16, marioY, inputValues[3]);        // WEST
+		environment.drawLine(marioX+16, marioY, marioX+16, marioY, inputValues[4]);  		// EAST
+		environment.drawLine(marioX, marioY, marioX, marioY+16, inputValues[5]);  		// SOUTH
+		environment.drawLine(marioX-16, marioY, marioX-16, marioY+16, inputValues[6]);  // SOUTHWEST
+		environment.drawLine(marioX+16, marioY, marioX+16, marioY+16, inputValues[7]);  // SOUTHEAST
+		System.out.println("Drawing grid[" + marioInputs.getXdimensionLength() + "][" + marioInputs.getYdimensionLength() + "]") ;
+	}
+	
+	public void drawPossibleMarioActions(){
+		boolean[] possibleActions = new boolean[3]; 
+		possibleActions[0] = environment.isMarioAbleToJump();
+		possibleActions[1] = environment.isMarioAbleToShoot();
+		possibleActions[2] = environment.isMarioOnGround();
+		environment.drawHardcodedMarioInputs(possibleActions);
+	}
+	
+	public void drawNearestEnemies(int threshold){
+		int marioX = Math.round(environment.getMarioFloatPos()[0]);
+		int marioY = Math.round(environment.getMarioFloatPos()[1]);
+		System.out.println("MarioPos[" + marioX + "][" + marioY + "]");
+		float[] enemies = environment.getEnemiesFloatPos(); 
+		for(int i = 0; i<enemies.length; i+=3){
+			System.out.println("ENEMY: [" + enemies[i] + "]["+ enemies[i+1] +"][" + enemies[i+2]+"]");
+			int enemyX = Math.round(enemies[i+1] + marioX);
+			int enemyY = Math.round(enemies[i+2] + marioY);
+			//String label = "[" + Float.toString(enemies[i+1]) + "][" + Float.toString(enemies[i+2]) + "]";
+			String label = "[" + Math.round(enemies[i+1]) + "][" + Math.round(enemies[i+2]) + "]";
+			environment.drawEnemy(marioX, marioY, enemyX, enemyY, label);
+		}
+		System.out.println("");
+	}
+	
+	public void drawOutputs(boolean[] actions){
+		environment.drawOutputs(actions);
+	}
+	
+	public double[] getAllInputs(){
+		return marioInputs.getAllInputs();
+	}
+	
+	
 }

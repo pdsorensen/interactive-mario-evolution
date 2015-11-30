@@ -737,24 +737,41 @@ public void saveLastRun(String filename)
     }
 }
 
+// NOT PART OF THE MAIN MARIO AI FRAMEWORK // 
 public void recordMario(boolean b) {
 	marioVisualComponent.saveImages = b; 
 }
 
-
-public void drawLine(int x1, int y1, int x2, int y2) {
-	
+public void drawLine(int x1, int y1, int x2, int y2, String text) {
 	marioVisualComponent.xCords.add(x1);
 	marioVisualComponent.yCords.add(y1);
 	marioVisualComponent.xCords.add(x2);
 	marioVisualComponent.yCords.add(y2);
+	marioVisualComponent.drawStrings.add(text);
 	marioVisualComponent.drawLines = true; 
 }
 
+@Override
+public void drawHardcodedMarioInputs(boolean[] values) {
+	for(boolean b : values)
+		marioVisualComponent.hardcodedMarioActions.add(b);
+}
 
-//public void setRecording(boolean isRecording)
-//{
-//    this.isRecording = isRecording;
-//}
+
+@Override
+public void drawOutputs(boolean[] actions) {
+	for(boolean b : actions)
+		marioVisualComponent.outputActions.add(b);
+}
+
+@Override
+public void drawEnemy(int x1, int y1, int x2, int y2, String text) {
+	marioVisualComponent.enemyXCords.add(x1);
+	marioVisualComponent.enemyYCords.add(y1);
+	marioVisualComponent.enemyXCords.add(x2);
+	marioVisualComponent.enemyYCords.add(y2);
+	marioVisualComponent.enemyLabels.add(text);
+	marioVisualComponent.drawEnemies = true; 
+}
 }
 

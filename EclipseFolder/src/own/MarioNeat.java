@@ -176,7 +176,7 @@ public class MarioNeat implements Configurable{
 		boolean wait = false;
 		for(int IECGeneration = 0; IECGeneration < 50; IECGeneration++){
 			// IEC STEP
-			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
+			/*System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
 			logger.info( "Generation " + IECGeneration + ": start" );
 		
 			//Reset MarioGIF object and create new .gif folder
@@ -231,7 +231,7 @@ public class MarioNeat implements Configurable{
 			iecCandidates.clear();
 			GifSequenceWriter.fileNumber = 0; 
 			folderName++;
-			
+			*/
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
 //			for ( int generation = 0; generation < 1; generation++ ) {
 //				System.out.println("Running generation: " + generation + "..."); 

@@ -15,7 +15,12 @@ public class MarioInputs {
 	int radNorth, radEast, radSouth, radWest;
 	int radCenter = 9;
 	
-	int numNearestEnemies;
+	public int numNearestEnemies;
+	
+	// FOR DEBUGGING MODE 
+	StringBuilder sb = new StringBuilder(); 
+	double[][] drawLimitedState;
+	
 	
 	/**
 	 * constructor. 
@@ -70,6 +75,7 @@ public class MarioInputs {
 			double[] inputNearestEnemies = getClosestEnemiesInput();
 			networkInput = addArrays(networkInput, inputNearestEnemies);
 		}
+		
 		
 		if(includeMarioState){
 			//Get the state of Mario
@@ -129,7 +135,7 @@ public class MarioInputs {
 	 * @return the number of tiles in the grid used for presenting the
 	 * the level for Mario
 	 */
-	private int getNumStageInputs(){
+	public int getNumStageInputs(){
 		
 		int x = radEast + radWest + 1;
 		int y = radNorth + radSouth + 1;
@@ -298,7 +304,7 @@ public class MarioInputs {
 	 * @param state, the double array with limited state of stage
 	 * @return the values from state put into a single dimension array
 	 */
-	private double[] getTwoDimToOneDimArray(double[][] state){
+	public double[] getTwoDimToOneDimArray(double[][] state){
 		
 		//Get the length of X and Y dimension of state array
 		int lengthX = state.length;
@@ -378,6 +384,8 @@ public class MarioInputs {
 			for( int j = 0; j < yDimension; j++ )
 				limitedState[ i ][ j ] = rotatedLevel[ i + getStartX() ][ j + getStartY() ];
 		
+		// Set draw values
+		setDrawValues(limitedState);
 		
 		//Convert to single dimension array
 		double[] input = getTwoDimToOneDimArray(limitedState);
@@ -385,6 +393,7 @@ public class MarioInputs {
 		return input;
 	}
 	
+
 	
 	/**
 	 * Set radius for all 4 directions;
@@ -403,12 +412,12 @@ public class MarioInputs {
 		//System.out.println("Total stage grid is " + numInputs + " inputs!");
 	}
 	
-	private int getXdimensionLength(){
+	public int getXdimensionLength(){
 		int xDimension = ( radCenter + radEast ) - ( radCenter - radWest ) + 1;
 		return xDimension;
 	}
 	
-	private int getYdimensionLength(){
+	public int getYdimensionLength(){
 		int yDimension = ( radCenter + radNorth ) - ( radCenter - radSouth ) + 1;
 		return yDimension;
 	}
@@ -456,4 +465,147 @@ public class MarioInputs {
 		return inputs; 
 	}
 	
+	/********** DEBUGGING FUNCTIONS GOES HERE **********/ 
+	public void setDrawValues(double[][] inputs){
+		System.out.println("Setting drawing values with inputs[" + inputs.length + "][" + inputs[0].length + "]");
+		drawLimitedState = new double[inputs.length][inputs[0].length]; 
+		for(int i = 0; i<inputs.length; i++){
+			for(int j = 0; j<inputs[i].length; j++){
+				drawLimitedState[i][j] = inputs[i][j];
+			}
+		}
+		
+		printArray(inputs);
+	} 
+	
+	public String[] getHardcodedCellValues(){
+		String[] res = new String[drawLimitedState.length * drawLimitedState[0].length];
+		res[0] = Double.toString(Math.round(drawLimitedState[0][1])); // NORTH
+		res[1] = Double.toString(Math.round(drawLimitedState[0][0])); // NORTH WEST
+		res[2] = Double.toString(Math.round(drawLimitedState[0][2])); // NORTH EAST 
+		res[3] = Double.toString(Math.round(drawLimitedState[1][0])); // WEST 
+		res[4] = Double.toString(Math.round(drawLimitedState[1][2])); // EAST
+		res[5] = Double.toString(Math.round(drawLimitedState[2][1])); // SOUTH
+		res[6] = Double.toString(Math.round(drawLimitedState[2][0])); // SOUTHWEST
+		res[7] = Double.toString(Math.round(drawLimitedState[2][2])); // SOUTHEAST
+		
+		return res; 
+	}
+	
+	public void printArray(double[][] arrayToPrint){
+		sb.setLength(0);
+		System.out.println("Printing DoubleArray[" + arrayToPrint.length + "][" + arrayToPrint[0].length + "]");
+		for(int i = 0; i<arrayToPrint.length; i++){
+			for(int j = 0; j<arrayToPrint[i].length; j++){
+				sb.append(arrayToPrint[i][j] + " - ");
+			}
+			sb.append("\n");
+		}
+		System.out.println(sb.toString());
+	}
+	
+	public void printScene(){
+		sb.setLength(0);
+		System.out.println("Printing levelScene[" + levelScene.length + "][" + levelScene[0].length + "]");
+		for(int i = 0; i<levelScene.length; i++){
+			for(int j = 0; j<levelScene[i].length; j++){
+				if(i == 9 && j == 9){
+					sb.append("M"); 
+				} else {
+					sb.append(levelScene[i][j]);
+				}
+				if(levelScene[i][j] == 0){
+					sb.append("  ");
+				}
+			}
+			sb.append("\n");
+		}
+		System.out.println(sb.toString());
+	}
+	
+	public void printAllInputs(double[] inputs){
+		int gridSize = getNumStageInputs(); boolean showHardcodedValues = false; 
+		int counter = 0; 
+		if(this.includeJump && this.includeOnGround && this.includeShoot)
+			showHardcodedValues = true; 
+		
+		
+		System.out.println("-----------  PRINTING OUT NEURAL NET[" + inputs.length + "] --------");
+		System.out.println("***** GENERAL INFO *****");
+		System.out.println("Gridsize: " + gridSize); 
+		System.out.println("NumEnemies: " + numNearestEnemies); 
+		System.out.println("Show marioState: " + this.includeMarioState);
+		System.out.println("Show hardcoded values: " + showHardcodedValues);
+		System.out.println("");
+		
+		System.out.println("****** NEURAL NET INPUTS ******* "); 
+	    if(this.includeStage){
+			for(int i = 0; i<gridSize; i++)
+				System.out.println("*  Stage: " + inputs[i]);
+			counter += gridSize; 
+	    }
+	    
+	    if(this.includeNearestEnemies){
+			for(int i = gridSize; i<counter+(numNearestEnemies*2); i++)
+				System.out.println("*  Enemy: " + inputs[i]);
+			counter += numNearestEnemies*2;
+	    }
+	    
+	    if(this.includeMarioState){
+	    	System.out.println("*  State: " + inputs[counter]);
+	    	counter += 1; 
+	    	if(showHardcodedValues){
+	    		System.out.println("*  isMarioAbleToJump()  : " + inputs[counter]); // isMarioAbleToJump()
+	    		System.out.println("*  isMarioAbleToShoot() : " + inputs[counter + 1]); // isMarioAbleToShoot()
+	    		System.out.println("*  isMarioOnGround()    : " + inputs[counter + 2]); // isMarioOnGround()
+	    		counter += 3; 
+	    	}	
+	    } else if(showHardcodedValues){
+	    	System.out.println("*  isMarioAbleToJump()  : " + inputs[counter]); // isMarioAbleToJump()
+    		System.out.println("*  isMarioAbleToShoot() : " + inputs[counter + 1]); // isMarioAbleToShoot()
+    		System.out.println("*  isMarioOnGround()    : " + inputs[counter + 2]); // isMarioOnGround()
+    		counter += 3; 
+	    }
+	    System.out.println("****** END OF NET INPUTS *******");
+	    System.out.println(""); 
+	}
+	
+	public void printAllOutputs(boolean[] actions, double[] outputs){
+		System.out.println("");
+		System.out.println("-------- PRINTING NET OUTPUTS[" + actions.length + "] -------");
+		if(actions[0] == true)
+			System.out.println("*  LEFT : " + actions[0] + "  - " + outputs[0]); 
+		else 
+			System.out.println("*  LEFT : "  + actions[0] + " - "  + outputs[0]); 
+
+		if(actions[1] == true)
+			System.out.println("*  RIGHT: " + actions[1] + "  - " + outputs[1]); 
+		else 
+			System.out.println("*  RIGHT: " + actions[1] + " - " + outputs[1]); 
+		
+		if(actions[2] == true)
+			System.out.println("*  DOWN : " + actions[2] + "  - " + outputs[2]); 
+		else 
+			System.out.println("*  DOWN : " + actions[2] + " - " + outputs[2]); 
+		
+		if(actions[3] == true)
+			System.out.println("*  UP   : " + actions[3] + "  - " + outputs[3]); 
+		else 
+			System.out.println("*  UP   : " + actions[3] + " - " + outputs[3]); 
+		
+		if(actions[5] == true)
+			System.out.println("*  FIRE : " + actions[4] + "  - " + outputs[4]); 
+		else 
+			System.out.println("*  FIRE : " + actions[4] + " - " + outputs[4]); 
+		
+		if(actions[5] == true)
+			System.out.println("*  JUMP : " + actions[5] + "  - " + outputs[5]); 
+		else 
+			System.out.println("*  JUMP : " + actions[5] + " - " + outputs[5]); 
+
+		System.out.println("-------- END OF NET OUTPUTS  -------");
+		System.out.println("");
+	}
+	
+
 }
