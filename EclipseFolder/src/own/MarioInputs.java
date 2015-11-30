@@ -366,6 +366,21 @@ public class MarioInputs {
 		return normInput;
 	}
 	
+	public double[][] preprocessStateValues(double[][] limitedState){
+		double[][] preprocessedValues = new double[getXdimensionLength()][getYdimensionLength()];
+		//System.out.println("");
+		for(int i = 0; i<limitedState.length; i++){
+			//System.out.println("");
+			for(int j = 0; j<limitedState[i].length; j++){
+				//System.out.println("LimitedState Value: " + limitedState[i][j]);
+				if(limitedState[i][j] == -60 || limitedState[i][j] == -115 || limitedState[i][j] == -119){
+					limitedState[i][j] = -60;
+				}
+			}
+		}
+		return preprocessedValues; 
+	}
+	
 
 	public double[] getLimitedStateFromStage(){
 		
@@ -387,6 +402,8 @@ public class MarioInputs {
 		
 		// Set draw values
 		setDrawValues(limitedState);
+		
+		limitedState = preprocessStateValues(limitedState);
 		
 		//Convert to single dimension array
 		double[] input = getTwoDimToOneDimArray(limitedState);

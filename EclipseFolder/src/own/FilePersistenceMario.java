@@ -24,9 +24,10 @@ public class FilePersistenceMario extends FilePersistence {
 
 		try {
 			System.out.println("Saving to gifs folder");
-			out = new FileOutputStream( path + Integer.toString(counter) );
+			out = new FileOutputStream( path + Integer.toString(counter) + ".xml" );
 			out.write( xp.toXml().getBytes() );
 			out.close();
+			counter++;
 		}
 		finally {
 			if ( out != null )

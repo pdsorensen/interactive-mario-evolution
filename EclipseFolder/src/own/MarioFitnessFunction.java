@@ -59,8 +59,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 												true, true, true, true );
 	
 	//Recording params
-	public int gifDurationMillis = 200;
-	public int delayRecording = 100;
+	public int gifDurationMillis = 2000;
+	public int delayRecording = 1000;
 	
 	@Override
 	public void init(Properties props) throws Exception {
@@ -74,7 +74,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		Iterator it = genotypes.iterator();
 		while ( it.hasNext() ) {
 			Chromosome genotype = (Chromosome) it.next();
-			evaluate(genotype, true);
+			evaluate(genotype, false);
 		}
 	}
 
@@ -126,6 +126,20 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 	}
 	
+	public void delayRecording(int generation){
+		
+		int gifMaxDuration = 4000;
+		int gifMaxDelay = 3000;
+		int generationDelay = ( generation * 100 );
+		
+		if(delayRecording < gifMaxDelay - generationDelay);
+			delayRecording += generationDelay;
+		
+		if(gifDurationMillis < gifMaxDuration - generationDelay);
+			gifDurationMillis += generationDelay;
+		
+	}
+	
 	
 	/**
 	 * @param index used for naming the gifs,
@@ -140,9 +154,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		environment.recordMario(true);
 		
 		//Delay gif with generation
-//		int generationDelay = ( generation * 200 );
-//		delayRecording += generationDelay;
-//		gifDurationMillis += generationDelay;
+		delayRecording(generation);
 		
 		try {
 			// Load in chromosome to the factory
@@ -251,18 +263,16 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 			//Get inputs
 			double[] networkInput = marioInputs.getAllInputs();
-			
-			//Feed the inputs to the network
-			marioInputs.printAllInputs(networkInput);
+		
 			
 			double[] networkOutput = activator.next(networkInput);
 			boolean[] actions = getAction(networkOutput);
 			
 			//Drawing and debugging functions 
-			drawGrid();
-			drawPossibleMarioActions();
-			drawNearestEnemies(2);
-			drawOutputs(actions);
+//			drawGrid();
+//			drawPossibleMarioActions();
+//			drawNearestEnemies(2);
+//			drawOutputs(actions);
 			//marioInputs.printAllOutputs(actions, networkOutput); 
 			//marioInputs.printAllInputs(networkInput);
 			

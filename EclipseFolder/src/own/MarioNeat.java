@@ -220,7 +220,7 @@ public class MarioNeat implements Configurable{
 				 	
 				 	//Set it's fitness
 				 	theChosenChrom.setFitnessValue(100);
-				 	db.storeToFolder(theChosenChrom, "./db/best/bestChrom");
+				 	db.storeToFolder(theChosenChrom, "./db/best/chromosome");
 
 					genotype.evolveGif();
 					
@@ -283,13 +283,13 @@ public class MarioNeat implements Configurable{
 		}
 		
 		// Load in chromosome: 
-//		String chromId = "244";
-//		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
-//		Chromosome chrom = db.loadChromosome( chromId, config );
-//		if ( chrom == null )
-//			throw new IllegalArgumentException( "no chromosome found.");
-//		
-//		ff.evaluate(chrom, true);
+		String chromId = "17";
+		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
+		Chromosome chrom = db.loadChromosome( chromId, config );
+		if ( chrom == null )
+			throw new IllegalArgumentException( "no chromosome found.");
+		ff.init(props);
+		ff.evaluate(chrom, true);
 		
 		
 	}
