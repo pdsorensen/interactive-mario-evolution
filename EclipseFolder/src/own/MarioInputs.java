@@ -294,7 +294,8 @@ public class MarioInputs {
 		//"Rotate" the levelScene in counter-clockwise direction
 		for(int i = 0; i < lengthX; i++ )
 			for(int j = 0; j < lengthY; j++ )
-				rotatedLevelScene[ lengthY - 1 - i ][ j ] = levelScene[ j ][ lengthY - 1 - i ];
+				//rotatedLevelScene[ lengthY - 1 - i ][ j ] = levelScene[ j ][ lengthY - 1 - i ];
+				rotatedLevelScene[ i ][ j ] = levelScene[ i ][ j ];
 				
 		return rotatedLevelScene;
 	}
@@ -352,8 +353,8 @@ public class MarioInputs {
 		//This will take an approximate possible max and min input for whole system
 		//Comment to make min and max based on all possible values and not 
 		//the current values in input variable
-//		maxInput = 100;
-//		minInput = -127;
+		maxInput = 130;
+		minInput = -127;
 		
 		double span = maxInput - minInput;
 		
@@ -467,7 +468,7 @@ public class MarioInputs {
 	
 	/********** DEBUGGING FUNCTIONS GOES HERE **********/ 
 	public void setDrawValues(double[][] inputs){
-		System.out.println("Setting drawing values with inputs[" + inputs.length + "][" + inputs[0].length + "]");
+		//System.out.println("Setting drawing values with inputs[" + inputs.length + "][" + inputs[0].length + "]");
 		drawLimitedState = new double[inputs.length][inputs[0].length]; 
 		for(int i = 0; i<inputs.length; i++){
 			for(int j = 0; j<inputs[i].length; j++){
@@ -475,7 +476,7 @@ public class MarioInputs {
 			}
 		}
 		
-		printArray(inputs);
+		//printArray(inputs);
 	} 
 	
 	public String[] getHardcodedCellValues(){
@@ -494,14 +495,14 @@ public class MarioInputs {
 	
 	public void printArray(double[][] arrayToPrint){
 		sb.setLength(0);
-		System.out.println("Printing DoubleArray[" + arrayToPrint.length + "][" + arrayToPrint[0].length + "]");
+		//System.out.println("Printing DoubleArray[" + arrayToPrint.length + "][" + arrayToPrint[0].length + "]");
 		for(int i = 0; i<arrayToPrint.length; i++){
 			for(int j = 0; j<arrayToPrint[i].length; j++){
 				sb.append(arrayToPrint[i][j] + " - ");
 			}
 			sb.append("\n");
 		}
-		System.out.println(sb.toString());
+		//System.out.println(sb.toString());
 	}
 	
 	public void printScene(){

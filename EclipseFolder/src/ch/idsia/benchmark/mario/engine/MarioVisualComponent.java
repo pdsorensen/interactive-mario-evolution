@@ -619,12 +619,14 @@ public void drawLines(){
 		drawCell(x, y, drawStrings.get(6)); 
 		drawCell(x+16, y, drawStrings.get(7)); 
 	} else {
+		
 		for(int i = 0; i<xCords.size(); i+=2){
 			int x1 = xCords.get(i); ; 
 			int y2 = yCords.get(i+1);;
 			drawCell(x1, y2, drawStrings.get(stringCounter));
-			}
-		stringCounter++;
+			stringCounter++;
+		}
+		
 	}
 	xCords.clear();
 	yCords.clear();

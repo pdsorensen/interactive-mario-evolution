@@ -59,8 +59,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 												true, true, true, true );
 	
 	//Recording params
-	public int gifDurationMillis = 2000;
-	public int delayRecording = 1000;
+	public int gifDurationMillis = 200;
+	public int delayRecording = 100;
 	
 	@Override
 	public void init(Properties props) throws Exception {
@@ -140,9 +140,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		environment.recordMario(true);
 		
 		//Delay gif with generation
-		int generationDelay = ( generation * 200 );
-		delayRecording += generationDelay;
-		gifDurationMillis += generationDelay;
+//		int generationDelay = ( generation * 200 );
+//		delayRecording += generationDelay;
+//		gifDurationMillis += generationDelay;
 		
 		try {
 			// Load in chromosome to the factory
@@ -180,12 +180,12 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 				boolean[] actions = getAction(networkOutput);
 				
 				//Drawing and debugging functions 
-				drawGrid();
-				drawPossibleMarioActions();
-				drawNearestEnemies(2);
-				drawOutputs(actions);
-				marioInputs.printAllOutputs(actions, networkOutput); 
-				marioInputs.printAllInputs(networkInput);
+//				drawGrid();
+//				drawPossibleMarioActions();
+//				drawNearestEnemies(2);
+//				drawOutputs(actions);
+				//marioInputs.printAllOutputs(actions, networkOutput); 
+				//marioInputs.printAllInputs(networkInput);
 				
 				//Perform some action based on networkOutput
 				
@@ -253,6 +253,8 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			double[] networkInput = marioInputs.getAllInputs();
 			
 			//Feed the inputs to the network
+			marioInputs.printAllInputs(networkInput);
+			
 			double[] networkOutput = activator.next(networkInput);
 			boolean[] actions = getAction(networkOutput);
 			
@@ -568,7 +570,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		environment.drawLine(marioX, marioY, marioX, marioY+16, inputValues[5]);  		// SOUTH
 		environment.drawLine(marioX-16, marioY, marioX-16, marioY+16, inputValues[6]);  // SOUTHWEST
 		environment.drawLine(marioX+16, marioY, marioX+16, marioY+16, inputValues[7]);  // SOUTHEAST
-		System.out.println("Drawing grid[" + marioInputs.getXdimensionLength() + "][" + marioInputs.getYdimensionLength() + "]") ;
+		//System.out.println("Drawing grid[" + marioInputs.getXdimensionLength() + "][" + marioInputs.getYdimensionLength() + "]") ;
 	}
 	
 	public void drawPossibleMarioActions(){
