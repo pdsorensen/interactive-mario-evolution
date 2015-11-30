@@ -77,7 +77,7 @@ public class MarioNeat implements Configurable{
 
 	private int maxFitness = 0;
 
-	private Persistence db = null;
+	private FilePersistenceMario db = null;
 	
 	// FOR FINDING THE BEST CHROMOSONES FOR EACH RUN: 
 	static ArrayList<Chromosome> bestChroms = new ArrayList<Chromosome>(); 
@@ -107,8 +107,8 @@ public class MarioNeat implements Configurable{
 		config = new NeatConfiguration( props );
 
 		// peristence
-		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
-
+		//db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
+		db = (FilePersistenceMario)  props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		numEvolutions = props.getIntProperty( NUM_GENERATIONS_KEY );
 		targetFitness = props.getDoubleProperty( FITNESS_TARGET_KEY, 1.0d );
 		thresholdFitness = props.getDoubleProperty( FITNESS_THRESHOLD_KEY, targetFitness );
@@ -176,7 +176,7 @@ public class MarioNeat implements Configurable{
 		boolean wait = false;
 		for(int IECGeneration = 0; IECGeneration < 50; IECGeneration++){
 			// IEC STEP
-			/*System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
+			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
 			logger.info( "Generation " + IECGeneration + ": start" );
 		
 			//Reset MarioGIF object and create new .gif folder
@@ -191,6 +191,7 @@ public class MarioNeat implements Configurable{
 			    Chromosome chrommie = (Chromosome) chroms.get(i);
 			    //Record that chromosome
 			    ff.recordImages( chrommie, IECGeneration );
+
 			    //Create and save gif 
 			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
 			}
@@ -216,8 +217,10 @@ public class MarioNeat implements Configurable{
 					//Get chosen chromosome
 				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
 				 	bestChroms.add(theChosenChrom);
+				 	
 				 	//Set it's fitness
 				 	theChosenChrom.setFitnessValue(100);
+				 	db.storeToFolder(theChosenChrom, "./db/best/bestChrom");
 
 					genotype.evolveGif();
 					
@@ -231,27 +234,27 @@ public class MarioNeat implements Configurable{
 			iecCandidates.clear();
 			GifSequenceWriter.fileNumber = 0; 
 			folderName++;
-			*/
+			
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
-//			for ( int generation = 0; generation < 1; generation++ ) {
-//				System.out.println("Running generation: " + generation + "..."); 
-//				Date generationStartDate = Calendar.getInstance().getTime();
-//				logger.info( "Automated NEAT Generation " + generation + ": start" );
-//				
-//				genotype.evolve();
-//				
-//				//Chromosome c = genotype.getFittestChromosome();
-//				//iecCandidates.add(c);
-//				
-//				ff.generation++;
-//				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
-//				
-//				// generation finish
-//				Date generationEndDate = Calendar.getInstance().getTime();
-//				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
-//				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
-//						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
-//			}
+			for ( int generation = 0; generation < 1; generation++ ) {
+				System.out.println("Running generation: " + generation + "..."); 
+				Date generationStartDate = Calendar.getInstance().getTime();
+				logger.info( "Automated NEAT Generation " + generation + ": start" );
+				
+				genotype.evolve();
+				
+				//Chromosome c = genotype.getFittestChromosome();
+				//iecCandidates.add(c);
+				
+				ff.generation++;
+				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
+				
+				// generation finish
+				Date generationEndDate = Calendar.getInstance().getTime();
+				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
+				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
+						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
+			}
 		}
 	}
 	
