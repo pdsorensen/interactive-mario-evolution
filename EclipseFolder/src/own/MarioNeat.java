@@ -224,7 +224,7 @@ public class MarioNeat implements Configurable{
 
 					genotype.evolveGif();
 					
-					MarioGIF.deleteGifs("./db/gifs/" + folderName);
+					//MarioGIF.deleteGifs("./db/gifs/" + folderName);
 
 					//Stop waiting and continue evolution
 					wait = false;
@@ -255,11 +255,12 @@ public class MarioNeat implements Configurable{
 				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
 						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
 			}
-		}
+		}	
 	}
 	
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
+		
 		try {
 			System.out.println("Booting up!");
 		    

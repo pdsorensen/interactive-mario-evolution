@@ -59,7 +59,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 												true, true, true, true );
 	
 	//Recording params
-	public int gifDurationMillis = 2000;
+	public int gifDurationMillis = 1500;
 	public int delayRecording = 1000;
 	
 	@Override
@@ -96,7 +96,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	public void setStage(){
 		//Check if generation changes
 		if(prevGeneration != generation){
-			System.out.println("GENERATION HAS CHANGED");
+			
 			//Change difficulty
 			if( generation % 4 == 0 ) 
 				difficulty++;
@@ -128,14 +128,14 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	public void delayRecording(int generation){
 		
-		int gifMaxDuration = 4000;
-		int gifMaxDelay = 3000;
+		int gifMaxDuration = 3000;
+		int gifMaxDelay = 2000;
 		int generationDelay = ( generation * 100 );
 		
-		if(delayRecording < gifMaxDelay - generationDelay);
+		if(delayRecording <= gifMaxDelay - generationDelay);
 			delayRecording += generationDelay;
 		
-		if(gifDurationMillis < gifMaxDuration - generationDelay);
+		if(gifDurationMillis <= gifMaxDuration - generationDelay);
 			gifDurationMillis += generationDelay;
 		
 	}
