@@ -186,6 +186,9 @@ public class MarioNeat implements Configurable{
 			// RECORDING STEP
 			List<Chromosome> chroms = genotype.getChromosomes();
 			
+			//Delay gif with generation
+			ff.delayRecording();
+			
 			for (int i = 0; i < 9; i++) {
 				//Get a chromosome
 			    Chromosome chrommie = (Chromosome) chroms.get(i);

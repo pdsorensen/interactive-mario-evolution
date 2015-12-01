@@ -126,11 +126,11 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 	}
 	
-	public void delayRecording(int generation){
+	public void delayRecording(){
 		
 		int gifMaxDuration = 3000;
 		int gifMaxDelay = 2000;
-		int generationDelay = ( generation * 100 );
+		int generationDelay = 100;
 		
 		if(delayRecording <= gifMaxDelay - generationDelay);
 			delayRecording += generationDelay;
@@ -154,9 +154,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		//Turn on recording
 		marioAIOptions.setVisualization(true);
 		environment.recordMario(true);
-		
-		//Delay gif with generation
-		delayRecording(generation);
 		
 		try {
 			// Load in chromosome to the factory
