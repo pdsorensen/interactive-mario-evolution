@@ -288,7 +288,7 @@ public class MarioNeat implements Configurable{
 		}
 		
 		// Load in chromosome: 
-		String chromId = "17";
+		String chromId = "7";
 		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		Chromosome chrom = db.loadChromosome( chromId, config );
 		if ( chrom == null )

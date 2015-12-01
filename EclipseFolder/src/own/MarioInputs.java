@@ -293,9 +293,11 @@ public class MarioInputs {
 		
 		//"Rotate" the levelScene in counter-clockwise direction
 		for(int i = 0; i < lengthX; i++ )
-			for(int j = 0; j < lengthY; j++ )
+			for(int j = 0; j < lengthY; j++ ){
 				//rotatedLevelScene[ lengthY - 1 - i ][ j ] = levelScene[ j ][ lengthY - 1 - i ];
 				rotatedLevelScene[ i ][ j ] = levelScene[ i ][ j ];
+				//System.out.println("rotatedLevelScene: " + rotatedLevelScene[ i ][ j ]);
+			}
 				
 		return rotatedLevelScene;
 	}
@@ -341,7 +343,7 @@ public class MarioInputs {
 		
 		double maxInput = -10000;
 		double minInput = 10000;
-		
+
 		//Find highest and lowest value in input
 		for(int i = 0; i < input.length; i++)
 			if( input[i] > maxInput )
@@ -349,12 +351,12 @@ public class MarioInputs {
 			else
 				if( input[i] < minInput )
 					minInput = input[i];
-		
+					
 		//This will take an approximate possible max and min input for whole system
 		//Comment to make min and max based on all possible values and not 
 		//the current values in input variable
 		maxInput = 130;
-		minInput = -127;
+		minInput = -130;
 		
 		double span = maxInput - minInput;
 		
@@ -367,7 +369,7 @@ public class MarioInputs {
 	}
 	
 	public double[][] preprocessStateValues(double[][] limitedState){
-		double[][] preprocessedValues = new double[getXdimensionLength()][getYdimensionLength()];
+		//double[][] preprocessedValues = new double[getXdimensionLength()][getYdimensionLength()];
 		//System.out.println("");
 		for(int i = 0; i<limitedState.length; i++){
 			//System.out.println("");
@@ -378,7 +380,7 @@ public class MarioInputs {
 				}
 			}
 		}
-		return preprocessedValues; 
+		return limitedState; 
 	}
 	
 

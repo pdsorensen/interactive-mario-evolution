@@ -98,17 +98,17 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		if(prevGeneration != generation){
 			
 			//Change difficulty
-			if( generation % 4 == 0 ) 
+			if( generation % 2 == 0 ) 
 				difficulty++;
 			
 			//Change seed
-			if( generation % 8 == 0 ){
+			if( generation % 4 == 0 ){
 				difficulty = 0;
 				seed++;
 			}
 			
 			//Change level
-			if( generation % 16 == 0 ){
+			if( generation % 8 == 0 ){
 				difficulty = 0;
 				seed = 0;
 				level++;
@@ -196,7 +196,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 //				drawNearestEnemies(2);
 //				drawOutputs(actions);
 				//marioInputs.printAllOutputs(actions, networkOutput); 
-				//marioInputs.printAllInputs(networkInput);
+//				marioInputs.printAllInputs(networkInput);
 				
 				//Perform some action based on networkOutput
 				
@@ -219,6 +219,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		} else {
 			marioAIOptions.setVisualization(false);
 		}
+		System.out.println("TESTING");
 	    
 	    try {
 			Activator activator = factory.newActivator( c );
@@ -228,7 +229,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			for ( int i = 0; i < numTrials; i++ ){
 
 				setStage();
-				
+				setMarioLevel(1, 0, 0);
 				fitness += singleTrial( activator );
 				
 				changeSeed( 1 );
@@ -262,8 +263,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 			//Get inputs
 			double[] networkInput = marioInputs.getAllInputs();
-		
-			
 			double[] networkOutput = activator.next(networkInput);
 			boolean[] actions = getAction(networkOutput);
 			
@@ -273,7 +272,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 //			drawNearestEnemies(2);
 //			drawOutputs(actions);
 			//marioInputs.printAllOutputs(actions, networkOutput); 
-			//marioInputs.printAllInputs(networkInput);
+//			marioInputs.printAllInputs(networkInput);
 			
 			//Perform some action based on networkOutput
 			environment.performAction(actions);
