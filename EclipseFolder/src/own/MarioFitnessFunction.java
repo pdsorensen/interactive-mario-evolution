@@ -55,7 +55,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	//Define the inputs for Mario
 	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
-												true, 3,
+												true, 2,
 												true, true, true, true );
 	
 	//Recording params
@@ -137,6 +137,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 		if(gifDurationMillis <= gifMaxDuration - generationDelay);
 			gifDurationMillis += generationDelay;
+			
+		System.out.println("Recording time: " + gifDurationMillis + " | delay: " + delayRecording);
 		
 	}
 	

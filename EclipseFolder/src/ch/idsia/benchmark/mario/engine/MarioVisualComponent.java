@@ -100,7 +100,7 @@ public boolean saveImages = false;
 
 // FOR DEBUGGING INPUTS
 public boolean drawLines = false; 
-public boolean drawHardcodedStates = true;
+public boolean drawHardcodedStates = false;
 public boolean drawActionOutputs = true; 
 public boolean drawEnemies = false; 
 int halfWidth = GlobalOptions.VISUAL_COMPONENT_WIDTH/2;
@@ -211,29 +211,29 @@ public void tick()
     //String msg = "Agent: " + this.agentNameStr;
     //drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 6, 5);
 
-    String msg = "PRESSED KEYS: ";
-    drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 7, 6);
+//    String msg = "PRESSED KEYS: ";
+//    drawStringDropShadow(thisVolatileImageGraphics, msg, 0, 7, 6);
+//
+//    msg = "";
+//    if (mario.keys != null)
+//    {
+//        for (int i = 0; i < Environment.numberOfKeys; ++i)
+//            msg += (mario.keys[i]) ? LevelScene.keysStr[i] : "    ";
+//    } else
+//        msg = "NULL";
+//    drawString(thisVolatileImageGraphics, msg, 107, 61, 1);
+//    if (mario.keys[Mario.KEY_SPEED])
+//        thisVolatileImageGraphics.drawImage(Art.particles[0][3], 234, 59, 10, 10, null);
+//
+//    if (mario.cheatKeys[CheaterKeyboardAgent.CHEAT_KEY_WIN])
+//        mario.win();
 
-    msg = "";
-    if (mario.keys != null)
-    {
-        for (int i = 0; i < Environment.numberOfKeys; ++i)
-            msg += (mario.keys[i]) ? LevelScene.keysStr[i] : "    ";
-    } else
-        msg = "NULL";
-    drawString(thisVolatileImageGraphics, msg, 107, 61, 1);
-    if (mario.keys[Mario.KEY_SPEED])
-        thisVolatileImageGraphics.drawImage(Art.particles[0][3], 234, 59, 10, 10, null);
-
-    if (mario.cheatKeys[CheaterKeyboardAgent.CHEAT_KEY_WIN])
-        mario.win();
-
-    if (!this.hasFocus() && (tm - tm0) / (delay + 1) % 42 < 20)
-    {
-        String msgClick = "CLICK TO PLAY";
-        drawString(thisVolatileImageGraphics, msgClick, 160 - msgClick.length() * 4, 110, 2);
-//            drawString(thisVolatileImageGraphics, msgClick, 160 - msgClick.length() * 4, 110, 7);
-    }
+//    if (!this.hasFocus() && (tm - tm0) / (delay + 1) % 42 < 20)
+//    {
+//        String msgClick = "CLICK TO PLAY";
+//        drawString(thisVolatileImageGraphics, msgClick, 160 - msgClick.length() * 4, 110, 2);
+//        drawString(thisVolatileImageGraphics, msgClick, 160 - msgClick.length() * 4, 110, 7);
+//    }
 //        thisVolatileImageGraphics.setColor(Color.DARK_GRAY);
     //drawStringDropShadow(thisVolatileImageGraphics, "FPS: ", 33, 2, 7);
     //drawStringDropShadow(thisVolatileImageGraphics, ((GlobalOptions.FPS > 99) ? "\\infty" : "  " + GlobalOptions.FPS.toString()), 33, 3, 7);

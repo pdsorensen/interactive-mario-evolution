@@ -231,30 +231,31 @@ public class MarioNeat implements Configurable{
 
 				}
 			}
+			
 			iecCandidates.clear();
 			GifSequenceWriter.fileNumber = 0; 
 			folderName++;
 			
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
-			for ( int generation = 0; generation < 1; generation++ ) {
-				System.out.println("Running generation: " + generation + "..."); 
-				Date generationStartDate = Calendar.getInstance().getTime();
-				logger.info( "Automated NEAT Generation " + generation + ": start" );
-				
-				genotype.evolve();
-				
-				//Chromosome c = genotype.getFittestChromosome();
-				//iecCandidates.add(c);
-				
-				ff.generation++;
-				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
-				
-				// generation finish
-				Date generationEndDate = Calendar.getInstance().getTime();
-				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
-				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
-						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
-			}
+//			for ( int generation = 0; generation < 1; generation++ ) {
+//				System.out.println("Running generation: " + generation + "..."); 
+//				Date generationStartDate = Calendar.getInstance().getTime();
+//				logger.info( "Automated NEAT Generation " + generation + ": start" );
+//				
+//				genotype.evolve();
+//				
+//				//Chromosome c = genotype.getFittestChromosome();
+//				//iecCandidates.add(c);
+//				
+//				ff.generation++;
+//				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
+//				
+//				// generation finish
+//				Date generationEndDate = Calendar.getInstance().getTime();
+//				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
+//				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
+//						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
+//			}
 		}	
 	}
 	
