@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import own.MarioNeatGif;
-
+import com.anji.util.Properties;
 
 public class MarioGIF {
 	
@@ -29,6 +29,8 @@ public class MarioGIF {
 	public static int iecGeneration = 1;
 	//Frame parameters
 	static JFrame frame;
+	//static int populationSize = 6;
+
 	
 	public static void reset(int folderName){
 		
@@ -45,8 +47,8 @@ public class MarioGIF {
 		MarioGIF.setVisibility(true);
 	}
 	
-	public static void runIEC(int folder){
-		
+	public static void runIEC(int folder, int populationSize){
+
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
@@ -57,18 +59,18 @@ public class MarioGIF {
 				JPanel contentPane = new JPanel();
 				
 				
-	            frame.setSize(new Dimension(1600, 1000));
+	            frame.setSize(new Dimension(1500, 1000));
 	            frame.setTitle("Mario AI Evaluator" + Integer.toString(iecGeneration));
 	            iecGeneration++; 
 	            frame.setLayout(new GridLayout(0,1));
 	           
 	            
 				// Get the GIFS into ImageIcons
-	            contentPane.setLayout(new GridLayout(0,3));
-				ImageIcon[] gifs = new ImageIcon[9];
+	            contentPane.setLayout( new GridLayout( 0, 3 ) );
+				ImageIcon[] gifs = new ImageIcon[ populationSize ];
 				
 			
-				for(int i = 0; i<9;i++){
+				for(int i = 0; i < populationSize;i++){
 					String fileLocation = "./db/gifs/" + Integer.toString(folder) + "/" + new Integer(i).toString() + ".gif";
 					System.out.println("Loading file at location: " + fileLocation);
 					gifs[i] = new ImageIcon(fileLocation);
@@ -78,7 +80,7 @@ public class MarioGIF {
 				//frame.add(controlPanel);
 				
 				// Assign imageIcons and text to JComponents
-				for(int i = 0; i<9;i++){
+				for(int i = 0; i < populationSize;i++){
 					String imageLabel = Integer.toString(i+1);
 					JButton button = new JButton(imageLabel, gifs[i]);
 					
@@ -134,5 +136,15 @@ public class MarioGIF {
 		return chosenGif;
 	}
 	
-
+	public static void changeGifName( int generation){
+		
+		File oldName = new File("db/gifs/" + generation + "/" + chosenGif + ".gif");
+	    File newName = new File("db/gifs/" + generation + "/" + chosenGif + "_WINNER.gif");
+	    
+	    if( oldName.renameTo( newName ) )
+	    	System.out.println("renamed");
+	    else
+	        System.out.println("Error NAME NOT CHANGED");
+	}
+	
 }

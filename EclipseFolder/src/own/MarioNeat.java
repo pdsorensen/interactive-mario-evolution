@@ -46,6 +46,8 @@ public class MarioNeat implements Configurable{
 	 * properties key, # generations in run
 	 */
 	public static final String NUM_GENERATIONS_KEY = "num.generations";
+	
+	public static final String POPULATION_SIZE = "popul.size";
 
 	/**
 	 * properties key, fitness function class
@@ -70,6 +72,8 @@ public class MarioNeat implements Configurable{
 	GenotypeGif genotypeGif = null;
 
 	public int numEvolutions = 0;
+	
+	public int populationSize = 0;
 
 	private double targetFitness = 0.0d;
 
@@ -112,7 +116,7 @@ public class MarioNeat implements Configurable{
 		numEvolutions = props.getIntProperty( NUM_GENERATIONS_KEY );
 		targetFitness = props.getDoubleProperty( FITNESS_TARGET_KEY, 1.0d );
 		thresholdFitness = props.getDoubleProperty( FITNESS_THRESHOLD_KEY, targetFitness );
-
+		populationSize = numEvolutions = props.getIntProperty( POPULATION_SIZE );
 		//
 		// event listeners
 		//
@@ -189,7 +193,7 @@ public class MarioNeat implements Configurable{
 			//Delay gif with generation
 			ff.delayRecording();
 			
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < populationSize; i++) {
 				//Get a chromosome
 			    Chromosome chrommie = (Chromosome) chroms.get(i);
 			    //Record that chromosome
@@ -203,7 +207,7 @@ public class MarioNeat implements Configurable{
 			System.out.println("Generation after record: " + ff.generation + " | " + ff);
 			
 			
-			MarioGIF.runIEC(folderName);
+			MarioGIF.runIEC(folderName, populationSize);
 			
 			wait = true;
 			while(wait){
@@ -224,7 +228,7 @@ public class MarioNeat implements Configurable{
 				 	//Set it's fitness
 				 	theChosenChrom.setFitnessValue(100);
 				 	db.storeToFolder(theChosenChrom, "./db/best/chromosome");
-
+				 	MarioGIF.changeGifName( IECGeneration );
 					genotype.evolveGif();
 					
 					//MarioGIF.deleteGifs("./db/gifs/" + folderName);
@@ -286,16 +290,15 @@ public class MarioNeat implements Configurable{
 			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
 			ff.evaluate(bestChroms.get(i), true);
 		}
-		
+	
 		// Load in chromosome: 
-		String chromId = "7";
+		String chromId = "19";
 		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		Chromosome chrom = db.loadChromosome( chromId, config );
 		if ( chrom == null )
 			throw new IllegalArgumentException( "no chromosome found.");
 		ff.init(props);
 		ff.evaluate(chrom, true);
-		
 		
 	}
 	

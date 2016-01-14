@@ -68,7 +68,7 @@ public class MarioNeatGif extends MarioNeat {
 			//Set wait to true
 			wait = true;
 
-			MarioGIF.runIEC(folderName);
+			MarioGIF.runIEC(folderName, populationSize);
 
 			
 			while(wait){
@@ -93,7 +93,7 @@ public class MarioNeatGif extends MarioNeat {
 
 					genotype.evolveGif();
 					
-					MarioGIF.deleteGifs("./db/gifs/" + folderName);
+					//MarioGIF.deleteGifs("./db/gifs/" + folderName);
 
 					//Stop waiting and continue evolution with next generation
 					wait = false;

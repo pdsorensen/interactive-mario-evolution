@@ -51,7 +51,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     public static int prevGeneration = 0;
     public static int difficulty = 0;
     public static int level = 0;
-    public static int seed = 0;
+    public static int seed = 200;
 	
 	//Define the inputs for Mario
 	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
@@ -98,17 +98,17 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		if(prevGeneration != generation){
 			
 			//Change difficulty
-			if( generation % 2 == 0 ) 
+			if( generation % 3 == 0 ) 
 				difficulty++;
 			
 			//Change seed
-			if( generation % 4 == 0 ){
+			if( generation % 6 == 0 ){
 				difficulty = 0;
 				seed++;
 			}
 			
 			//Change level
-			if( generation % 8 == 0 ){
+			if( generation % 12 == 0 ){
 				difficulty = 0;
 				seed = 0;
 				level++;
@@ -256,6 +256,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
  	    //environment.reset(options);
  	    
 	    marioInputs.setRadius(1, 1, 1, 1);
+	    setMarioLevel(2,0,0);
 	    
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
