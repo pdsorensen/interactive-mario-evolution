@@ -175,7 +175,6 @@ public class GifSequenceWriter {
   };
   
   public static void createGIF(String outputFolder) throws Exception{
-	System.out.println("Creating GIF called");
 	// LOADING IMAGES: 
     final File dir = new File("./db/images/");
     ArrayList<BufferedImage> images = new ArrayList<BufferedImage>(); 

@@ -58,14 +58,15 @@ public class Custom
 	static Environment environment = MarioEnvironment.getInstance();
 public static void main(String[] args)
 {
-    final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
-    final BasicTask basicTask = new BasicTask(marioAIOptions);
+	String options = "-lt 0 -ls 0 -ld 0 -mix 2400  -miy 140";
+    final MarioAIOptions marioAIOptions = new MarioAIOptions(options);
+    //final BasicTask basicTask = new BasicTask(marioAIOptions);
     
     // Uncomment to play with keyboard
     //basicTask.setOptionsAndReset(marioAIOptions);
     //basicTask.runSingleEpisode(1);
     
-    //Environment environment = MarioEnvironment.getInstance();
+    Environment environment = MarioEnvironment.getInstance();
     //Agent agent = new ForwardJumpingAgent(); 
     //Agent agent = new SimpleMLPAgent();
     //Agent agent = new NEATController();
@@ -73,30 +74,30 @@ public static void main(String[] args)
     // FOR DEBUGGING DRAWING FUNCTIONS
     Agent agent = marioAIOptions.getAgent();
     
-    String options = "-lf on -zs 1 -ls 16 -vis on";
+    marioAIOptions.setLevelDifficulty(0);
+    marioAIOptions.setLevelType(1);
+    marioAIOptions.setLevelRandSeed(0);
     environment.reset(options);
 //    MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
 //			true, 3,
 //			true, true, true, true );
-    MarioFitnessFunction ff = new MarioFitnessFunction(); 
+    //MarioFitnessFunction ff = new MarioFitnessFunction(); 
     
-    marioAIOptions.setLevelDifficulty(0);
-    marioAIOptions.setLevelRandSeed(0);
-    basicTask.setOptionsAndReset(marioAIOptions);
+    //marioAIOptions.setLevelDifficulty(0);
+    //marioAIOptions.setLevelRandSeed(0);
+    //basicTask.setOptionsAndReset(marioAIOptions);
+    int i = environment.getEvaluationInfo().levelLength; 
+    System.out.println(i);
+    //options = "-lf on -zs 1 -ls 16 -vis on -mix " + Integer.toString(i);
+    //environment.reset(options);
     
     
-//    while(!environment.isLevelFinished()){
-//    	environment.tick();
-//    	//agent.integrateObservation(environment);
-//        //environment.performAction(agent.getAction());
-//        
-//    }
     
     while (!environment.isLevelFinished()){
 	    environment.tick();
         if (!GlobalOptions.isGameplayStopped){
         	// Do Drawing! 
-        	ff.resetActions();
+        	//ff.resetActions();
 			
 			//Get inputs
 			//double[] networkInput = marioInputs.getAllInputs();
@@ -106,15 +107,14 @@ public static void main(String[] args)
 			//boolean[] actions = getAction(networkOutput);
 			
 			//Drawing and debugging functions 
-        	ff.getAllInputs();
-			ff.drawGrid();
-			ff.drawPossibleMarioActions();
-			ff.drawNearestEnemies(2);
+        	//ff.getAllInputs();
+			//ff.drawGrid();
+			//ff.drawPossibleMarioActions();
+			//ff.drawNearestEnemies(2);
 			//ff.drawOutputs(actions);
 			//marioInputs.printAllOutputs(actions, networkOutput); 
 			//marioInputs.printAllInputs(networkInput);
-        	
-        	
+
         	// Perform action 
             agent.integrateObservation(environment);
             boolean[] action = agent.getAction();
