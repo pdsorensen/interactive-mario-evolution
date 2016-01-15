@@ -53,7 +53,9 @@ Temporary Items
 EclipseFolder/bin
 EclipseFolder/db
 EclipseFolder/lib
-EclipseFolder/.classpath
+EclipseFolder
+
 target
 .classpath
 .project
+testing
