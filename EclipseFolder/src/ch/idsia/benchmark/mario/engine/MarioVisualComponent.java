@@ -382,6 +382,7 @@ public void render(Graphics g)
     	drawActionOutputs();
     if(drawEnemies)
     	drawEnemies();
+    
     g.clearRect(5, 5, 5, 5);
 }
 
@@ -478,7 +479,7 @@ public void adjustFPS()
     delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
     
     //Added to speed up the visualized run
-    delay = 0;
+    //delay = 0;
 }
 
 // THis method here solely for the displaying information in order to reduce
@@ -592,6 +593,34 @@ public void createImage(){
 		counter++; 
 	}
 }
+/**
+ *  Creates images every time Mario passes 20 cells ahead. 
+ */
+public void createLevelImage(){
+	// File Variables: 
+	StringBuilder sb = new StringBuilder(); 
+	String folderDestAsString = "./db/images/levelImages/";
+	String extension = "png"; 
+	BufferedImage imageToDraw = thisVolatileImage.getSnapshot();
+	try {
+		sb.append(folderDestAsString);
+		if( fileNumber < 10 ){
+			sb.append("0");
+		}
+		sb.append(fileNumber + ".");
+		sb.append(extension);
+		
+		String finalFileName = sb.toString();
+        if (ImageIO.write(imageToDraw, extension, new File(finalFileName)))
+        {
+            //System.out.println("-- image saved to: " + finalFileName);
+            fileNumber++; 
+            counter = 0; 
+        }
+    } catch (IOException e) {	
+            e.printStackTrace();
+    }
+}
 
 /**
  * Draws all lines saved in xCords and yCords in MarioVisualComponent class. 
@@ -600,6 +629,9 @@ public void createImage(){
 public void drawLines(){
 	int stringCounter = 0; 
 	// So hardcoded it breaks your heart and makes your eyes bleed. But it's okay.  
+	if(xCords.isEmpty())
+		return; 
+	
 	if(xCords.get(0)>halfWidth && drawStrings.size() >= 8){
 		int x = xCords.get(0) + halfWidth - xCords.get(0); 
 		int y = yCords.get(1); 

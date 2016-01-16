@@ -1,31 +1,4 @@
-/*
- * Copyright (c) 2009-2010, Sergey Karakovskiy and Julian Togelius
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Mario AI nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
-package ch.idsia.scenarios;
+package own.util;
 
 import ch.idsia.agents.Agent;
 import ch.idsia.agents.controllers.ForwardAgent;
@@ -54,7 +27,8 @@ import competition.gic2010.turing.sergeykarakovskiy.SergeyKarakovskiy_ForwardAge
  * Package: ch.idsia
  */
 
-public class Custom  {
+public class HumanMarioPlayer  {
+	
 	static Environment environment = MarioEnvironment.getInstance();
 	static Hashtable<Integer, Boolean> levelImagePoints = new Hashtable<Integer, Boolean>();
 	
@@ -62,11 +36,13 @@ public class Custom  {
 	
 public static void main(String[] args)
 {
-	//29 cells for a picture. A cell is 16pixels. 16*29 = 464
-	//49 cells for next picture
-	//69 for next picture
-	//80 for next picture etc
-	// So incrementing until end
+	// 256 cells / rate of changing mario spawn position (5) = 51.2    
+	
+	// 9 cells is mario spawn
+	//20 cells ahead for a picture (so next picture is 29). A cell is 16pixels. 16*29 = 464
+	//49 for next picture
+	//79 for next picture etc
+	// incrementing until end
 	String options = "-lt 0 -ls 0 -ld 0 -mix 9  -miy 140";
 //	String options = "";
     final MarioAIOptions marioAIOptions = new MarioAIOptions(options);
@@ -102,7 +78,6 @@ public static void main(String[] args)
     //return true;
     for(int j = 0; j < 1; j++) {
     	basicTask.reset();
-    	System.out.println("ALLRIGHT");
 	    while (!environment.isLevelFinished()){
 		    environment.tick();
 	        if (!GlobalOptions.isGameplayStopped){

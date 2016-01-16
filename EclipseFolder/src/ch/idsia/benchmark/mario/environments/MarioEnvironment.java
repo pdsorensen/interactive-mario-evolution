@@ -773,5 +773,9 @@ public void drawEnemy(int x1, int y1, int x2, int y2, String text) {
 	marioVisualComponent.enemyLabels.add(text);
 	marioVisualComponent.drawEnemies = true; 
 }
+
+public void createLevelImage(){
+	marioVisualComponent.createLevelImage();
+}
 }
 
