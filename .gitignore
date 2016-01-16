@@ -51,10 +51,9 @@ Temporary Items
 # http://docs.unity3d.com/Manual/ExternalVersionControlSystemSupport.html
 .Settings
 EclipseFolder/bin
-#EclipseFolder/db
+EclipseFolder/db
 EclipseFolder/lib
 
 target
 .classpath
 .project
-testing
