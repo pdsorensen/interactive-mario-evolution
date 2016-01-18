@@ -314,7 +314,7 @@ public class MarioInputs {
 		int lengthY = state[0].length;
 		
 		//Create single dimension array with same amount of space
-		double[] newArray = new double[lengthX * lengthY];
+		double[] inputs = new double[lengthX * lengthY];
 		
 		//Index number for the newArray
 		int index = 0;
@@ -322,14 +322,11 @@ public class MarioInputs {
 		//Go through double dimension array and put values in single dimension array
 		for(int i = 0; i < lengthX; i++)
 			for(int j = 0; j < lengthY; j++){
-				newArray[ index ] = state[i][j];
+				inputs[ index ] = state[i][j];
 				index++;
 			}
-			
-		//Normalize values in newArray
-		double[] normNewArray = normalizeState(newArray);
 		
-		return normNewArray;
+		return inputs;
 	}
 	
 	
@@ -355,8 +352,8 @@ public class MarioInputs {
 		//This will take an approximate possible max and min input for whole system
 		//Comment to make min and max based on all possible values and not 
 		//the current values in input variable
-		maxInput = 130;
-		minInput = -130;
+		maxInput = 2;
+		minInput = -128;
 		
 		double span = maxInput - minInput;
 		
@@ -408,9 +405,12 @@ public class MarioInputs {
 		limitedState = preprocessStateValues(limitedState);
 		
 		//Convert to single dimension array
-		double[] input = getTwoDimToOneDimArray(limitedState);
+		double[] inputs = getTwoDimToOneDimArray(limitedState);
 		
-		return input;
+		//Normalize values in newArray
+		double[] normalizedInputs = normalizeState( inputs );
+		
+		return normalizedInputs;
 	}
 	
 

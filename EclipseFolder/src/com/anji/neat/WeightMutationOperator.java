@@ -143,7 +143,7 @@ public float getStdDev() {
 
 // OWN CODE, NOT PART OF THE ANJI LIBRARY
 public void changeWeightMutationRate(Properties props){
-	setMutationRate(props.getFloatProperty( WEIGHT_MUTATE_RATE_KEY, DEFAULT_MUTATE_RATE ));
+	setMutationRate( props.getFloatProperty( WEIGHT_MUTATE_RATE_KEY, DEFAULT_MUTATE_RATE ) );
 }
 
 }

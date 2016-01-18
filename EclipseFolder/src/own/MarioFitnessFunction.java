@@ -33,7 +33,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 
 	private static Logger logger = Logger.getLogger( TargetFitnessFunction.class );
 	private ActivatorTranscriber factory;
-	private int numTrials = 3;
+	private int numTrials = 1;
 	
 	//MARIO VARIABLES
 	static final MarioAIOptions marioAIOptions = new MarioAIOptions();
@@ -45,6 +45,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     //Info on stage
     protected byte[][] mergedObservation;
     public String levelOptions = "-mix 0 -miy 223"; // see class ParameterContainer.java for each flag
+    
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
 
@@ -60,7 +61,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 												true, true, true, true );
 	
 	//Recording params
-	public int gifDurationMillis = 1500;
+	public int gifDurationMillis = 2000;
 	public int delayRecording = 1000;
 	
 	@Override
@@ -119,29 +120,31 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 	}
 	
-	public void setStageWithParams(String params, int generation){
-		if(generation == 4 )
-			params = "-mix 825 -miy 140";
+	public void setStageWithParams( int generation ){
+		if(generation == 4)
+			levelOptions = "-mix 400 -miy 170";
 		else if (generation == 8)
-			params = "-mix 1625 -miy 140";
+			levelOptions = "-mix 1056 -miy 100";
 		else if (generation == 12)
-			params = "-mix 2400 -miy 140";
+			levelOptions = "-mix 1888 -miy 170";
 		else if ( generation == 16)
-			params = "-mix 4000 -miy 323";
+			levelOptions = "-mix 3024 -miy 170";
 		
-		environment.reset(params);
+		environment.reset(levelOptions);
 	}
 	
 	public void delayRecording(){
 		
-		int gifMaxDuration = 3000;
+		int gifMaxDuration = 4000;
 		int gifMaxDelay = 2000;
 		int generationDelay = 100;
 		
-		if(delayRecording <= gifMaxDelay - generationDelay);
+		if(delayRecording <= gifMaxDelay - generationDelay)
 			delayRecording += generationDelay;
 		
-		if(gifDurationMillis <= gifMaxDuration - generationDelay);
+		delayRecording = 0;
+		
+		if(gifDurationMillis <= gifMaxDuration - generationDelay)
 			gifDurationMillis += generationDelay;
 			
 		System.out.println("Recording time: " + gifDurationMillis + " | delay: " + delayRecording);
@@ -156,7 +159,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 		//Set stage, difficulty and seed
 		//setStage();
-		setStageWithParams(levelOptions, generation);
+		setStageWithParams( generation );
 	    
 		//Turn on recording
 		marioAIOptions.setVisualization(true);
@@ -285,17 +288,18 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		
 		//TODO: Make sure this is correct.
 		//NORMALIZED RESULTS
-		fitness += getFitnessDistancePassed(1);
+		//fitness += getFitnessDistancePassed(1);
+		fitness = environment.getEvaluationInfo().distancePassedCells;
 		//fitness += getFitnessQuick(1);
 		//fitness += getFitnessGreedy(1);
 		//fitness += getFitnessAgressive(1);
 		//fitness += getFitnessVariedAgressive(1, 1, 1);
 		//fitness += getFitnessMushroomsAndFlowers(1,1);
 		//fitness += getFitnessExplore(1, 1);
-		fitness *= getFitnessMode( 1.2, 1.5, 2.0 );
+		//fitness *= getFitnessMode( 1.2, 1.5, 2.0 );
 		
 		//To account for the casting to int
-		fitness *= 10000;
+		//fitness *= 10000;
 		
 		return (int)fitness;
 	}

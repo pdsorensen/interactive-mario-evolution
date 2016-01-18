@@ -491,12 +491,35 @@ public void logIdMaps( Logger aLogger, Priority pri ) {
 	neatIdMap.log( aLogger, pri );
 }
 
-public void changeProperyValue(String key, float value){
+public void changePropertyValue(String key, float change){
 	
 	if(!props.containsKey(key))
 		System.out.println("I don't have that key");
-	System.out.println(key + " changed to: " + props.getProperty(key)); 
+	
+	//Get old value, and subtract value
+	float new_value = Float.parseFloat( props.getProperty( key ) ) + change;
+	
+	//Set new value
+	props.setProperty( key, Float.toString( new_value ) );
+	
+	//Update weightOperators with the new value
 	weightOperator.changeWeightMutationRate(props);
+	
+	System.out.println(key + " changed to: " + props.getProperty(key)); 
+}
+
+public void setPropertyValue(String key, float value){
+	
+	if(!props.containsKey(key))
+		System.out.println("I don't have that key");
+	
+	//Set new value
+	props.setProperty( key, Float.toString( value ) );
+	
+	//Update weightOperators with the new value
+	weightOperator.changeWeightMutationRate(props);
+	
+	System.out.println(key + " set to: " + props.getProperty(key)); 
 }
 
 }

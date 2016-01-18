@@ -132,7 +132,7 @@ public static void main(String[] args)
 	            agent.giveIntermediateReward(environment.getIntermediateReward());
 	            boolean[] action = agent.getAction();
 	            environment.performAction(action);
-	            checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
+	            //checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
 	            //environment.getEvaluationInfo();
 	            
 	        }
@@ -164,7 +164,7 @@ public static void main(String[] args)
 		for(int i : levelImagePoints.keySet()){
 			if(currentMarioCell == i && levelImagePoints.get(i)== false){
 				System.out.println("I SHOULD TAKE A PICTURE: " + currentMarioCell);
-				environment.createLevelImage();
+				//environment.createLevelImage();
 				levelImagePoints.replace(i, true);
 			}
 		}

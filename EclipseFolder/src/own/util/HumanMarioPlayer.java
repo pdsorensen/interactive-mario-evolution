@@ -43,7 +43,7 @@ public static void main(String[] args)
 	//49 for next picture
 	//79 for next picture etc
 	// incrementing until end
-	String options = "-lt 0 -ls 0 -ld 0 -mix 9  -miy 140";
+	String options = "-lt 0 -ls 0 -ld 0 -mix 3024  -miy 170";
 //	String options = "";
     final MarioAIOptions marioAIOptions = new MarioAIOptions(options);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
@@ -107,9 +107,9 @@ public static void main(String[] args)
 	            agent.giveIntermediateReward(environment.getIntermediateReward());
 	            boolean[] action = agent.getAction();
 	            environment.performAction(action);
-	            checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
-	            //environment.getEvaluationInfo();
-	            
+	            //checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
+	             //environment.getEvaluationInfo().distancePassedCells;
+	            System.out.println( "distanceCellsPassed: " + environment.getEvaluationInfo().distancePassedCells );
 	        }
 	        //System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());
 	    }
@@ -139,7 +139,7 @@ public static void main(String[] args)
 		for(int i : levelImagePoints.keySet()){
 			if(currentMarioCell == i && levelImagePoints.get(i)== false){
 				System.out.println("I SHOULD TAKE A PICTURE: " + currentMarioCell);
-				environment.createLevelImage();
+				//environment.createLevelImage();
 				levelImagePoints.replace(i, true);
 			}
 		}
