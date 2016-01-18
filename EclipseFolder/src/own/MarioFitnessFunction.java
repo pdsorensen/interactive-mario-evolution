@@ -51,7 +51,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     public static int prevGeneration = 0;
     public static int difficulty = 0;
     public static int level = 0;
-    public static int seed = 200;
+    public static int seed = 0;
 	
 	//Define the inputs for Mario
 	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 

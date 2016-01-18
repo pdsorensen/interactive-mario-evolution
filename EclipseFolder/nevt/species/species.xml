@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="./graphSpeciesRefresh.xsl" ?>
 <!DOCTYPE run SYSTEM "../run.dtd">
-<run name="testrun" timedatestamp="[20160114 17:31:17 - 20160114 17:32:02]" >
+<run name="testrun" timedatestamp="[20160115 16:00:29 - 20160115 16:11:21]" >
 <search-parameters>
 <population-size>6</population-size>
 <generations>10</generations>
@@ -25,27 +25,6 @@
 <chromosome id="128" fitness="1" />
 <chromosome id="129" fitness="1" />
 <chromosome id="130" fitness="1" />
-</specie>
-</generation>
-<generation id="2" >
-<fitness>
-<max>100</max>
-<min>1</min>
-<avg>17</avg>
-</fitness>
-<complexity>
-<champ>126</champ>
-<max>129</max>
-<min>125</min>
-<avg>126.33333333333333</avg>
-</complexity>
-<specie id="125" count="6">
-<chromosome id="126" fitness="1" />
-<chromosome id="190" fitness="1" />
-<chromosome id="191" fitness="100" />
-<chromosome id="192" fitness="1" />
-<chromosome id="193" fitness="1" />
-<chromosome id="194" fitness="1" />
 </specie>
 </generation>
 </run>
