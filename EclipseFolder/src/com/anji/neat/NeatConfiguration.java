@@ -181,6 +181,7 @@ private ActivationFunctionType hiddenActivationType;
 
 private NeatIdMap neatIdMap;
 
+private WeightMutationOperator weightOperator;  
 /**
  * Initialize mutation operators.
  * 
@@ -218,7 +219,7 @@ private void initMutation() throws InvalidConfigurationException {
 	}
 
 	// modify weight
-	WeightMutationOperator weightOperator = (WeightMutationOperator) props
+	weightOperator = (WeightMutationOperator) props
 			.singletonObjectProperty( WeightMutationOperator.class );
 	if ( weightOperator.getMutationRate() > 0.0f )
 		addMutationOperator( weightOperator );
@@ -488,6 +489,14 @@ public void store() throws InvalidConfigurationException {
  */
 public void logIdMaps( Logger aLogger, Priority pri ) {
 	neatIdMap.log( aLogger, pri );
+}
+
+public void changeProperyValue(String key, float value){
+	
+	if(!props.containsKey(key))
+		System.out.println("I don't have that key");
+	System.out.println(key + " changed to: " + props.getProperty(key)); 
+	weightOperator.changeWeightMutationRate(props);
 }
 
 }

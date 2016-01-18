@@ -37,6 +37,7 @@ import ch.idsia.tools.MarioAIOptions;
 import iec.GenotypeGif;
 import iec.GifSequenceWriter;
 import iec.MarioGIF;
+import own.util.FitnessCSVWriter;
 
 public class MarioNeat implements Configurable{
 
@@ -46,16 +47,13 @@ public class MarioNeat implements Configurable{
 	 * properties key, # generations in run
 	 */
 	public static final String NUM_GENERATIONS_KEY = "num.generations";
-	
 	public static final String POPULATION_SIZE = "popul.size";
 
 	/**
 	 * properties key, fitness function class
 	 */
 	public static final String FITNESS_FUNCTION_CLASS_KEY = "fitness_function";
-
 	private static final String FITNESS_THRESHOLD_KEY = "fitness.threshold";
-
 	private static final String RESET_KEY = "run.reset";
 
 	/**
@@ -64,21 +62,17 @@ public class MarioNeat implements Configurable{
 	public static final String FITNESS_TARGET_KEY = "fitness.target";
 
 	private static NeatConfiguration config = null;
-
-	private Chromosome champ = null;
-
-	Genotype genotype = null;
+	//private static MarioNEATConfiguration config = null;
 	
+	private Chromosome champ = null;
+	Genotype genotype = null;
 	GenotypeGif genotypeGif = null;
 
 	public int numEvolutions = 0;
-	
 	public int populationSize = 0;
-
+	
 	private double targetFitness = 0.0d;
-
 	private double thresholdFitness = 0.0d;
-
 	private int maxFitness = 0;
 
 	private FilePersistenceMario db = null;
@@ -99,7 +93,7 @@ public class MarioNeat implements Configurable{
 	
 	@Override
 	public void init(Properties props) throws Exception {
-		
+		ff.init(props);
 		boolean doReset = props.getBooleanProperty( RESET_KEY, false );
 		if ( doReset ) {
 			logger.warn( "Resetting previous run !!!" );
@@ -109,20 +103,17 @@ public class MarioNeat implements Configurable{
 		}
 
 		config = new NeatConfiguration( props );
+		//config = new MarioNEATConfiguration( props );
+		
 
 		// peristence
-		//db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		db = (FilePersistenceMario)  props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		numEvolutions = props.getIntProperty( NUM_GENERATIONS_KEY );
 		targetFitness = props.getDoubleProperty( FITNESS_TARGET_KEY, 1.0d );
 		thresholdFitness = props.getDoubleProperty( FITNESS_THRESHOLD_KEY, targetFitness );
 		populationSize = numEvolutions = props.getIntProperty( POPULATION_SIZE );
-		//
-		// event listeners
-		//
 
 		// run
-		// TODO - hibernate
 		Run run = (Run) props.singletonObjectProperty( Run.class );
 		db.startRun( run.getName() );
 		config.getEventManager().addEventListener( GeneticEvent.GENOTYPE_EVALUATED_EVENT, run );
@@ -166,8 +157,7 @@ public class MarioNeat implements Configurable{
 			logger.info( "random genotype" );
 		}
 		
-		// Might get messy: 
-		ff.init(props);
+		
 
 	}
 
@@ -175,104 +165,96 @@ public class MarioNeat implements Configurable{
 	public void run() throws Exception {
 		// TODO: Cleaning and evaluating, think about class variables, more proper logging
 		logger.info( "Run: start" );
-		DateFormat fmt = new SimpleDateFormat( "HH:mm:ss" );
 		
 		boolean wait = false;
-		for(int IECGeneration = 0; IECGeneration < 50; IECGeneration++){
-			// IEC STEP
-			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
-			logger.info( "Generation " + IECGeneration + ": start" );
-		
-			//Reset MarioGIF object and create new .gif folder
-			MarioGIF.reset(folderName);
-			new File("db/gifs/" + folderName).mkdirs();
-
-			// RECORDING STEP
-			List<Chromosome> chroms = genotype.getChromosomes();
+//		for(int IECGeneration = 0; IECGeneration < 50; IECGeneration++){
+//			// IEC STEP
+//			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
+//			logger.info( "Generation " + IECGeneration + ": start" );
+//		
+//			//Reset MarioGIF object and create new .gif folder
+//			MarioGIF.reset(folderName);
+//			new File("db/gifs/" + folderName).mkdirs();
+//
+//			// RECORDING STEP
+//			List<Chromosome> chroms = genotype.getChromosomes();
+//			
+//			ff.delayRecording();
+//			
+//			for (int i = 0; i < populationSize; i++) {
+//				//Get a chromosome
+//			    Chromosome chrommie = (Chromosome) chroms.get(i);
+//			    //Record that chromosome
+//			    ff.recordImages( chrommie, IECGeneration );
+//			    //Create and save gif 
+//			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
+//			}
+//			
+//			ff.generation++;
+//			System.out.println("Generation after record: " + ff.generation + " | " + ff);
+//	
+//			MarioGIF.runIEC(folderName, populationSize);
+//			
+//			wait = true;
+//			while(wait){
+//				Thread.sleep(10);
+//				//Check if chromosome has been chosen
+//				if(MarioGIF.getChosenGif() != -1){
+//					
+//					MarioGIF.setVisibility(false);
+//					
+//					for (Chromosome c : chroms)
+//						c.setFitnessValue(0);
+//					
+//				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
+//				 	bestChroms.add(theChosenChrom);
+//				 	
+//				 	//Set it's fitness
+//				 	theChosenChrom.setFitnessValue(100);
+//				 	db.storeToFolder(theChosenChrom, "./db/best/chromosome");
+//				 	MarioGIF.changeGifName( IECGeneration );
+//					genotype.evolveGif();
+//					//MarioGIF.deleteGifs("./db/gifs/" + folderName);
+//
+//					wait = false;
+//				}
+//			}
+//			
+//			iecCandidates.clear();
+//			GifSequenceWriter.fileNumber = 0; 
+//			folderName++;
 			
-			//Delay gif with generation
-			ff.delayRecording();
-			
-			for (int i = 0; i < populationSize; i++) {
-				//Get a chromosome
-			    Chromosome chrommie = (Chromosome) chroms.get(i);
-			    //Record that chromosome
-			    ff.recordImages( chrommie, IECGeneration );
-
-			    //Create and save gif 
-			    GifSequenceWriter.createGIF("db/gifs/" + folderName + "/");   
-			}
-			
-			ff.generation++;
-			System.out.println("Generation after record: " + ff.generation + " | " + ff);
-			
-			
-			MarioGIF.runIEC(folderName, populationSize);
-			
-			wait = true;
-			while(wait){
-				Thread.sleep(10);
-				//Check if chromosome has been chosen
-				if(MarioGIF.getChosenGif() != -1){
-					
-					MarioGIF.setVisibility(false);
-					
-					//Set all chroms fitness to zero
-					for (Chromosome c : chroms)
-						c.setFitnessValue(0);
-					
-					//Get chosen chromosome
-				 	Chromosome theChosenChrom = (Chromosome) chroms.get( MarioGIF.getChosenGif() );
-				 	bestChroms.add(theChosenChrom);
-				 	
-				 	//Set it's fitness
-				 	theChosenChrom.setFitnessValue(100);
-				 	db.storeToFolder(theChosenChrom, "./db/best/chromosome");
-				 	MarioGIF.changeGifName( IECGeneration );
-					genotype.evolveGif();
-					
-					//MarioGIF.deleteGifs("./db/gifs/" + folderName);
-
-					//Stop waiting and continue evolution
-					wait = false;
-
-				}
-			}
-			
-			iecCandidates.clear();
-			GifSequenceWriter.fileNumber = 0; 
-			folderName++;
+			// Changing evolutionary parameters
+			// NOTE: Maybe weight.mutation.std.dev
+//			config.changeProperyValue("weight.mutation.rate", 0.75f);
 			
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
-//			for ( int generation = 0; generation < 1; generation++ ) {
-//				System.out.println("Running generation: " + generation + "..."); 
-//				Date generationStartDate = Calendar.getInstance().getTime();
-//				logger.info( "Automated NEAT Generation " + generation + ": start" );
-//				
-//				genotype.evolve();
-//				
-//				//Chromosome c = genotype.getFittestChromosome();
-//				//iecCandidates.add(c);
-//				
-//				ff.generation++;
-//				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
-//				
-//				// generation finish
-//				Date generationEndDate = Calendar.getInstance().getTime();
-//				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
-//				logger.info( "Generation " + generation + ": end [" + fmt.format( generationStartDate )
-//						+ " - " + fmt.format( generationEndDate ) + "] [" + durationMillis + "]" );
-//			}
+			for ( int generation = 0; generation < 10; generation++ ) {
+				System.out.println("Running generation: " + generation + "..."); 
+				Date generationStartDate = Calendar.getInstance().getTime();
+				logger.info( "Automated NEAT Generation " + generation + ": start" );
+				
+				genotype.evolve();
+				
+				Chromosome c = genotype.getFittestChromosome();
+				iecCandidates.add(c);
+				bestChroms.add(c);
+				ff.generation++;
+				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
+				
+				// generation finish
+				Date generationEndDate = Calendar.getInstance().getTime();
+				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
+				logger.info( "Generation " + generation + ": [" + durationMillis + "]" );
+			}
 		}	
-	}
+	//}
 	
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
 		
 		try {
 			System.out.println("Booting up!");
-		    
-		    //NEAT SETUP
 			MarioNeat mNeat = new MarioNeat();
 			mNeat.init(props);
 			mNeat.run();
@@ -284,21 +266,28 @@ public class MarioNeat implements Configurable{
 			System.out.println(th);
 		}
 		
-		MarioFitnessFunction ff = new MarioFitnessFunction(); 
-		ff.init(props);
+		//ff.init(props);
 		for(int i = 0; i<bestChroms.size(); i++){
 			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
 			ff.evaluate(bestChroms.get(i), true);
 		}
-	
+		
+		// For creating a .csv file with fitness
+		int[] fitnessValues = new int[bestChroms.size()];
+		for(int i = 0; i< bestChroms.size(); i++){
+			fitnessValues[i] = bestChroms.get(i).getFitnessValue(); 
+		}
+		
+		FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues);
+		
 		// Load in chromosome: 
 		String chromId = "19";
 		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		Chromosome chrom = db.loadChromosome( chromId, config );
-		if ( chrom == null )
-			throw new IllegalArgumentException( "no chromosome found.");
-		ff.init(props);
-		ff.evaluate(chrom, true);
+		if ( chrom != null )
+			ff.evaluate(chrom, true);
+			//throw new IllegalArgumentException( "no chromosome found.");
+		
 		
 	}
 	

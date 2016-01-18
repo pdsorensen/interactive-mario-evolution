@@ -183,6 +183,8 @@ public void drawHardcodedMarioInputs(boolean[] values);
 public void drawOutputs(boolean[] actions);
 
 public void recordMario(boolean b);
+
+public void createLevelImage();
 }
 
 

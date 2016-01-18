@@ -44,6 +44,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     
     //Info on stage
     protected byte[][] mergedObservation;
+    public String levelOptions = "-mix 0 -miy 223"; // see class ParameterContainer.java for each flag
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
 
@@ -64,7 +65,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	@Override
 	public void init(Properties props) throws Exception {
-		System.out.println("INITTING");
+		System.out.println("MarioFitnessFunction: Factory intitiated.");
 		factory = (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );		
 	}
 
@@ -79,20 +80,12 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	}
 
 	
-	public void increaseGeneration(){
-		generation++;
-	}
-	
-	public void changeSeed(int num){
-		seed += num;
-	}
-	
-	/*
+	/**
 	 * If enough playthroughs have been made:
-	 * 		Increase difficulty
-	 * 		Change state
-	 * 		Increase seed
+	 * 		Change difficulity, seed, and level type, followed
+	 * 		by a environment.reset
 	 */
+	
 	public void setStage(){
 		//Check if generation changes
 		if(prevGeneration != generation){
@@ -126,6 +119,19 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 	}
 	
+	public void setStageWithParams(String params, int generation){
+		if(generation == 4 )
+			params = "-mix 825 -miy 140";
+		else if (generation == 8)
+			params = "-mix 1625 -miy 140";
+		else if (generation == 12)
+			params = "-mix 2400 -miy 140";
+		else if ( generation == 16)
+			params = "-mix 4000 -miy 323";
+		
+		environment.reset(params);
+	}
+	
 	public void delayRecording(){
 		
 		int gifMaxDuration = 3000;
@@ -149,7 +155,8 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	public void recordImages( Chromosome c, int generation ){
 		
 		//Set stage, difficulty and seed
-		setStage();
+		//setStage();
+		setStageWithParams(levelOptions, generation);
 	    
 		//Turn on recording
 		marioAIOptions.setVisualization(true);
@@ -195,7 +202,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 //				drawPossibleMarioActions();
 //				drawNearestEnemies(2);
 //				drawOutputs(actions);
-				//marioInputs.printAllOutputs(actions, networkOutput); 
+//				marioInputs.printAllOutputs(actions, networkOutput); 
 //				marioInputs.printAllInputs(networkInput);
 				
 				//Perform some action based on networkOutput
@@ -219,7 +226,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		} else {
 			marioAIOptions.setVisualization(false);
 		}
-		System.out.println("TESTING");
 	    
 	    try {
 			Activator activator = factory.newActivator( c );
@@ -228,15 +234,12 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			int fitness = 0;
 			for ( int i = 0; i < numTrials; i++ ){
 
-				setStage();
-				setMarioLevel(1, 0, 0);
+				//setStage();
+				setMarioLevel(0, 0, 0);
 				fitness += singleTrial( activator );
-				
-				changeSeed( 1 );
+
 			}
-			//Reset seed
-			changeSeed( -numTrials );
-			
+
 			fitness /= numTrials;
 			System.out.println("EVALUATE: fitness score,  " + fitness);
 			c.setFitnessValue( fitness );
@@ -256,7 +259,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
  	    //environment.reset(options);
  	    
 	    marioInputs.setRadius(1, 1, 1, 1);
-	    setMarioLevel(2,0,0);
 	    
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
@@ -281,7 +283,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			makeTick();		
 	    }
 		
-
+		//TODO: Make sure this is correct.
 		//NORMALIZED RESULTS
 		fitness += getFitnessDistancePassed(1);
 		//fitness += getFitnessQuick(1);
@@ -304,7 +306,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	 * NORMALIZED FITNESS ELEMENTS
 	 */
 
-	/*
+	/**
 	 * @return normalized distance that Mario have travelled in the stage
 	 */
 	public double getFitnessDistancePassed(double ratio){
@@ -316,7 +318,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		return fitness;
 	}
 	
-	/*
+	/**
 	 * @return normalized time left of stage
 	 */
 	
@@ -338,7 +340,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		return fitness;
 	}
 	
-	/*
+	/**
 	 * @return Normalized value of amount of coins collected
 	 */
 	
@@ -351,7 +353,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		return fitness;
 	}
 	
-	/*
+	/**
 	 * @return Normalized result of creatures killed
 	 */
 	
@@ -364,7 +366,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		return fitness;
 	}
 	
-	/*
+	/**
 	 * @return Normalized result of creatures killed, varied by kill method
 	 */
 	public double getFitnessVariedAgressive(double ratioStomp, double ratioFire, double ratioShell){
@@ -505,9 +507,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	
 	
 	public void performAction(){
-		
 		environment.performAction(agent.getAction());	
-		
 	}
 	
 	public void makeTick(){
@@ -529,7 +529,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	 * 
 	 * @param level type
 	 * @param level difficulity 
-	 * @param seed
+	 * @param level seed
 	 */
 	public void setMarioLevel(int level, int difficulity, int seed){
 		marioAIOptions.setLevelType(level);
@@ -593,17 +593,13 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	public void drawNearestEnemies(int threshold){
 		int marioX = Math.round(environment.getMarioFloatPos()[0]);
 		int marioY = Math.round(environment.getMarioFloatPos()[1]);
-		System.out.println("MarioPos[" + marioX + "][" + marioY + "]");
 		float[] enemies = environment.getEnemiesFloatPos(); 
 		for(int i = 0; i<enemies.length; i+=3){
-			System.out.println("ENEMY: [" + enemies[i] + "]["+ enemies[i+1] +"][" + enemies[i+2]+"]");
 			int enemyX = Math.round(enemies[i+1] + marioX);
 			int enemyY = Math.round(enemies[i+2] + marioY);
-			//String label = "[" + Float.toString(enemies[i+1]) + "][" + Float.toString(enemies[i+2]) + "]";
 			String label = "[" + Math.round(enemies[i+1]) + "][" + Math.round(enemies[i+2]) + "]";
 			environment.drawEnemy(marioX, marioY, enemyX, enemyY, label);
 		}
-		System.out.println("");
 	}
 	
 	public void drawOutputs(boolean[] actions){

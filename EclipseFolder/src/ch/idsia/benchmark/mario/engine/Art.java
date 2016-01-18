@@ -57,6 +57,12 @@ public static void init(GraphicsConfiguration gc)
 {
     try
     {
+    	// For making Mario being an 1x1 pixel. Making him invisible (almost). 
+//    	mario = cutImage(gc, "resources/invisMario.png", 32, 32);
+//        racoonmario = cutImage(gc, "resources/invisMario.png", 32, 32);
+//        smallMario = cutImage(gc, "resources/invisMario.png", 16, 16);
+//        fireMario = cutImage(gc, "resources/invisMario.png", 32, 32);
+    	
         mario = cutImage(gc, "resources/mariosheet.png", 32, 32);
         racoonmario = cutImage(gc, "resources/racoonmariosheet.png", 32, 32);
         smallMario = cutImage(gc, "resources/smallmariosheet.png", 16, 16);
