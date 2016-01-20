@@ -402,8 +402,8 @@ private double[] normalizeStateVer2(double[] input){
 			normInput[i] = ( ( input[i] - minInput ) / span * 2 ) - 1;
 		
 		//Return normalized input
-//		for(double d : normInput)
-//			System.out.println("Norm Value: " + d);
+		for(double d : normInput)
+			System.out.println("Norm Value: " + d);
 		return normInput;
 	}
 	
@@ -429,64 +429,81 @@ private double[] normalizeStateVer2(double[] input){
 				// Unreachable ground and air: 0.0 
 				else if(limitedState[i][j] == -125 ){
 //					System.out.println("UNREACHABLE GROUND: " + limitedState[i][j]);
-					limitedState[i][j] = -0.5;
+					limitedState[i][j] = 1.0;
 				}
 				
 				// Between corners
 				else if(limitedState[i][j] > -125 && limitedState[i][j] < -108 ){
 //					System.out.println("BETWEEN CORNERS: " + limitedState[i][j]);
-					limitedState[i][j] = -0.5;
+					limitedState[i][j] = -1.0;
 				}
 				
+				// Coins
 				else if(limitedState[i][j] == 2)
 					limitedState[i][j] = 0.2;
+				
+				//BOXES
+//				else if(limitedState[i][j] == -20 || limitedState[i][j] == -22)
+//					limitedState[i][j] = -0.35;
+				
+				//QUESTION BOXES
+				else if(limitedState[i][j] == -22)
+					limitedState[i][j] = -0.2;
+				
+				//OTHER BOXES
+				else if(limitedState[i][j] == -20)
+					limitedState[i][j] = -0.5;
+				
+				//TUBES
+				else if(limitedState[i][j] == -90 )
+					limitedState[i][j] = -0.75;
 				
 			}
 
 			// Boxes or tunnels on either side, is considered like corners
-			for(int g = 0; g<limitedState[1].length; g++)
-				if(limitedState[1][g] == -20 || limitedState[1][g] == -22 || limitedState[1][g] == -90){
-					limitedState[1][g] = -1.0; 
-					limitedState[2][g] = -0.5;
-				}
-					
-			// Boxes or tunnels on on top right or top left, is considered like corners
-			if(limitedState[0][0] < 0.0)
-				limitedState[0][0] = -1.0;
+//			for(int g = 0; g<limitedState[1].length; g++)
+//				if(limitedState[1][g] == -20 || limitedState[1][g] == -22 || limitedState[1][g] == -90){
+//					limitedState[1][g] = -1.0; 
+//					limitedState[2][g] = 1.0;
+//				}
+//
+//			// Boxes or tunnels on on top right or top left, is considered like corners
+//			if(limitedState[0][0] < 0.0)
+//				limitedState[0][0] = -1.0;
+//
+//			else if(limitedState[0][2] < 0.0)
+//				limitedState[0][2] = -1.0;
+//
+
 			
-			else if(limitedState[0][2] < 0.0)
-				limitedState[0][2] = -1.0;
-			
-			
-			
-			if((limitedState[2][1] == -90 & limitedState[2][0] == 0) || (limitedState[2][1] == -90 & limitedState[2][2] == 0)){
-//				System.out.println("Changing to corner!");
-				limitedState[2][1] = -1.0;
-			}
-			
-			if((limitedState[2][1] == -22 & limitedState[2][0] == 0) || (limitedState[2][1] == -22 & limitedState[2][2] == 0)){
-//				System.out.println("Changing to corner!");
-				limitedState[2][1] = -1.0;
-			}
-			
-			if((limitedState[2][1] == -20 & limitedState[2][0] == 0) || (limitedState[2][1] == -20 & limitedState[2][2] == 0)){
-//				System.out.println("Changing to corner!");
-				limitedState[2][1] = -1.0;
-			}
+//			if((limitedState[2][1] == -90 & limitedState[2][0] == 0) || (limitedState[2][1] == -90 & limitedState[2][2] == 0)){
+////				System.out.println("Changing to corner!");
+//				limitedState[2][1] = -1.0;
+//			}
+//			
+//			if((limitedState[2][1] == -22 & limitedState[2][0] == 0) || (limitedState[2][1] == -22 & limitedState[2][2] == 0)){
+////				System.out.println("Changing to corner!");
+//				limitedState[2][1] = -1.0;
+//			}
+//			
+//			if((limitedState[2][1] == -20 & limitedState[2][0] == 0) || (limitedState[2][1] == -20 & limitedState[2][2] == 0)){
+////				System.out.println("Changing to corner!");
+//				limitedState[2][1] = -1.0;
+//			}
 			
 			// Boxes below mario is considered like ground, with a small offset
-			for(int g = 0; g<limitedState[2].length; g++)
-				if(limitedState[2][g] == -20 || limitedState[2][g] == -22 || limitedState[2][g] == -90)
-					limitedState[2][g] = 0.5; 
+//			for(int g = 0; g<limitedState[2].length; g++)
+//				if(limitedState[2][g] == -20 || limitedState[2][g] == -22 || limitedState[2][g] == -90)
+//					limitedState[2][g] = 0.5; 
 			} 
 			
 		
-//		for(int i = 0; i<limitedState.length; i++){
-//			System.out.println("");
-//			for(int j = 0; j<limitedState[i].length; j++){
-//				System.out.println("LimitedState Value: " + limitedState[i][j]);
-//			}
-//		}
+		for(int i = 0; i<limitedState.length; i++){
+			System.out.println("");
+			for(int j = 0; j<limitedState[i].length; j++){
+				System.out.println("LimitedState Value: " + limitedState[i][j]);
+			}
+		}
 	return limitedState; 
 	}
 	
