@@ -163,7 +163,7 @@ public final static String INITIAL_TOPOLOGY_ACTIVATION_INPUT_KEY = "initial.topo
  */
 public final static String INITIAL_TOPOLOGY_ACTIVATION_OUTPUT_KEY = "initial.topology.activation.output";
 
-private Properties props;
+public Properties props;
 
 private CloneReproductionOperator cloneOper = null;
 
