@@ -777,5 +777,9 @@ public void drawEnemy(int x1, int y1, int x2, int y2, String text) {
 public void createLevelImage(){
 	marioVisualComponent.createLevelImage();
 }
+
+public void changeFPS(){
+	marioVisualComponent.delayFPS = !marioVisualComponent.delayFPS; 
+}
 }
 

@@ -179,12 +179,10 @@ void saveLastRun(String filename);
 public void drawLine(int x1, int y1, int x2, int y2, String text);
 public void drawEnemy(int x1, int y1, int x2, int y2, String text);
 public void drawHardcodedMarioInputs(boolean[] values);
-
 public void drawOutputs(boolean[] actions);
-
 public void recordMario(boolean b);
-
 public void createLevelImage();
+public void changeFPS();
 }
 
 

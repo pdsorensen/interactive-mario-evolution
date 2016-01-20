@@ -119,6 +119,8 @@ public ArrayList<Integer> enemyXCords = new ArrayList<Integer>();
 public ArrayList<Integer> enemyYCords = new ArrayList<Integer>(); 
 public ArrayList<String> enemyLabels = new ArrayList<String>();
 
+public boolean delayFPS = false; 
+
 private MarioVisualComponent(MarioAIOptions marioAIOptions, MarioEnvironment marioEnvironment)
 {
     this.marioEnvironment = marioEnvironment;
@@ -475,11 +477,12 @@ public void postInitGraphicsAndLevel()
 
 public void adjustFPS()
 {
-    int fps = GlobalOptions.FPS;
-    //delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
-    
-    //Added to speed up the visualized run
-    delay = 0;
+	if(delayFPS){
+		int fps = GlobalOptions.FPS;
+    	delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
+	} else {
+		delay = 0;
+	}
 }
 
 // THis method here solely for the displaying information in order to reduce
@@ -704,12 +707,12 @@ public void drawHardcodedStates(){
  */
 public void drawActionOutputs(){
 	if(outputActions.size() == 6){
-		drawString(thisVolatileImageGraphics, "RIGHT: " + outputActions.get(0), 140, 8, 0);
-		drawString(thisVolatileImageGraphics, "LEFT : " + outputActions.get(1), 140, 16, 0);
+		drawString(thisVolatileImageGraphics, "LEFT : " + outputActions.get(0), 140, 8, 0);
+		drawString(thisVolatileImageGraphics, "RIGHT: " + outputActions.get(1), 140, 16, 0);
 		drawString(thisVolatileImageGraphics, "DOWN : " + outputActions.get(2), 140, 24, 0);
-		drawString(thisVolatileImageGraphics, "UP   : " + outputActions.get(3), 140, 32, 0);
+		drawString(thisVolatileImageGraphics, "JUMP : " + outputActions.get(3), 140, 40, 0);
 		drawString(thisVolatileImageGraphics, "FIRE : " + outputActions.get(4), 140, 48, 0);
-		drawString(thisVolatileImageGraphics, "JUMP : " + outputActions.get(5), 140, 40, 0);
+		drawString(thisVolatileImageGraphics, "UP   : " + outputActions.get(5), 140, 32, 0);
 	}
 	outputActions.clear();
 }
@@ -736,6 +739,7 @@ public void drawEnemies(){
 	enemyYCords.clear();
 	enemyLabels.clear();
 }
+
 
 }
 
