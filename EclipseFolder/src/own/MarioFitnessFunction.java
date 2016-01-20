@@ -127,21 +127,21 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		if(generation == 4)
 			levelOptions = "-mix 300 -miy 170";
 		else if (generation == 8)
-			levelOptions = "-mix 1056 -miy 100";
+			levelOptions = "-mix 850 -miy 190";
 		else if (generation == 12)
-			levelOptions = "-mix 1888 -miy 170";
+			levelOptions = "-mix 1748 -miy 170";
 		else if ( generation == 16)
-			levelOptions = "-mix 3024 -miy 170";
+			levelOptions = "-mix 2716 -miy 170";
 		
 //		if(generation == 4)
 //			levelOptions = "-vis off -mix 400 -miy 170";
 //		else if (generation == 8)
-//			levelOptions = "-vis off -mix 1056 -miy 100";
+//			levelOptions = "-vis off -mix 850 -miy 190";
 //		else if (generation == 12)
-//			levelOptions = "-vis off -mix 1888 -miy 170";
+//			levelOptions = "-vis off -mix 1748 -miy 190";
 //		else if ( generation == 16)
-//			levelOptions = "-vis off -mix 3024 -miy 170";
-//		System.out.println("LevelOptions: " + levelOptions);
+//			levelOptions = "-vis off -mix 2716 -miy 170";
+		//System.out.println("LevelOptions: " + levelOptions);
 		environment.reset(levelOptions);
 	}
 	

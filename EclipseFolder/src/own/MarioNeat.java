@@ -257,27 +257,27 @@ public class MarioNeat implements Configurable{
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
 		ff.init( props );
-//		try {
-//			System.out.println("Booting up!");
-//			MarioNeat mNeat = new MarioNeat();
-//			mNeat.init(props);
-//			mNeat.run();
-//		
-//			System.out.println("Last up!");
-//			
-//		}
-//		catch ( Throwable th ) {
-//			System.out.println(th);
-//		}
-//		
-//		//ff.init(props);
-//		ff.levelOptions = "-mix 16 -miy 223";
-//		ff.generation = 0;
-//		ff.adjustFPS(); 
-//		for(int i = 0; i<bestChroms.size(); i++){
-//			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
-//			ff.evaluate(bestChroms.get(i), true);
-//		}
+		try {
+			System.out.println("Booting up!");
+			MarioNeat mNeat = new MarioNeat();
+			mNeat.init(props);
+			mNeat.run();
+		
+			System.out.println("Last up!");
+			
+		}
+		catch ( Throwable th ) {
+			System.out.println(th);
+		}
+		
+		//ff.init(props);
+		ff.levelOptions = "-mix 16 -miy 223";
+		ff.generation = 0;
+		ff.adjustFPS(); 
+		for(int i = 0; i<bestChroms.size(); i++){
+			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
+			ff.evaluate(bestChroms.get(i), true);
+		}
 		
 		// For creating a .csv file with fitness
 //		int[] fitnessValues = new int[bestChroms.size()];
