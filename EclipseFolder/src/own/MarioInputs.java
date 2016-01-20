@@ -1,5 +1,7 @@
 package own;
 
+import com.anji.util.Properties;
+
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 
@@ -206,7 +208,6 @@ public class MarioInputs {
 			
 			//Calculate distance to Mario
 			double distance = Math.sqrt( Math.pow(relX, 2) + Math.pow(relY, 2) );
-			
 			//If this enemy is the farthest, update maxDistance
 			if( distance > maxDistance )
 				maxDistance = distance;
@@ -219,9 +220,13 @@ public class MarioInputs {
 			
 			//Get index in input array
 			int k = i * 2 / 3;
-
+			
+			//Normalize distance
+			distance = (distance - 0) / (300 - 0);
+			
 			//Add distance to array
 			inputs[ k ] = distance;
+			//System.out.println("Distance: " + distance);
 			
 			//Add normalized angle to array
 			inputs[ k + 1 ] = degree;
@@ -230,7 +235,7 @@ public class MarioInputs {
 		
 		//Normalize distances and angles to enemies
 		for(int i = 0; i < inputs.length; i += 2){
-			inputs[i] = normalizeEnemyDistance( inputs[ i ], maxDistance );
+			//inputs[i] = normalizeEnemyDistance( inputs[ i ], maxDistance );
 			inputs[ i + 1 ] = normalizeDegree( inputs[ i + 1 ] );
 		}
 		
@@ -380,6 +385,111 @@ public class MarioInputs {
 		return limitedState; 
 	}
 	
+private double[] normalizeStateVer2(double[] input){
+		
+		double[] normInput = new double[input.length];
+		
+		//This will take an approximate possible max and min input for whole system
+		//Comment to make min and max based on all possible values and not 
+		//the current values in input variable
+		double maxInput = 1;
+		double minInput = -1;
+		
+		double span = maxInput - minInput;
+		
+		//Normalize all values between -1 and 1
+		for(int i = 0; i < input.length; i++)
+			normInput[i] = ( ( input[i] - minInput ) / span * 2 ) - 1;
+		
+		//Return normalized input
+		for(double d : normInput)
+			System.out.println("Norm Value: " + d);
+		return normInput;
+	}
+	
+	public double[][] preprocessStateValuesVer2(double[][] limitedState){
+		//double[][] preprocessedValues = new double[getXdimensionLength()][getYdimensionLength()];
+		//System.out.println("PREPROCESS VALUES VER.2");
+		for(int i = 0; i<limitedState.length; i++){
+			//System.out.println("");
+			for(int j = 0; j<limitedState[i].length; j++){
+				//System.out.println("LimitedState Value: " + limitedState[i][j]);
+				
+				// Ground: 1.0
+				if(limitedState[i][j] == -60 || limitedState[i][j] == -62 || limitedState[i][j] == -115 || limitedState[i][j] == -119){
+					limitedState[i][j] = 1.0;
+				}
+				
+				// Corners: -1.0
+				else if(limitedState[i][j] == -128 || limitedState[i][j] == -126 ){
+//					System.out.println("CORNERS: " + limitedState[i][j]);
+					limitedState[i][j] = -1.0;
+				}
+				
+				// Unreachable ground and air: 0.0 
+				else if(limitedState[i][j] == -125 ){
+//					System.out.println("UNREACHABLE GROUND: " + limitedState[i][j]);
+					limitedState[i][j] = -0.5;
+				}
+				
+				// Between corners
+				else if(limitedState[i][j] > -125 && limitedState[i][j] < -108 ){
+//					System.out.println("BETWEEN CORNERS: " + limitedState[i][j]);
+					limitedState[i][j] = -0.5;
+				}
+				
+				else if(limitedState[i][j] == 2)
+					limitedState[i][j] = 0.2;
+				
+			}
+
+			// Boxes or tunnels on either side, is considered like corners
+			for(int g = 0; g<limitedState[1].length; g++)
+				if(limitedState[1][g] == -20 || limitedState[1][g] == -22 || limitedState[1][g] == -90){
+					limitedState[1][g] = -1.0; 
+					limitedState[2][g] = -0.5;
+				}
+					
+			// Boxes or tunnels on on top right or top left, is considered like corners
+			if(limitedState[0][0] < 0.0)
+				limitedState[0][0] = -1.0;
+			
+			else if(limitedState[0][2] < 0.0)
+				limitedState[0][2] = -1.0;
+			
+			
+			
+			if((limitedState[2][1] == -90 & limitedState[2][0] == 0) || (limitedState[2][1] == -90 & limitedState[2][2] == 0)){
+//				System.out.println("Changing to corner!");
+				limitedState[2][1] = -1.0;
+			}
+			
+			if((limitedState[2][1] == -22 & limitedState[2][0] == 0) || (limitedState[2][1] == -22 & limitedState[2][2] == 0)){
+//				System.out.println("Changing to corner!");
+				limitedState[2][1] = -1.0;
+			}
+			
+			if((limitedState[2][1] == -20 & limitedState[2][0] == 0) || (limitedState[2][1] == -20 & limitedState[2][2] == 0)){
+//				System.out.println("Changing to corner!");
+				limitedState[2][1] = -1.0;
+			}
+			
+			// Boxes below mario is considered like ground, with a small offset
+			for(int g = 0; g<limitedState[2].length; g++)
+				if(limitedState[2][g] == -20 || limitedState[2][g] == -22 || limitedState[2][g] == -90)
+					limitedState[2][g] = 0.5; 
+			} 
+			
+		
+		for(int i = 0; i<limitedState.length; i++){
+			System.out.println("");
+			for(int j = 0; j<limitedState[i].length; j++){
+				System.out.println("LimitedState Value: " + limitedState[i][j]);
+			}
+		}
+	return limitedState; 
+	}
+	
 
 	public double[] getLimitedStateFromStage(){
 		
@@ -402,13 +512,15 @@ public class MarioInputs {
 		// Set draw values
 		setDrawValues(limitedState);
 		
-		limitedState = preprocessStateValues(limitedState);
+//		limitedState = preprocessStateValues(limitedState);
+		limitedState = preprocessStateValuesVer2(limitedState);
 		
 		//Convert to single dimension array
 		double[] inputs = getTwoDimToOneDimArray(limitedState);
 		
 		//Normalize values in newArray
-		double[] normalizedInputs = normalizeState( inputs );
+		//double[] normalizedInputs = normalizeState( inputs );
+		double[] normalizedInputs = normalizeStateVer2( inputs );
 		
 		return normalizedInputs;
 	}
@@ -552,10 +664,10 @@ public class MarioInputs {
 		
 		System.out.println("-----------  PRINTING OUT NEURAL NET[" + inputs.length + "] --------");
 		System.out.println("***** GENERAL INFO *****");
-		System.out.println("Gridsize: " + gridSize); 
-		System.out.println("NumEnemies: " + numNearestEnemies); 
-		System.out.println("Show marioState: " + this.includeMarioState);
-		System.out.println("Show hardcoded values: " + showHardcodedValues);
+		System.out.println("*  Gridsize: " + gridSize); 
+		System.out.println("*  NumEnemies: " + numNearestEnemies); 
+		System.out.println("*  Show marioState: " + this.includeMarioState);
+		System.out.println("*  Show hardcoded values: " + showHardcodedValues);
 		System.out.println("");
 		
 		System.out.println("****** NEURAL NET INPUTS ******* "); 
@@ -609,22 +721,34 @@ public class MarioInputs {
 			System.out.println("*  DOWN : " + actions[2] + " - " + outputs[2]); 
 		
 		if(actions[3] == true)
-			System.out.println("*  UP   : " + actions[3] + "  - " + outputs[3]); 
+			System.out.println("*  JUMP : " + actions[3] + "  - " + outputs[3]); 
 		else 
-			System.out.println("*  UP   : " + actions[3] + " - " + outputs[3]); 
+			System.out.println("*  JUMP : " + actions[3] + " - " + outputs[3]); 
 		
-		if(actions[5] == true)
+		if(actions[4] == true)
 			System.out.println("*  FIRE : " + actions[4] + "  - " + outputs[4]); 
 		else 
 			System.out.println("*  FIRE : " + actions[4] + " - " + outputs[4]); 
 		
 		if(actions[5] == true)
-			System.out.println("*  JUMP : " + actions[5] + "  - " + outputs[5]); 
+			System.out.println("*  UP   : " + actions[5] + "  - " + outputs[5]); 
 		else 
-			System.out.println("*  JUMP : " + actions[5] + " - " + outputs[5]); 
+			System.out.println("*  UP   : " + actions[5] + " - " + outputs[5]); 
+		
+		
+		
+		
 
 		System.out.println("-------- END OF NET OUTPUTS  -------");
 		System.out.println("");
+	}
+	
+	public void printEvolutionaryParameters(Properties props){
+		System.out.println("");
+		System.out.println("-------- EVOLUTIONARY PARAMETERS    --------");
+		System.out.println(" * PROPERTY: weight.mutation.rate: " + props.getDoubleProperty("weight.mutation.rate"));
+		System.out.println("-------- END OF EVOLUTIONARY PARAMETERS --------");
+		
 	}
 	
 
