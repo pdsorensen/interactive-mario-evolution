@@ -167,12 +167,11 @@ public class MarioNeat implements Configurable{
 		logger.info( "Run: start" );
 		
 		boolean wait = false;
-		
-		for(int IECGeneration = 0; IECGeneration < 50; IECGeneration++){
-//			// IEC STEP
+		for(int IECGeneration = 0; IECGeneration < 20; IECGeneration++){
+			// IEC STEP
 			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
 			logger.info( "Generation " + IECGeneration + ": start" );
-		
+//			ff.printEvolutionaryParameters(config.props);
 			//Reset MarioGIF object and create new .gif folder
 			MarioGIF.reset(folderName);
 			new File("db/gifs/" + folderName).mkdirs();
@@ -227,10 +226,13 @@ public class MarioNeat implements Configurable{
 			
 			// Changing evolutionary parameters
 			// NOTE: Maybe weight.mutation.std.dev
-			config.changePropertyValue("weight.mutation.rate", -0.01f);
+//			config.changePropertyValue("weight.mutation.rate", -0.01f);
+//			
+//			config.changePropertyValue("add.neuron.mutation.rate", -0.001f);
+			
 			
 			// AUTOMATED NEATSTEP WITH DISTANCE PASSED AS FITNESS
-//			for ( int generation = 0; generation < 10; generation++ ) {
+//			for ( int generation = 0; generation < 20; generation++ ) {
 //				System.out.println("Running generation: " + generation + "..."); 
 //				Date generationStartDate = Calendar.getInstance().getTime();
 //				logger.info( "Automated NEAT Generation " + generation + ": start" );
@@ -240,7 +242,7 @@ public class MarioNeat implements Configurable{
 //				Chromosome c = genotype.getFittestChromosome();
 //				iecCandidates.add(c);
 //				bestChroms.add(c);
-//				ff.generation++;
+//				
 //				System.out.println("Generation in NEAT loop: " + ff.generation + " | " + ff);
 //				
 //				// generation finish
@@ -248,6 +250,7 @@ public class MarioNeat implements Configurable{
 //				long durationMillis = generationEndDate.getTime() - generationStartDate.getTime();
 //				logger.info( "Generation " + generation + ": [" + durationMillis + "]" );
 //			}
+			
 		}	
 	}
 	
@@ -268,6 +271,9 @@ public class MarioNeat implements Configurable{
 //		}
 //		
 //		//ff.init(props);
+//		ff.levelOptions = "-mix 16 -miy 223";
+//		ff.generation = 0;
+//		ff.adjustFPS(); 
 //		for(int i = 0; i<bestChroms.size(); i++){
 //			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
 //			ff.evaluate(bestChroms.get(i), true);
@@ -282,12 +288,16 @@ public class MarioNeat implements Configurable{
 		//FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues);
 		
 		// Load in chromosome: 
-		String chromId = "12";
-	
+		String chromId = "8";
+		
 		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		Chromosome chrom = db.loadChromosome( chromId, config );
+		ff.levelOptions = "-mix 300 -miy 150";
+		ff.generation = 0;
+		ff.adjustFPS();
 		if ( chrom != null ){
 			System.out.println("Chrom: " + chrom);
+			
 			ff.evaluate(chrom, true);
 			//throw new IllegalArgumentException( "no chromosome found.");
 		}

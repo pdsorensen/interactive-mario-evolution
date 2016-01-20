@@ -44,7 +44,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     
     //Info on stage
     protected byte[][] mergedObservation;
-    public String levelOptions = "-mix 0 -miy 223"; // see class ParameterContainer.java for each flag
+    public String levelOptions = "-mix 16 -miy 223"; // see class ParameterContainer.java for each flag
     
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
@@ -58,7 +58,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	//Define the inputs for Mario
 	MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
 												true, 2,
-												true, true, true, true );
+												false, true, false, true );
 	
 	//Recording params
 	public int gifDurationMillis = 2000;
@@ -72,11 +72,14 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 
 	@Override
 	public void evaluate(List genotypes) {
-		System.out.println("Evaluting list of chromosones..."); 
+		System.out.println("Evaluting list of chromosones...");
+		generation++; 
+		System.out.println("Increasing generation" + generation);
 		Iterator it = genotypes.iterator();
 		while ( it.hasNext() ) {
 			Chromosome genotype = (Chromosome) it.next();
 			evaluate(genotype, false);
+			
 		}
 	}
 
@@ -122,7 +125,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	public void setStageWithParams( int generation ){
 		if(generation == 4)
-			levelOptions = "-mix 400 -miy 170";
+			levelOptions = "-mix 300 -miy 170";
 		else if (generation == 8)
 			levelOptions = "-mix 1056 -miy 100";
 		else if (generation == 12)
@@ -130,6 +133,15 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		else if ( generation == 16)
 			levelOptions = "-mix 3024 -miy 170";
 		
+//		if(generation == 4)
+//			levelOptions = "-vis off -mix 400 -miy 170";
+//		else if (generation == 8)
+//			levelOptions = "-vis off -mix 1056 -miy 100";
+//		else if (generation == 12)
+//			levelOptions = "-vis off -mix 1888 -miy 170";
+//		else if ( generation == 16)
+//			levelOptions = "-vis off -mix 3024 -miy 170";
+//		System.out.println("LevelOptions: " + levelOptions);
 		environment.reset(levelOptions);
 	}
 	
@@ -200,13 +212,13 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 				double[] networkOutput = activator.next(networkInput);
 				boolean[] actions = getAction(networkOutput);
 				
-				//Drawing and debugging functions 
+				//Drawing and debugging functions v
 //				drawGrid();
 //				drawPossibleMarioActions();
 //				drawNearestEnemies(2);
-//				drawOutputs(actions);
-//				marioInputs.printAllOutputs(actions, networkOutput); 
-//				marioInputs.printAllInputs(networkInput);
+				drawOutputs(actions);
+				marioInputs.printAllOutputs(actions, networkOutput); 
+				marioInputs.printAllInputs(networkInput);
 				
 				//Perform some action based on networkOutput
 				
@@ -224,26 +236,28 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	public void evaluate( Chromosome c, boolean visual ) {
 		
 		// Reset environment each trial
+		setStageWithParams(generation);
 		if(visual){
 			marioAIOptions.setVisualization(true);
 		} else {
 			marioAIOptions.setVisualization(false);
 		}
-	    
+		
+		
 	    try {
 			Activator activator = factory.newActivator( c );
 			
 			// calculate fitness, sum of multiple trials
 			int fitness = 0;
-			for ( int i = 0; i < numTrials; i++ ){
+//			for ( int i = 0; i < numTrials; i++ ){
 
 				//setStage();
-				setMarioLevel(0, 0, 0);
+				
 				fitness += singleTrial( activator );
 
-			}
-
-			fitness /= numTrials;
+//			}
+//
+//			fitness /= numTrials;
 			System.out.println("EVALUATE: fitness score,  " + fitness);
 			c.setFitnessValue( fitness );
 		}
@@ -266,6 +280,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
 			resetActions();
+			
 			
 			//Get inputs
 			double[] networkInput = marioInputs.getAllInputs();
@@ -466,7 +481,6 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	
 	
 	public boolean[] getAction(double[] networkOutput){
-		
 		if(networkOutput[0] < 0.5)
 			actions[Mario.KEY_LEFT] = false;
 		else
@@ -497,6 +511,21 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		else
 			actions[Mario.KEY_SPEED] = true;
 		
+		if ( networkOutput[0] > networkOutput[1] && networkOutput[0] > networkOutput[2] ){
+			actions[Mario.KEY_LEFT] = true;
+			actions[Mario.KEY_RIGHT] = false;
+			actions[Mario.KEY_DOWN] = false;
+		} else if ( networkOutput[1] > networkOutput[0] && networkOutput[1] > networkOutput[2] ){
+			actions[Mario.KEY_LEFT] = false;
+			actions[Mario.KEY_RIGHT] = true;
+			actions[Mario.KEY_DOWN] = false;
+		} else if ( networkOutput[2] > networkOutput[1] && networkOutput[2] > networkOutput[0] ){
+			actions[Mario.KEY_LEFT] = false;
+			actions[Mario.KEY_RIGHT] = false;
+			actions[Mario.KEY_DOWN] = true;
+		} else   
+	         System.out.println("Entered numbers are not distinct.");
+			
 		return actions;
 	}
 	
@@ -612,6 +641,19 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	
 	public double[] getAllInputs(){
 		return marioInputs.getAllInputs();
+	}
+	
+	public void printEvolutionaryParameters(Properties props){
+		System.out.println("");
+		System.out.println("-------- EVOLUTIONARY PARAMETERS    --------");
+		System.out.println(" * PROPERTY: weight.mutation.rate: " + props.getDoubleProperty("weight.mutation.rate"));
+		System.out.println(" * PROPERTY: add.neuron.mutation.rate: " + props.getDoubleProperty("add.neuron.mutation.rate"));
+		System.out.println("-------- END OF EVOLUTIONARY PARAMETERS --------");
+		
+	}
+	
+	public void adjustFPS(){
+		environment.changeFPS(); 
 	}
 	
 	

@@ -43,7 +43,7 @@ public static void main(String[] args)
 	//49 for next picture
 	//79 for next picture etc
 	// incrementing until end
-	String options = "-lt 0 -ls 0 -ld 0 -mix 3024  -miy 170";
+	String options = "-lt 0 -ls 0 -ld 0 -mix 300  -miy 170";
 //	String options = "";
     final MarioAIOptions marioAIOptions = new MarioAIOptions(options);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
@@ -74,7 +74,7 @@ public static void main(String[] args)
     //environment.reset(options);
     
     populateHashMap();
-
+    environment.changeFPS();
     //return true;
     for(int j = 0; j < 1; j++) {
     	basicTask.reset();
@@ -92,8 +92,8 @@ public static void main(String[] args)
 	//			boolean[] actions = getAction(networkOutput);
 				
 				//Drawing and debugging functions 
-//	        	ff.getAllInputs();
-//				ff.drawGrid();
+	        	ff.getAllInputs();
+				ff.drawGrid();
 //				ff.drawPossibleMarioActions();
 //				ff.drawNearestEnemies(2);
 	//			System.out.println(environment.getMarioEgoPos()[0]);
@@ -109,7 +109,7 @@ public static void main(String[] args)
 	            environment.performAction(action);
 	            //checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
 	             //environment.getEvaluationInfo().distancePassedCells;
-	            System.out.println( "distanceCellsPassed: " + environment.getEvaluationInfo().distancePassedCells );
+	            //System.out.println( "distanceCellsPassed: " + environment.getEvaluationInfo().distancePassedCells );
 	        }
 	        //System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());
 	    }
