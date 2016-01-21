@@ -257,50 +257,81 @@ public class MarioNeat implements Configurable{
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
 		ff.init( props );
-		try {
-			System.out.println("Booting up!");
-			MarioNeat mNeat = new MarioNeat();
-			mNeat.init(props);
-			mNeat.run();
-		
-			System.out.println("Last up!");
-			
-		}
-		catch ( Throwable th ) {
-			System.out.println(th);
-		}
+//		try {
+//			System.out.println("Booting up!");
+//			MarioNeat mNeat = new MarioNeat();
+//			mNeat.init(props);
+//			mNeat.run();
+//		
+//			System.out.println("Last up!");
+//			
+//		}
+//		catch ( Throwable th ) {
+//			System.out.println(th);
+//		}
 		
 		//ff.init(props);
-		ff.levelOptions = "-mix 16 -miy 223";
+		
+		ff.levelOptions = "-mix 16 -miy 223"; //Set starting position
 		ff.generation = 0;
-		ff.adjustFPS(); 
-		for(int i = 0; i<bestChroms.size(); i++){
-			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
-			ff.evaluate(bestChroms.get(i), true);
+		ff.adjustFPS(); //Switches delay to opposite
+		
+		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
+		
+		int chromSize = 20;
+		String participantName = "DGRU";
+		
+		int[] fitnessValues = new int[chromSize];
+		
+		for(int i = 0; i < chromSize; i++){
+			
+			//Get new chromosome
+			Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
+			
+			//Evaluate the chromosome
+			ff.evaluate( chrom, false );
+			
+			//Print results
+			System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue());
+			
+			//Save to array
+			fitnessValues[ i ] = chrom.getFitnessValue();
+			
 		}
 		
+		FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues, participantName );
+
+		
+//		for(int i = 0; i<bestChroms.size(); i++){
+//			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
+//			ff.evaluate(bestChroms.get(i), true);
+//		}
+		
 		// For creating a .csv file with fitness
-//		int[] fitnessValues = new int[bestChroms.size()];
+
 //		for(int i = 0; i< bestChroms.size(); i++){
 //			fitnessValues[i] = bestChroms.get(i).getFitnessValue(); 
 //		}
 		
 		//FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues);
 		
-		// Load in chromosome: 
-		String chromId = "8";
 		
-		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
-		Chromosome chrom = db.loadChromosome( chromId, config );
-		ff.levelOptions = "-mix 300 -miy 150";
-		ff.generation = 0;
-		ff.adjustFPS();
-		if ( chrom != null ){
-			System.out.println("Chrom: " + chrom);
-			
-			ff.evaluate(chrom, true);
-			//throw new IllegalArgumentException( "no chromosome found.");
-		}
+		
+		// Load in chromosome: 
+//		String chromId = "8";
+		
+		
+//		Chromosome chrom = db.loadChromosome( chromId, config );
+//		ff.levelOptions = "-mix 300 -miy 150";
+//		ff.generation = 0;
+//		ff.adjustFPS();
+//		if ( chrom != null ){
+//			System.out.println("Chrom: " + chrom);
+//			
+//			ff.evaluate(chrom, true);
+//			//throw new IllegalArgumentException( "no chromosome found.");
+//		}
+
 		
 	}
 	

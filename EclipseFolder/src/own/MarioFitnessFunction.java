@@ -44,7 +44,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     
     //Info on stage
     protected byte[][] mergedObservation;
-    public String levelOptions = "-mix 16 -miy 223"; // see class ParameterContainer.java for each flag
+    public String levelOptions = "-mix 1700 -miy 223"; // see class ParameterContainer.java for each flag
     
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
@@ -145,6 +145,16 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		environment.reset(levelOptions);
 	}
 	
+	
+	public void setStageWithPermanentParams( int cellX, int cellY ){
+		
+		int x = cellX * 16;
+		int y = cellY * 16;
+		
+		levelOptions = "-mix " + x + " -miy " + y;
+		environment.reset(levelOptions);
+	}
+	
 	public void delayRecording(){
 		
 		int gifMaxDuration = 4000;
@@ -236,13 +246,20 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 	public void evaluate( Chromosome c, boolean visual ) {
 		
 		// Reset environment each trial
-		setStageWithParams(generation);
+		
+		//setStageWithParams(generation);
+		setStageWithPermanentParams(2, 0);
+		
+		//setMarioLevel( 0, 0, 0 );
+		//levelOptions = "-mix 300 -miy 170";
+		
 		if(visual){
 			marioAIOptions.setVisualization(true);
 		} else {
 			marioAIOptions.setVisualization(false);
 		}
 		
+		environment.reset(marioAIOptions);
 		
 	    try {
 			Activator activator = factory.newActivator( c );
@@ -253,12 +270,11 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 
 				//setStage();
 				
-				fitness += singleTrial( activator );
+			fitness += singleTrial( activator );
 
 //			}
 //
 //			fitness /= numTrials;
-			System.out.println("EVALUATE: fitness score,  " + fitness);
 			c.setFitnessValue( fitness );
 		}
 		catch ( Throwable e ) {
@@ -523,8 +539,9 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			actions[Mario.KEY_LEFT] = false;
 			actions[Mario.KEY_RIGHT] = false;
 			actions[Mario.KEY_DOWN] = true;
-		} else   
-	         System.out.println("Entered numbers are not distinct.");
+		} 
+//		else   
+//	         System.out.println("Entered numbers are not distinct.");
 			
 		return actions;
 	}

@@ -6,15 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class FitnessCSVWriter {
-	private final static String DELIMITER = ",";
+	private final static String DELIMITER = ";";
 	private final static String NEW_LINE_SEPERATOR = "\n";
 	private final static String FILE_HEADER = "id, fitness";
 	
-	public static void generateCsvFile(String fileName, int[] values)
+	public static void generateCsvFile(String fileName, int[] values, String name)
 	{
 		try
 		{
-		    FileWriter writer = new FileWriter("db/csv/" + fileName);
+		    FileWriter writer = new FileWriter("db/csv/" + name + "_" + fileName + ".csv");
 		    
 		    writer.append(FILE_HEADER); 
 		    writer.append(NEW_LINE_SEPERATOR);

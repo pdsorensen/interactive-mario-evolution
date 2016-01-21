@@ -402,8 +402,8 @@ private double[] normalizeStateVer2(double[] input){
 			normInput[i] = ( ( input[i] - minInput ) / span * 2 ) - 1;
 		
 		//Return normalized input
-		for(double d : normInput)
-			System.out.println("Norm Value: " + d);
+//		for(double d : normInput)
+//			System.out.println("Norm Value: " + d);
 		return normInput;
 	}
 	
@@ -498,12 +498,12 @@ private double[] normalizeStateVer2(double[] input){
 			} 
 			
 		
-		for(int i = 0; i<limitedState.length; i++){
-			System.out.println("");
-			for(int j = 0; j<limitedState[i].length; j++){
-				System.out.println("LimitedState Value: " + limitedState[i][j]);
-			}
-		}
+//		for(int i = 0; i<limitedState.length; i++){
+//			System.out.println("");
+//			for(int j = 0; j<limitedState[i].length; j++){
+//				System.out.println("LimitedState Value: " + limitedState[i][j]);
+//			}
+//		}
 	return limitedState; 
 	}
 	
