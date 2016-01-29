@@ -44,7 +44,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     
     //Info on stage
     protected byte[][] mergedObservation;
-    public String levelOptions = "-mix 1700 -miy 223"; // see class ParameterContainer.java for each flag
+    public String levelOptions = "-mix 16 -miy 223"; // see class ParameterContainer.java for each flag
     
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
@@ -227,8 +227,8 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 //				drawPossibleMarioActions();
 //				drawNearestEnemies(2);
 				drawOutputs(actions);
-				marioInputs.printAllOutputs(actions, networkOutput); 
-				marioInputs.printAllInputs(networkInput);
+				//marioInputs.printAllOutputs(actions, networkOutput); 
+				//marioInputs.printAllInputs(networkInput);
 				
 				//Perform some action based on networkOutput
 				
@@ -248,9 +248,10 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		// Reset environment each trial
 		
 		//setStageWithParams(generation);
-		setStageWithPermanentParams(2, 0);
 		
-		//setMarioLevel( 0, 0, 0 );
+		//setStageWithPermanentParams(2, 0);
+		//setMarioLevel( 0, 0, 3 );
+		
 		//levelOptions = "-mix 300 -miy 170";
 		
 		if(visual){
@@ -259,7 +260,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			marioAIOptions.setVisualization(false);
 		}
 		
-		environment.reset(marioAIOptions);
+		//environment.reset(marioAIOptions);
 		
 	    try {
 			Activator activator = factory.newActivator( c );

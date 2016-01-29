@@ -655,7 +655,7 @@ private double[] normalizeStateVer2(double[] input){
 	
 	public void printScene(){
 		sb.setLength(0);
-		System.out.println("Printing levelScene[" + levelScene.length + "][" + levelScene[0].length + "]");
+		//System.out.println("Printing levelScene[" + levelScene.length + "][" + levelScene[0].length + "]");
 		for(int i = 0; i<levelScene.length; i++){
 			for(int j = 0; j<levelScene[i].length; j++){
 				if(i == 9 && j == 9){
@@ -669,7 +669,7 @@ private double[] normalizeStateVer2(double[] input){
 			}
 			sb.append("\n");
 		}
-		System.out.println(sb.toString());
+		//System.out.println(sb.toString());
 	}
 	
 	public void printAllInputs(double[] inputs){

@@ -257,6 +257,9 @@ public class MarioNeat implements Configurable{
 	public static void main( String[] args ) throws Throwable {
 		Properties props = new Properties( "mario.properties" );
 		ff.init( props );
+		
+		
+		//RUN
 //		try {
 //			System.out.println("Booting up!");
 //			MarioNeat mNeat = new MarioNeat();
@@ -269,9 +272,11 @@ public class MarioNeat implements Configurable{
 //		catch ( Throwable th ) {
 //			System.out.println(th);
 //		}
+//
+//		
+//		
 		
-		//ff.init(props);
-		
+		//PARAMETERS FOR TESTS
 		ff.levelOptions = "-mix 16 -miy 223"; //Set starting position
 		ff.generation = 0;
 		ff.adjustFPS(); //Switches delay to opposite
@@ -279,28 +284,116 @@ public class MarioNeat implements Configurable{
 		Persistence db = (Persistence) props.newObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		
 		int chromSize = 20;
-		String participantName = "DGRU";
-		
 		int[] fitnessValues = new int[chromSize];
+		String participantName = "JENS";
+
+		
+		
+		//OLD TEST CHECK
+//		for(int i = 0; i < chromSize; i++){
+//			
+//			//Get new chromosome
+//			Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
+//			
+//			//Evaluate the chromosome
+//			ff.evaluate( chrom, true );
+//			
+//			//Print results
+//			System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue());
+//			
+//			//Save to array
+//			fitnessValues[ i ] = chrom.getFitnessValue();
+//			
+//		}
+		
+		
+		//FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues, participantName );
+		
+		
+		
+		//GENERALIZED TEST
+		int numLevels = 10;
 		
 		for(int i = 0; i < chromSize; i++){
+			int fitnessVal = 0;
 			
 			//Get new chromosome
 			Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
 			
-			//Evaluate the chromosome
-			ff.evaluate( chrom, false );
-			
-			//Print results
-			System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue());
+			for(int l = 0; l < numLevels; l++){
+				
+				ff.setMarioLevel( 0, 0, l );
+				
+				//Evaluate the chromosome
+				ff.evaluate( chrom, false );
+				
+				
+				fitnessVal += chrom.getFitnessValue();
+				
+				//Print results
+				System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue() + " | LEVEL: " + l);
+			}
 			
 			//Save to array
-			fitnessValues[ i ] = chrom.getFitnessValue();
-			
+			fitnessValues[ i ] = fitnessVal / numLevels;
 		}
 		
 		FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues, participantName );
 
+	
+		//TEST WITH TRAINING PARAMETERS
+//		int offsetX = 16;	
+//		int offsetY = 170;
+//		
+//		for(int i = 0; i < chromSize; i++){
+//			
+//			//Get new chromosome
+//			Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
+//			
+//			//ff.setMarioLevel( 0, 0, 0 );
+//			
+//		
+//			//Find offset X and Y 
+//			if(i >= 4){
+//				offsetX = 300;
+//				offsetY = 170;
+//			}
+//			if (i >= 8){
+//				offsetX = 850;
+//				offsetY = 190;
+//			}
+//			if (i >= 12){
+//				offsetX = 1748;
+//				offsetY = 170;
+//			} 
+//			if ( i >= 16){
+//				offsetX = 2716;
+//				offsetY = 170;
+//			}
+//			
+//			//Move Mario according to generation
+//			ff.levelOptions = "-mix " + offsetX + " -miy "+ offsetY;
+//			System.out.println(ff.levelOptions);
+//			
+//			ff.environment.reset(ff.levelOptions);
+//			//Evaluate the chromosome
+//			ff.evaluate( chrom, true );
+//			
+//			//Print results
+//			System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue());
+//			
+//			//Save to array
+//			fitnessValues[ i ] = chrom.getFitnessValue() - ( offsetX / 16 );
+//		}
+//		
+//		FitnessCSVWriter.generateCsvFile("fitnessResults", fitnessValues, participantName );
+
+	
+		
+		
+		
+		
+		
 		
 //		for(int i = 0; i<bestChroms.size(); i++){
 //			System.out.println("GENERATION " + i + " - BestFitness(" + bestChroms.get(i).getFitnessValue() + ")"); 
