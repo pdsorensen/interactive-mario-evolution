@@ -44,7 +44,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
     
     //Info on stage
     protected byte[][] mergedObservation;
-    public String levelOptions = "-mix 16 -miy 223"; // see class ParameterContainer.java for each flag
+    public String levelOptions = "-vis off -mix 16 -miy 223"; // see class ParameterContainer.java for each flag
     
     //Control buttons
     boolean[] actions = new boolean[Environment.numberOfKeys]; 
@@ -73,7 +73,6 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	@Override
 	public void evaluate(List genotypes) {
 		System.out.println("Evaluting list of chromosones...");
-		generation++; 
 		System.out.println("Increasing generation" + generation);
 		Iterator it = genotypes.iterator();
 		while ( it.hasNext() ) {
@@ -81,6 +80,7 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 			evaluate(genotype, false);
 			
 		}
+		generation++; 
 	}
 
 	
@@ -251,16 +251,15 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		
 		//setStageWithPermanentParams(2, 0);
 		//setMarioLevel( 0, 0, 3 );
-		
+
 		//levelOptions = "-mix 300 -miy 170";
-		
 		if(visual){
 			marioAIOptions.setVisualization(true);
 		} else {
 			marioAIOptions.setVisualization(false);
 		}
 		
-		//environment.reset(marioAIOptions);
+//		environment.reset(marioAIOptions);
 		
 	    try {
 			Activator activator = factory.newActivator( c );

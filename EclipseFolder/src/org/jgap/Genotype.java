@@ -261,7 +261,10 @@ public synchronized void evolveGif() {
 		selector.add( m_activeConfiguration, m_chromosomes );
 		m_chromosomes = selector.select( m_activeConfiguration );
 		selector.empty();
-
+		
+		
+		
+		
 		// Repopulate the population of species and chromosomes with those selected
 		// by the natural selector, and cull species down to contain only remaining
 		// chromosomes.
@@ -347,7 +350,32 @@ public synchronized void evolve() {
 				c.setFitnessValue( function.getFitnessValue( c ) );
 			}
 		}
-
+		
+		// HARDCODED, REMOVE AFTER USE 
+		int champFitness = 0; 
+		Chromosome bestChrom = null; 
+		
+		for(int i = 0; i<m_chromosomes.size(); i++){
+			Chromosome c = (Chromosome) m_chromosomes.get(i);
+			System.out.println("Chromosomes: " + Integer.toString(c.getFitnessValue()));
+			if(champFitness < c.getFitnessValue()){
+				System.out.println("Champ" + i + " | Fitness: " + c.getFitnessValue());
+				if(bestChrom != null)
+					bestChrom.setFitnessValue(0);
+				bestChrom = c; 
+				champFitness = c.getFitnessValue();
+			} else {
+				c.setFitnessValue(0);
+			}
+		}
+		
+		bestChrom.setFitnessValue(100);
+		
+		for(int i = 0; i<m_chromosomes.size(); i++){
+			Chromosome c = (Chromosome) m_chromosomes.get(i);
+			System.out.println("Chromosome + " + i + " has fitness : " + Integer.toString(c.getFitnessValue()));
+		}
+				
 		// Fire an event to indicate we've evaluated all chromosomes.
 		// -------------------------------------------------------
 		m_activeConfiguration.getEventManager().fireGeneticEvent(
