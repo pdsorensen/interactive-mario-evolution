@@ -3,6 +3,7 @@ package own;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +31,9 @@ import ch.idsia.benchmark.tasks.BasicTask;
 import ch.idsia.tools.MarioAIOptions;
 
 public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
-
+	
+	static Hashtable<Integer, Boolean> levelImagePoints = new Hashtable<Integer, Boolean>();
+	
 	private static Logger logger = Logger.getLogger( TargetFitnessFunction.class );
 	private ActivatorTranscriber factory;
 	private int numTrials = 1;
@@ -204,7 +207,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 
 	    //Get millis at starting point
 	    long startMillis = System.currentTimeMillis();
-	    
+	   
 	    //Run trial
 		while(!environment.isLevelFinished() && startMillis + gifDurationMillis > System.currentTimeMillis()){			
 			
@@ -292,7 +295,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
  	    //environment.reset(options);
  	    
 	    marioInputs.setRadius(1, 1, 1, 1);
-	    
+	    populateHashMap();
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
 			resetActions();
@@ -313,7 +316,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 			//Perform some action based on networkOutput
 			environment.performAction(actions);
-			 
+			checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
 			makeTick();		
 	    }
 		
@@ -673,5 +676,30 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		environment.changeFPS(); 
 	}
 	
+	public static void populateHashMap(){
+		// Cell 29 is the first place to take picture
+		int imagePoint = 9;  
+		levelImagePoints.put(imagePoint, false);
+		
+		for(int i = 0; i<11; i++){
+			imagePoint += 20; 
+			levelImagePoints.put(imagePoint, false);
+		}
+		
+		for(int p : levelImagePoints.keySet()){
+			System.out.println("Key: " + p);
+		}
+	}
+	
+	public static void checkImagePoints(int currentMarioCell){
+		//System.out.println("Recieved value: " + currentMarioCell);
+		for(int i : levelImagePoints.keySet()){
+			if(currentMarioCell == i && levelImagePoints.get(i)== false){
+				System.out.println("I SHOULD TAKE A PICTURE: " + currentMarioCell);
+				environment.createLevelImage();
+				levelImagePoints.replace(i, true);
+			}
+		}
+	}
 	
 }

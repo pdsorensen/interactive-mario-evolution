@@ -119,7 +119,11 @@ public ArrayList<Integer> enemyXCords = new ArrayList<Integer>();
 public ArrayList<Integer> enemyYCords = new ArrayList<Integer>(); 
 public ArrayList<String> enemyLabels = new ArrayList<String>();
 
+// Drawing points from array 
+public ArrayList<Integer> xPointArray = new ArrayList<Integer>(); 
+public ArrayList<Integer> yPointArray = new ArrayList<Integer>(); 
 public boolean delayFPS = false; 
+public int myCounter = 2; 
 
 private MarioVisualComponent(MarioAIOptions marioAIOptions, MarioEnvironment marioEnvironment)
 {
@@ -385,6 +389,8 @@ public void render(Graphics g)
     if(drawEnemies)
     	drawEnemies();
     
+    createImageAtXFrames(8);
+    
     g.clearRect(5, 5, 5, 5);
 }
 
@@ -477,12 +483,8 @@ public void postInitGraphicsAndLevel()
 
 public void adjustFPS()
 {
-	if(delayFPS){
-		int fps = GlobalOptions.FPS;
+		int fps = 5;
     	delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
-	} else {
-		delay = 0;
-	}
 }
 
 // THis method here solely for the displaying information in order to reduce
@@ -623,6 +625,44 @@ public void createLevelImage(){
     } catch (IOException e) {	
             e.printStackTrace();
     }
+}
+
+public void drawMarioTrajectory(){
+	System.out.println("Drawing line");
+}
+
+public void createImageAtXFrames(int modulus){
+	if(myCounter % modulus == 0){
+		System.out.println("Creating Image!");
+		createImage(); 
+	} else {
+		System.out.println("myCounter:" + myCounter);
+	}
+	myCounter++; 
+}
+
+public void drawPoint(){
+	int[] xTempArray = new int[xPointArray.size()]; 
+	int[] yTempArray = new int[yPointArray.size()];
+	
+	int x = 0; int y = 0; 
+	
+	for(int i = 0; i<xPointArray.size(); i++){
+		if(xPointArray.get(i)>halfWidth){
+			System.out.println("Xpoint Array: " + xPointArray.get(i));
+			x = xPointArray.get(i) + halfWidth - xPointArray.get(i); 
+			y = yPointArray.get(i);
+			System.out.println("HALFWIDTH FOUND: " + halfWidth);
+		} else {
+			x = xPointArray.get(i); 
+			y = yPointArray.get(i);
+		}
+		System.out.println("X: " + x + "Y: " + y);
+		xTempArray[i] = x; 
+		yTempArray[i] = y;
+	} 
+	
+	thisVolatileImageGraphics.drawPolyline(xTempArray, yTempArray, xPointArray.size());
 }
 
 /**

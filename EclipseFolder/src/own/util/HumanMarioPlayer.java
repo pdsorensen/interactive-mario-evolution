@@ -58,7 +58,7 @@ public static void main(String[] args)
     
     marioAIOptions.setLevelDifficulty(0);
     marioAIOptions.setLevelType(0);
-    marioAIOptions.setLevelRandSeed(1);
+    marioAIOptions.setLevelRandSeed(0);
     environment.reset(options);
     MarioInputs marioInputs = new MarioInputs(  true, 1, 1, 1, 1, 
 			true, 3,
@@ -75,6 +75,8 @@ public static void main(String[] args)
     
     populateHashMap();
     environment.changeFPS();
+    int marioX = 0; 
+    int marioY = 0; 
     //return true;
     for(int j = 0; j < 1; j++) {
     	basicTask.reset();
@@ -92,8 +94,8 @@ public static void main(String[] args)
 	//			boolean[] actions = getAction(networkOutput);
 				
 				//Drawing and debugging functions 
-	        	ff.getAllInputs();
-				ff.drawGrid();
+//	        	ff.getAllInputs();
+//				ff.drawGrid();
 //				ff.drawPossibleMarioActions();
 //				ff.drawNearestEnemies(2);
 	//			System.out.println(environment.getMarioEgoPos()[0]);
@@ -107,7 +109,8 @@ public static void main(String[] args)
 	            agent.giveIntermediateReward(environment.getIntermediateReward());
 	            boolean[] action = agent.getAction();
 	            environment.performAction(action);
-	            //checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
+	            
+	            checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
 	             //environment.getEvaluationInfo().distancePassedCells;
 	            //System.out.println( "distanceCellsPassed: " + environment.getEvaluationInfo().distancePassedCells );
 	        }
@@ -139,7 +142,7 @@ public static void main(String[] args)
 		for(int i : levelImagePoints.keySet()){
 			if(currentMarioCell == i && levelImagePoints.get(i)== false){
 				System.out.println("I SHOULD TAKE A PICTURE: " + currentMarioCell);
-				//environment.createLevelImage();
+				environment.createLevelImage();
 				levelImagePoints.replace(i, true);
 			}
 		}

@@ -394,94 +394,94 @@ public class MarioNeat implements Configurable{
 		int chromSize = 20;
 		int[] fitnessValues = new int[chromSize];
 		String participantName = "STA1";
-		
-		//GENERALIZED TEST TRAINED IN MULTIPLE SEED LEVELS
-		int numLevels = 10;
-		for(int i = 0; i < chromSize; i++){
-			int fitnessVal = 0;
-			
-			//Get new chromosome
-			Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
-			
-			for(int l = 0; l < numLevels; l++){
-				ff.environment.reset(ff.marioAIOptions);
-				ff.setMarioLevel( 0, 0, l );
-				
-				//Evaluate the chromosome
-				ff.evaluate( chrom, false );
-				fitnessVal += chrom.getFitnessValue();
-				
-				//Print results
-				System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue() + " | LEVEL: " + l);
-			}
-			
-			//Save to array
-			fitnessValues[ i ] = fitnessVal / numLevels;
-		}
-		
-		
-		
-		FitnessCSVWriter.generateCsvFile("GENERALIZED_FITNESS_", fitnessValues, participantName );
-		
-		// EVALUATE WITH OFFSET
-		for(int i = 0; i < chromSize; i++){
-					
-				//Get new chromosome
-				Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
-				
-				int offsetX = 16;	
-				int offsetY = 170;
-			
-				//Find offset X and Y 
-				if(i >= 4){
-					offsetX = 300;
-					offsetY = 170;
-				}
-				if (i >= 8){
-					offsetX = 850;
-					offsetY = 190;
-				}
-				if (i >= 12){
-					offsetX = 1748;
-					offsetY = 170;
-				} 
-				if ( i >= 16){
-					offsetX = 2716;
-					offsetY = 170;
-				}
-				
-				//Move Mario according to generation
-				ff.levelOptions = "-vis on -mix " + offsetX + " -miy "+ offsetY;
-		
-				ff.environment.reset(ff.levelOptions);
-				
-				//Evaluate the chromosome
-				ff.evaluate( chrom, true );
-				
-				//Print results
-				System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue());
-				
-				//Save to array
-				fitnessValues[ i ] = chrom.getFitnessValue() - ( offsetX / 16 );
-			}
-				
-			FitnessCSVWriter.generateCsvFile("FITNESS_W_OFFSET_", fitnessValues, participantName );
-			
+//		
+//		//GENERALIZED TEST TRAINED IN MULTIPLE SEED LEVELS
+//		int numLevels = 10;
+//		for(int i = 0; i < chromSize; i++){
+//			int fitnessVal = 0;
+//			
+//			//Get new chromosome
+//			Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
+//			
+//			for(int l = 0; l < numLevels; l++){
+//				ff.environment.reset(ff.marioAIOptions);
+//				ff.setMarioLevel( 0, 0, l );
+//				
+//				//Evaluate the chromosome
+//				ff.evaluate( chrom, false );
+//				fitnessVal += chrom.getFitnessValue();
+//				
+//				//Print results
+//				System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue() + " | LEVEL: " + l);
+//			}
+//			
+//			//Save to array
+//			fitnessValues[ i ] = fitnessVal / numLevels;
+//		}
+//		
+//		
+//		
+//		FitnessCSVWriter.generateCsvFile("GENERALIZED_FITNESS_", fitnessValues, participantName );
+//		
+//		// EVALUATE WITH OFFSET
+//		for(int i = 0; i < chromSize; i++){
+//					
+//				//Get new chromosome
+//				Chromosome chrom = db.loadChromosome( Integer.toString( i ), config );
+//				
+//				int offsetX = 16;	
+//				int offsetY = 170;
+//			
+//				//Find offset X and Y 
+//				if(i >= 4){
+//					offsetX = 300;
+//					offsetY = 170;
+//				}
+//				if (i >= 8){
+//					offsetX = 850;
+//					offsetY = 190;
+//				}
+//				if (i >= 12){
+//					offsetX = 1748;
+//					offsetY = 170;
+//				} 
+//				if ( i >= 16){
+//					offsetX = 2716;
+//					offsetY = 170;
+//				}
+//				
+//				//Move Mario according to generation
+//				ff.levelOptions = "-vis on -mix " + offsetX + " -miy "+ offsetY;
+//		
+//				ff.environment.reset(ff.levelOptions);
+//				
+//				//Evaluate the chromosome
+//				ff.evaluate( chrom, true );
+//				
+//				//Print results
+//				System.out.println("ChromID: " + i + " | Fitness: " + chrom.getFitnessValue());
+//				
+//				//Save to array
+//				//fitnessValues[ i ] = chrom.getFitnessValue() - ( offsetX / 16 );
+//			}
+//				
+//			FitnessCSVWriter.generateCsvFile("FITNESS_W_OFFSET_", fitnessValues, participantName );
+//			
 		
 		// Load in chromosome: 
-//		String chromId = "8";
+		String chromId = "11";
 		
 		
-//		Chromosome chrom = db.loadChromosome( chromId, config );
-//		ff.levelOptions = "-mix 300 -miy 150";
-//		ff.generation = 0;
-//		ff.adjustFPS();
-//		if ( chrom != null ){
-//			System.out.println("Chrom: " + chrom);
-//			
-//			ff.evaluate(chrom, true);
-//			//throw new IllegalArgumentException( "no chromosome found.");
-//		}
+		Chromosome chrom = db.loadChromosome( chromId, config );
+		ff.levelOptions = "-mix 1748 -miy 150";
+		ff.environment.reset(ff.levelOptions);
+		ff.generation = 0;
+		if ( chrom != null ){
+			System.out.println("Chrom: " + chrom);
+			
+			ff.evaluate(chrom, true);
+			//throw new IllegalArgumentException( "no chromosome found.");
+		}
 
 		System.exit(0);
 	}
