@@ -189,7 +189,7 @@ public class GifSequenceWriter {
             images.add(img);
             imgFiles[i].delete();
         } catch (final IOException e) {
-            System.out.println("Something failed while loading the images" + e);
+            //System.out.println("Something failed while loading the images" + e);
         }
     }
     // CREATING THE GIF:
@@ -217,17 +217,12 @@ public class GifSequenceWriter {
     	  writer.writeToSequence(nextImage);
       }
       
-      System.out.println(outputLocation + " sucessfully saved");
       writer.close();
       output.close();
       
       
-    } else {
-    	
-    	System.out.println("Usage: java GifSequenceWriter [list of gif files] [output file]");
-    	System.out.println("Images array size: " + images.size());
-    }
-  }
+    } 
+   }
     
     
 }

@@ -351,7 +351,7 @@ public synchronized void evolve() {
 			}
 		}
 		
-		// HARDCODED, REMOVE AFTER USE 
+		// HARDCODED FOR IEC, REMOVE AFTER USE 
 		int champFitness = 0; 
 		Chromosome bestChrom = null; 
 		
@@ -369,7 +369,7 @@ public synchronized void evolve() {
 			}
 		}
 		
-		bestChrom.setFitnessValue(100);
+//		bestChrom.setFitnessValue(100);
 		
 		for(int i = 0; i<m_chromosomes.size(); i++){
 			Chromosome c = (Chromosome) m_chromosomes.get(i);
@@ -404,7 +404,8 @@ public synchronized void evolve() {
 		// -------------------------------------------------------
 		m_activeConfiguration.getEventManager().fireGeneticEvent(
 				new GeneticEvent( GeneticEvent.GENOTYPE_START_GENETIC_OPERATORS_EVENT, this ) );
-
+		
+		System.out.println("Firing genetic event");
 		// Execute Reproduction Operators.
 		// -------------------------------------
 		Iterator iterator = m_activeConfiguration.getReproductionOperators().iterator();
@@ -413,7 +414,8 @@ public synchronized void evolve() {
 			ReproductionOperator operator = (ReproductionOperator) iterator.next();
 			operator.reproduce( m_activeConfiguration, m_species, offspring );
 		}
-
+		
+		System.out.println("Reproducing");
 		// Execute Mutation Operators.
 		// -------------------------------------
 		Iterator mutOpIter = m_activeConfiguration.getMutationOperators().iterator();
@@ -441,6 +443,8 @@ public synchronized void evolve() {
 		// -------------------------------------------------------
 		m_activeConfiguration.getEventManager().fireGeneticEvent(
 				new GeneticEvent( GeneticEvent.GENOTYPE_EVOLVED_EVENT, this ) );
+		
+		System.out.println("End of genotype");
 	}
 	catch ( InvalidConfigurationException e ) {
 		throw new RuntimeException( "bad config", e );

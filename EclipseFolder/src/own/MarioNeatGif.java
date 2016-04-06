@@ -125,7 +125,7 @@ public class MarioNeatGif extends MarioNeat {
 		    //NEAT SETUP
 			MarioNeat mNeat = new MarioNeatGif();
 			mNeat.init(props);
-			mNeat.run();
+			mNeat.trainANNWithIEC();
 		
 			System.out.println("Last up!");
 			

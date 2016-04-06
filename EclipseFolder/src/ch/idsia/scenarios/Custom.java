@@ -163,7 +163,7 @@ public static void main(String[] args)
 		//System.out.println("Recieved value: " + currentMarioCell);
 		for(int i : levelImagePoints.keySet()){
 			if(currentMarioCell == i && levelImagePoints.get(i)== false){
-				System.out.println("I SHOULD TAKE A PICTURE: " + currentMarioCell);
+				//System.out.println("I SHOULD TAKE A PICTURE: " + currentMarioCell);
 				//environment.createLevelImage();
 				levelImagePoints.replace(i, true);
 			}

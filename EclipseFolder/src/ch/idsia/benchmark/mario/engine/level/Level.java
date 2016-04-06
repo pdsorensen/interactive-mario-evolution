@@ -141,8 +141,8 @@ public Level(int length, int height)
 {
 //        ints = new Vector();
 //        booleans = new Vector();
-    this.length = length;
-    this.height = height;
+    this.length = 20;
+    this.height = 15;
 
     xExit = 50;
     yExit = 10;

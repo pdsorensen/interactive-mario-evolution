@@ -43,7 +43,7 @@ public static void main(String[] args)
 	//49 for next picture
 	//79 for next picture etc
 	// incrementing until end
-	String options = "-lt 0 -ls 0 -ld 0 -mix 16 -miy -200";
+	String options = "-mm 0 -mix 200 -miy 166";
 //	String options = "";
     final MarioAIOptions marioAIOptions = new MarioAIOptions(options);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
@@ -73,7 +73,7 @@ public static void main(String[] args)
     //options = "-lf on -zs 1 -ls 16 -vis on -mix " + Integer.toString(i);
     //environment.reset(options);
     
-    populateHashMap();
+    //populateHashMap();
     environment.changeFPS();
     int marioX = 0; 
     int marioY = 0; 
@@ -87,21 +87,21 @@ public static void main(String[] args)
 	        	//ff.resetActions();
 				
 				//Get inputs
-	//			double[] networkInput = marioInputs.getAllInputs();
+				double[] networkInput = marioInputs.getAllInputs();
 				
 				//Feed the inputs to the network and translate it
-	//			double[] networkOutput = activator.next(networkInput);
-	//			boolean[] actions = getAction(networkOutput);
+//				double[] networkOutput = activator.next(networkInput);
+//				boolean[] actions = getAction(networkOutput);
 				
 				//Drawing and debugging functions 
-//	        	ff.getAllInputs();
-//				ff.drawGrid();
-//				ff.drawPossibleMarioActions();
-//				ff.drawNearestEnemies(2);
-	//			System.out.println(environment.getMarioEgoPos()[0]);
-	//			ff.drawOutputs(actions);
-	//			marioInputs.printAllOutputs(actions, networkOutput); 
-	//			marioInputs.printAllInputs(networkInput);
+	        	ff.getAllInputs();
+				ff.drawGrid();
+				ff.drawPossibleMarioActions();
+				ff.drawNearestEnemies(2);
+				System.out.println(environment.getMarioEgoPos()[0]);
+//				ff.drawOutputs(actions);
+//				marioInputs.printAllOutputs(actions, networkOutput); 
+				marioInputs.printAllInputs(networkInput);
 	        	//System.out.println("Level Length: " + environment.getEvaluationInfo().levelLength);
 	
 	        	// Perform action 
@@ -110,7 +110,7 @@ public static void main(String[] args)
 	            boolean[] action = agent.getAction();
 	            environment.performAction(action);
 	            
-	            checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
+	            //checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
 	             //environment.getEvaluationInfo().distancePassedCells;
 	            //System.out.println( "distanceCellsPassed: " + environment.getEvaluationInfo().distancePassedCells );
 	        }

@@ -72,7 +72,6 @@ public class MarioGIF {
 			
 				for(int i = 0; i < populationSize;i++){
 					String fileLocation = "./db/gifs/" + Integer.toString(folder) + "/" + new Integer(i).toString() + ".gif";
-					System.out.println("Loading file at location: " + fileLocation);
 					gifs[i] = new ImageIcon(fileLocation);
 				}
 				

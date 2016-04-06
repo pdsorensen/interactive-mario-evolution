@@ -95,7 +95,7 @@ private Scale2x scale2x = new Scale2x(320, 240);
 // FOR GIF CREATION
 private int fileNumber = 1; 
 int counter = 0; 
-int saveFrequency = 1; 
+int saveFrequency = 2; 
 public boolean saveImages = false; 
 
 // FOR DEBUGGING INPUTS
@@ -379,17 +379,17 @@ public void render(Graphics g)
     if(saveImages)
     	createImage();
     
-    if(drawLines)
-    	drawLines(); 
+//    if(drawLines)
+//    	drawLines(); 
     
-    if(drawHardcodedStates)
-    	drawHardcodedStates(); 
-    if(drawActionOutputs)
-    	drawActionOutputs();
-    if(drawEnemies)
-    	drawEnemies();
+//    if(drawHardcodedStates)
+//    	drawHardcodedStates(); 
+//    if(drawActionOutputs)
+//    	drawActionOutputs();
+//    if(drawEnemies)
+//    	drawEnemies();
     
-    createImageAtXFrames(8);
+    //createImageAtXFrames(8);
     
     g.clearRect(5, 5, 5, 5);
 }
@@ -483,7 +483,7 @@ public void postInitGraphicsAndLevel()
 
 public void adjustFPS()
 {
-		int fps = 5;
+		int fps = 60;
     	delay = (fps > 0) ? (fps >= GlobalOptions.MaxFPS) ? 0 : (1000 / fps) : 100;
 }
 
@@ -569,7 +569,6 @@ private void renderBlackout(Graphics g, int x, int y, int radius)
 public void createImage(){
 	//System.out.println("Creating image...");
 	BufferedImage imageToDraw = thisVolatileImage.getSnapshot();
-	
 	// File Variables: 
 	StringBuilder sb = new StringBuilder(); 
 	String folderDestAsString = "./db/images/";

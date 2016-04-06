@@ -160,9 +160,9 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 	
 	public void delayRecording(){
 		
-		int gifMaxDuration = 4000;
-		int gifMaxDelay = 2000;
-		int generationDelay = 100;
+		int gifMaxDuration = 2000;
+		int gifMaxDelay = 1000;
+		int generationDelay = 50;
 		
 		if(delayRecording <= gifMaxDelay - generationDelay)
 			delayRecording += generationDelay;
@@ -184,9 +184,10 @@ public class MarioFitnessFunction implements BulkFitnessFunction, Configurable {
 		
 		//Set stage, difficulty and seed
 		//setStage();
-		setStageWithParams( generation );
+		setStageWithParams( 0 );
 	    
 		//Turn on recording
+		
 		marioAIOptions.setVisualization(true);
 		environment.recordMario(true);
 		
@@ -257,12 +258,19 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 
 		//levelOptions = "-mix 300 -miy 170";
 		if(visual){
-			marioAIOptions.setVisualization(true);
+			//String options = "-vis on -mm 0 -mix 120 -miy 185";; //Set starting position
+			String options = "-vis on -mm 0 -mix 16 -miy 220";
+			environment.reset(options);
+			//marioAIOptions.setVisualization(true);
 		} else {
-			marioAIOptions.setVisualization(false);
+			String options = "-vis off -mm 0 -mix 16 -miy 220";
+			//String options = "-vis off -mm 0 -mix 120 -miy 185";; //Set starting position
+			environment.reset(options);
+			
+			//marioAIOptions.setVisualization(false);
 		}
 		
-//		environment.reset(marioAIOptions);
+		//environment.reset(levelOptions);
 		
 	    try {
 			Activator activator = factory.newActivator( c );
@@ -274,7 +282,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 				//setStage();
 				
 			fitness += singleTrial( activator );
-
+			System.out.println("Fitness for the chromosome was: " + fitness);
 //			}
 //
 //			fitness /= numTrials;
@@ -292,10 +300,11 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 		double fitness = 0;
 		// FOR CREATING A FLAT LEVEL: 
 		//String options = "-lf on -zs 1 -ls 16 -vis on";
- 	    //environment.reset(options);
+		
+		//environment.reset(options);
  	    
-	    marioInputs.setRadius(1, 1, 1, 1);
-	    populateHashMap();
+	    
+	    //populateHashMap();
 		while(!environment.isLevelFinished()){
 			//Set all actions to false
 			resetActions();
@@ -316,7 +325,7 @@ private void singleTrialForGIF( Activator activator, int gifDurationMillis, int 
 			
 			//Perform some action based on networkOutput
 			environment.performAction(actions);
-			checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
+			//checkImagePoints(environment.getEvaluationInfo().distancePassedCells);
 			makeTick();		
 	    }
 		

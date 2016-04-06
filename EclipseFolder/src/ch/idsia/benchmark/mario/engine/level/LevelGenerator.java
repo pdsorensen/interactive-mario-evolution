@@ -183,12 +183,13 @@ public static Level createLevel(MarioAIOptions args)
     if (isFlatLevel)
         floor = height - 1 - globalRandom.nextInt(4);
 
-    currentLength += buildStraight(0, level.length, true, floor, INFINITE_FLOOR_HEIGHT);
-    while (currentLength < level.length - 10)
-    {
-//        System.out.println("level.currentLength - currentLength = " + (level.currentLength - currentLength));
-        currentLength += buildZone(currentLength, level.length - currentLength, ANY_HEIGHT, floor, INFINITE_FLOOR_HEIGHT);
-    }
+    //currentLength += buildStraight(0, level.length, true, floor, INFINITE_FLOOR_HEIGHT);
+//    while (currentLength < level.length - 10)
+//    {
+////        System.out.println("level.currentLength - currentLength = " + (level.currentLength - currentLength));
+//        currentLength += buildZone(currentLength, level.length - currentLength, ANY_HEIGHT, floor, INFINITE_FLOOR_HEIGHT);
+//        currentLength += 20;
+//    }
 
     if (!isFlatLevel)  //NOT flat level
         floor = height - 1 - globalRandom.nextInt(4); //floor of the exit line
@@ -206,8 +207,57 @@ public static Level createLevel(MarioAIOptions args)
     level.randomSeed = levelSeed;
     level.type = levelType;
     level.difficulty = levelDifficulty;
-
-
+    
+    /******************** HARDCODED DECEPTIVE LEVEL @Patrikk *****************/
+    
+    //Lower part of level
+    
+    //Ground floor
+    for(int i = 0; i<20; i++){
+    	level.setBlock(i, 14, (byte) (1 + 9 * 16));
+    }
+    
+    // 1st ground Obstacles
+    for(int i = 0; i<4; i++){
+    	level.setBlock(4, 11+i, (byte) (1 + 9 * 16));
+    }
+    
+    // 2nd ground Obstacles
+    for(int i = 0; i<4; i++){
+    	level.setBlock(8, 11+i, (byte) (1 + 9 * 16));
+    }
+    
+//    // 3rd ground Obstacles
+//    for(int i = 0; i<4; i++){
+//    	level.setBlock(14, 11+i, (byte) (1 + 9 * 16));
+//    }
+    
+    // 1st Ceiling
+    for(int i = 3; i<6; i++){
+    	level.setBlock(i, 11, (byte) (1 + 9 * 16));
+    }
+    
+    // Upper part of level
+    //Straight ground
+    //level.setBlock(4, 9, (byte) (1 + 9 * 16));
+    level.setBlock(5, 9, (byte) (1 + 9 * 16));
+    level.setBlock(6, 9, (byte) (1 + 9 * 16));
+    
+    for(int i = 0; i<9; i++){
+    	level.setBlock(6, i, (byte) (1 + 9 * 16));
+    }
+//
+//    for(int i = 8; i<13; i++){
+//    	level.setBlock(i, 9, (byte) (1 + 9 * 16));
+//    }
+//    
+//    for(int i = 0; i<7; i++){
+//    	level.setBlock(15, 0+i, (byte) (1 + 9 * 16));
+//    }
+    
+    
+    /******************** HARDCODED DECEPTIVE LEVEL @Patrikk *****************/
+    
     //level zone where exit is located
     for (int x = currentLength; x < level.length; x++)
     {
@@ -215,7 +265,7 @@ public static Level createLevel(MarioAIOptions args)
         {
             if (y >= floor)
             {
-                level.setBlock(x, y, (byte) (1 + 9 * 16));
+               //level.setBlock(x, y, (byte) (1 + 9 * 16));
             }
         }
     }
@@ -245,9 +295,14 @@ public static Level createLevel(MarioAIOptions args)
 
     fixWalls();
     setPrincess(level.xExit, level.yExit);
-
+    
     level.counters = counters;
 
+    level.setBlock(2, 2, (byte) (15 + 15 * 16));
+    //level.setSpriteTemplate(10, 2, new SpriteTemplate(Sprite.KIND_COIN_ANIM));
+    level.setBlock(4, 4, (byte) (15 + 15 * 16));
+    //level.setBlock(12, 12, (byte) (15 + 15 * 16));
+    level.setBlock(16, 16, (byte) (15 + 15 * 16));
     return level;
 }
 
@@ -256,7 +311,7 @@ private static void setPrincess(int x, int y)
 //    System.out.println("x = " + x);
 //    System.out.println("y = " + y);
     level.setSpriteTemplate(x, y, new SpriteTemplate(Sprite.KIND_PRINCESS));
-    level.setBlock(x, y, (byte) (15 + 15 * 16));
+    level.setBlock(11, 16, (byte) (15 + 15 * 16));
 }
 
 private static int buildZone(int x, int maxLength, int maxHeight, int floor, int floorHeight)
@@ -280,35 +335,35 @@ private static int buildZone(int x, int maxLength, int maxHeight, int floor, int
         case ODDS_STRAIGHT:
             length = buildStraight(x, maxLength, false, floor, floorHeight);
             break;
-        case ODDS_HILL_STRAIGHT:
-            if (floor == DEFAULT_FLOOR && counters.hillStraightCount < counters.totalHillStraight)
-            {
-                counters.hillStraightCount++;
-//                length = buildHillStraight(x, maxLength, floor, false);
-                length = buildHill(x, true, maxLength, floor, false);
-            } else
-                length = 0;
-            break;
-        case ODDS_TUBES:
-            if (counters.tubesCount < counters.totalTubes)
-                length = buildTubes(x, maxLength, maxHeight, floor, floorHeight);
-            else
-                length = 0;
-            break;
-        case ODDS_GAPS:
-            if ((floor > 2 || floor == ANY_HEIGHT) && (counters.gapsCount < counters.totalGaps))
-            {
-                counters.gapsCount++;
-                length = buildGap(x, maxLength, maxHeight, floor, floorHeight);
-            } else
-                length = 0;
-            break;
-        case ODDS_CANNONS:
-            if (counters.cannonsCount < counters.totalCannons)
-                length = buildCannons(x, maxLength, maxHeight, floor, floorHeight);
-            else
-                length = 0;
-            break;
+//        case ODDS_HILL_STRAIGHT:
+//            if (floor == DEFAULT_FLOOR && counters.hillStraightCount < counters.totalHillStraight)
+//            {
+//                counters.hillStraightCount++;
+////                length = buildHillStraight(x, maxLength, floor, false);
+//                length = buildHill(x, true, maxLength, floor, false);
+//            } else
+//                length = 0;
+//            break;
+//        case ODDS_TUBES:
+//            if (counters.tubesCount < counters.totalTubes)
+//                length = buildTubes(x, maxLength, maxHeight, floor, floorHeight);
+//            else
+//                length = 0;
+//            break;
+//        case ODDS_GAPS:
+//            if ((floor > 2 || floor == ANY_HEIGHT) && (counters.gapsCount < counters.totalGaps))
+//            {
+//                counters.gapsCount++;
+//                length = buildGap(x, maxLength, maxHeight, floor, floorHeight);
+//            } else
+//                length = 0;
+//            break;
+//        case ODDS_CANNONS:
+//            if (counters.cannonsCount < counters.totalCannons)
+//                length = buildCannons(x, maxLength, maxHeight, floor, floorHeight);
+//            else
+//                length = 0;
+//            break;
         case ODDS_DEAD_ENDS:
         {
             if (floor == DEFAULT_FLOOR && counters.deadEndsCount < counters.totalDeadEnds) //if method was not called from buildDeadEnds
@@ -325,18 +380,18 @@ private static int buildZone(int x, int maxLength, int maxHeight, int floor, int
 //        addEnemy(x, y);
 //        ++crCount;
 //    }
-    for (int yy = level.height; yy > 0; yy--)
-        if (level.getBlock(x, yy) == 0 &&
-                creaturesRandom.nextInt(levelDifficulty + 1) + 1 > (levelDifficulty + 1) / 2 &&
-                crCount < levelDifficulty + 1 &&
-                level.getSpriteTemplate(x, yy) == null)
-        {
-            addEnemy(x, yy);
-            ++crCount;
-        }
+//    for (int yy = level.height; yy > 0; yy--)
+//        if (level.getBlock(x, yy) == 0 &&
+//                creaturesRandom.nextInt(levelDifficulty + 1) + 1 > (levelDifficulty + 1) / 2 &&
+//                crCount < levelDifficulty + 1 &&
+//                level.getSpriteTemplate(x, yy) == null)
+//        {
+//            addEnemy(x, yy);
+//            ++crCount;
+//        }
 
-    if (levelType > 0)
-        buildCeiling(x, length);
+    //if (levelType > 0)
+        //buildCeiling(x, length);
 
     return length;
 }
