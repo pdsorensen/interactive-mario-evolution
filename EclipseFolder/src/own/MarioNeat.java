@@ -168,7 +168,7 @@ public class MarioNeat implements Configurable{
 		
 		boolean wait = false;
 		int[] fitnessValues = new int[20]; 
-		for(int IECGeneration = 0; IECGeneration < 2; IECGeneration++){
+		for(int IECGeneration = 0; IECGeneration < 15; IECGeneration++){
 			System.out.println("*************** Running IECgeneration: " + IECGeneration + " ***************"); 
 			MarioGIF.reset(folderName);
 			new File("db/gifs/" + folderName).mkdirs();
