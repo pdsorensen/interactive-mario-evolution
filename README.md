@@ -9,10 +9,8 @@
 you can install in any IDE you prefer, but we used good old Eclipse. 
 
 ### Setting up the Mario engine: 
-1. Create two empty projects, one for the Mario Engine and one for the ASM library
-2. Copy the files from the /org folder to the /src folder in your ASM project 
-3. Copy the files from the /mario folder to the /src folder in your Mario project 
-4. add missing libraries by rightclicking on mario project -> go into properties -> java build path -> libraries and add all the libraries in the /libraries folder. Now you should be able to run the HumanMarioPlayer in the package own.util   
+1. Create an empty java project in eclipse and drag and drop all of the files from the source folder to to /src folder in your new Eclipse project 
+2. add missing libraries by rightclicking on mario project -> go into properties -> java build path -> libraries and add all the libraries in the /libraries folder. Now you should be able to run the HumanMarioPlayer in the package own.util   
 
 ### Packages
 - Idsia packages contains experiments, mario engine components, and other tools specifically related to the Mario Engine written in Java. 
