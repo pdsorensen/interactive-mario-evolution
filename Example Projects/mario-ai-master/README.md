@@ -1,1 +1,0 @@
-This is a repository containing code for evolving a neural network to play a game of Mario.  The first commit contains the baseline code for the mario AI competition as well as the baseline code for SharpNEAT, a C# based application for evolving neural networks.  The old.rar file contains a zip of the working files from 2009.
